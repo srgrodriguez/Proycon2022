@@ -1,0 +1,419 @@
+
+#tablaHerramientas{
+    margin-top: 2%;
+}
+
+
+@media screen and (max-width: 800px){
+ #header{
+        position: fixed;
+        z-index: 1000;
+    }
+#contenedor{
+      margin-top:50px;
+    }
+.btnsHerramientas{
+        right: -100%;
+        margin-top: -10.5%;
+        margin-right: -2%;
+    }
+header #menu nav .ul {	
+		top:60px;
+		width: 50%;
+		height: 90%;
+		margin: 0;
+		position: fixed;
+		left: -100%;
+		z-index: 10;
+		background: #003DA6;
+	}
+        
+        
+	#menu nav .ul li a span {
+		margin-right: 5%; 
+	}
+
+	nav li .ul {
+		margin-left:0px;	
+	}
+
+	header nav .ul li a {
+
+		display: block;
+		text-align: left;
+	}
+
+	header #menu nav .ul li {
+		display: block;
+		padding-top: 20px;
+                padding-left: 20px;
+		float: none;
+		height: 60px;
+		width: 100%;
+		border-bottom: 1px solid rgba(255,255,255, .3);
+	}
+#imgMenu{
+            cursor: pointer;
+            display:block;
+            float: left;
+        }
+ #btnAtras{
+  display: block;
+}
+#btnAtrasNoResponsive{
+    display: none;
+}
+#imgOpciones{
+
+    cursor: pointer;
+    display: block;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    margin-top: -15px;
+}
+body{
+    overflow-x: hidden;
+}
+
+#contenedor #contenido .imgInicio{
+
+    margin-top: 200px; 
+}
+}
+@media screen and (max-width: 750px){
+    #contenedor{
+        width: 100%;
+    }
+   #contenedor #pblContieneMateriales #MostrarBusquedaMateriales{
+        width: 100%;
+        margin: auto;
+        
+    }
+    .pnlGeneral{
+        width: 100%;
+    }
+    #panelContienetblMateriales{
+        width: 100%;
+    }
+  #contenedor #pblContieneMateriales .codigoHerramienta .buscarHerramienta{
+      width: 100%;  
+      margin:auto;
+    }
+    #contenedor #pblContieneMateriales #MostrarBusquedaMateriales .pnlGeneral #buscarCodigo{
+      float:left;
+      width: 100%;  
+       
+    }
+    .formularioMenuHerramientas .formHerramientas{
+        width: 100%;
+        margin: auto;
+        float: none;
+    }
+    #mostrarProyectos{
+        width: 100%;
+        margin: auto;
+    }
+    #mostrarProyectos .proyecto{
+        width: 100%;
+        height: auto;
+    }
+ 
+    .informacionProyecto .nombreProyecto .btnOredenar{
+        margin-bottom: 5px;
+        width: 100%;
+    }
+    .informacionProyecto #mhProyectos .materiales{
+       width: 100%;
+       margin:auto;
+    }
+    .informacionProyecto #mhProyectos .materiales .btnExpandir{
+        display:none;
+    }
+    .seccionCerrarProyecto{
+        width:100%;
+    }
+    .informacionProyecto #pedidos{
+       width: 100%; 
+    }
+    
+    #btnNoResponsive{
+        display: none;
+    }
+    #btnResponsive{
+        display: block;
+    }
+    /*SolicitudPedido*/
+    #contenedor #GeneraBoletaSalida .nuevoPedidoProveduria {
+        width: 100%;  
+    }
+    #contenedor #GeneraBoletaSalida .BoletaBodega{
+        width:100%;
+    }
+    
+    /*Usuarios*/
+    #contenedor #pnlcontienetblusuarios .formUsuarios{
+        width:100%;
+    }
+    
+     /*Pedidos*/
+     .body .contenidoPedidos .formHerramientas{
+         width:100%;
+         margin:auto;
+     }
+     
+     .contenidoPedidos .pedidos{
+         width:100%;
+         margin:auto;  
+     }
+     .contenidoPedidos #pp{
+         width:100%;
+         margin:auto;   
+     }
+     
+  #contenedor .container{
+        margin-top: -30px;
+}
+
+ body #headerLogin #tituloNoresponsive {
+    display:none;
+}
+body #headerLogin #tituloResponsive {
+    display:block;
+    padding-left:10px;
+}
+
+/*RESPONSIVE MICUENTA*/
+#perfilUsuario #imgPerfil{
+    width:70%;
+    margin:auto;
+}
+#perfilUsuario #InformacionCuenta{
+    width:100%;
+    margin:0px;
+}
+
+/*Herramientas*/
+#contenedor .MostrarBusquedaHerramienta{
+    width: 100%;
+    margin: 0px;
+}
+#contenedor .MostrarBusquedaHerramienta #headerpnlTotalHerra{
+    height: 70px;
+}
+
+#contenedor .MostrarBusquedaHerramienta #headerpnlTotalHerra #btnImprimirHerramientas1{
+    position: relative;
+    margin-top: 30px;
+    float: right;
+  margin-right: -180px;
+}
+#buscarHerrmientas .buscarHerramienta{
+    width: 100%;
+    margin: auto;
+}
+
+#tituloHeaderListadoH{
+    display: none;
+}
+#contenedor #reparaciones{
+     width: 100%;
+    margin: auto;
+    position:relative;
+    z-index: 0;
+ top:-200px;
+
+}
+#contenedor #reparaciones #btnreparaciones{
+   overflow: hidden;
+   z-index: 0;
+   width: 100%;
+   position: relative;
+  
+}
+#contenedor #reparaciones #tituloNoresponsive{
+  display:none;  
+}
+#contenedor #reparaciones #tituloResponsive{
+  display:block;  
+}
+
+ #contenedor .MostrarTransladoHerramienta{
+    width: 100%;
+    margin: auto;
+}
+#contenedor .MostrarHistorialHerramienta #informacionHerramienta{
+    position: relative;
+    top:-80px
+
+}
+
+#contenedor .MostrarHistorialHerramienta{
+    float: none;
+    width: 100%;
+    margin: auto;
+}
+.MostrarHistorialHerramienta #btnExportarExcelHistorialGastos{
+   float:none;
+   position:relative;
+   right:-200px;
+   z-index:1;
+   margin-top:-40px;
+}
+#contenedor #BoletaReparacionHerramienta{
+    width: 100%;
+    margin: auto;  
+}
+}
+@media screen and (max-width: 480px){
+       .informacionProyecto .nombreProyecto {
+        width: 100%;
+    } 
+    .informacionProyecto #mhProyectos .materiales .tablasG thead tr th{
+       font-size: 70%; 
+    }
+    
+     /*SolicitudPedido*/
+     #contenedor #GeneraBoletaSalida .BoletaBodega #PedidoMateriales #headerPedidoMaterial .tbl_txt_btn{
+        width: 100%; 
+     }
+     
+         /*Usuarios*/
+    #contenedor #pnlcontienetblusuarios .formUsuarios #tblListausuarios thead tr th{
+        font-size: 70%;
+    }
+        #contenedor #pnlcontienetblusuarios .formUsuarios #tblListausuarios tbody tr td{
+        font-size: 70%;
+    }
+    #contenedor #pnlcontienetblusuarios .formUsuarios{
+        padding:0px;
+    }
+    .btnsHerramientas{
+        margin-top: -15%;
+        
+    }
+    #textoHeaderPanelListadoMaterilaes{
+        display:none;
+    }
+    #btnImprimirHerramientas{
+        position: relative;
+        margin-top: 40px;   
+    }
+    #headertextopnlMateriales{
+        padding-right: 30px;
+    }
+    #contenedor #contenido{
+        width: 70%; 
+    }
+    #contenedor #contenido .imgInicio{
+
+        width: 100%;
+}
+#contenedor{
+    padding:0px;
+}
+  #contenedor .container{
+      padding:0px;
+      margin-top:-60px;
+        width: 100%;
+}
+#contenedor .container #loginbox{
+          padding:3px;
+      margin:0px;
+        width: 100%;
+}
+ .contieneDatos .tma{
+     width: 100%;
+}
+#contenedor .MostrarBusquedaHerramienta .opcionesHerramientas{
+    margin-bottom: 10px;
+}
+#contenedor .MostrarBusquedaHerramienta .opcionesHerramientas #contienetxtBuscarCodigo{
+    width: 100%;
+    
+    padding: 0px;
+    float: none;
+}
+#contenedor .MostrarBusquedaHerramienta .opcionesHerramientas #contienetxtBuscarCodigo .buscarHerramienta{
+    margin: 0px;
+}
+#contenedor .MostrarBusquedaHerramienta .opcionesHerramientas #contienecboFiltrar .buscarHerramienta{
+    margin: 0px;
+}
+#contenedor .MostrarBusquedaHerramienta .opcionesHerramientas #contienecboFiltrar{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    float: none;
+}
+#contenedor .MostrarBusquedaHerramienta #bodyBusquedaHerramientas #tbl_total_herramientas thead tr th {
+   font-size: 60%; 
+}
+#contenedor .MostrarBusquedaHerramienta #bodyBusquedaHerramientas{
+    position: relative;
+    top: -145px;
+}
+#contenedor .MostrarBusquedaHerramienta #bodyBusquedaHerramientas #tbl_total_herramientas tbody tr td {
+   font-size: 60%; 
+}
+
+#contenedor #reparaciones #panelreparaciones #tablaReparaciones thead tr th{
+   font-size: 80%; 
+}
+#contenedor #reparaciones #panelreparaciones #tablaReparaciones tbody tr td{
+   font-size: 70%; 
+}
+}
+@media screen and (max-width: 400px){
+    .informacionProyecto #mhProyectos .materiales .tablasG tbody tr td{
+       font-size: 70%; 
+    }
+    #pnlnuevoPedido .nuevoPedido #PedidoMateriales #tbl_agregarMaterialPedido{
+        width:100%;
+    }
+    #contenedor .informacionProyecto #pedidos #pnlListaPedidos #headPedidos #pdotituloBtnA #buscarPedido{
+        width:100%;
+    }
+    .informacionProyecto #pedidos #headPedidos #pdotituloBtnA #cboPedidos{
+       width:100%; 
+    }
+   .informacionProyecto #pedidos #headPedidos #pdotituloBtnA #btnAgregarPedido{
+        width:100%;
+    }
+    
+    #contenedor #GeneraBoletaSalida {
+        width:100%;
+    }
+    
+    /*Usuarios*/
+    #contenedor #pnlcontienetblusuarios .formUsuarios #tblListausuarios tbody tr td img{
+        width: 50%;
+    }
+    #contenedor #pnlcontienetblusuarios .formUsuarios #tblListausuarios tbody tr td{
+        font-size: 50%;
+    }
+    
+    /*Pedidos*/
+    .body .contenidoPedidos .formHerramientas .mostrarProyectos .proyecto{
+        width:100%;
+    }
+    .body .contenidoPedidos .formHerramientas .mostrarProyectos{
+        margin:auto;
+        width:100%; 
+        padding-left:1px;
+        padding-right:1px;
+    }
+    
+    .contenidoPedidos .pedidos #headPedidosProveeduria #pdotituloBtnA #buscarPedido{
+        width:100%; 
+    }
+    .contenidoPedidos .pedidos #headPedidosProveeduria #pdotituloBtnA #btnMostrarBoletaSolicitudPedido{
+        width:100%;
+    }
+    .contenidoPedidos #pp #generarPedidoProveeduria #headerPedidoMaterial .btnFuncionesBoletaProveeduria {
+        margin-bottom:2px;
+    }
+        .btnsHerramientas{
+        margin-top: -20%;
+    }
+}
+

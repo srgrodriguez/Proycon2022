@@ -1,0 +1,1292 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.body{
+    
+    background: #E9EBEE;
+}
+.trasladoT{
+    background: #7DC63F;
+}
+
+#imgMenu{
+    cursor: pointer;
+    display: none;
+}
+#imgPasarDepedidos{
+    cursor: pointer;
+}
+#btnAtras{
+  float: right;
+  margin-top: 15px;
+  margin-right: 20px; 
+  width: 40px;
+  display: none;
+}
+#imgOpciones{
+    float: right;position: relative;top: -35px;
+    display: none;
+}
+
+#header{
+    top:0px;
+    width: 100%;
+    /* height: 80px;*/
+    /*background:#003DA6;; */
+    color: #fff;
+    /*background: #cbcfb1;*/
+    background:#b9c9fe;
+}
+/*Estilos de la pagina de login----->*/
+#headerLogin{
+    width: 100%;
+    height: 90px;
+    /*background:#003DA6;;*/
+     background: #003DA6;
+    color: #fff;
+    padding-bottom: 5px;
+  
+
+}
+#headerLogin #logo{
+    width: 100%;
+    background: #E9EBEE;
+    padding-left: 1px;
+
+}
+#tituloResponsive {
+    display:none;
+}
+.container{
+    margin-top:70px;
+}
+#contenido{
+    width: 50%;
+    margin: auto;
+    margin-top: 10%;
+
+
+}
+#contenido .mensajeInicio{
+    color: #003DA6;
+    padding-left: 100px;
+}
+#mensaje{
+    width: 80%;
+    padding-left: 3%;
+    padding-top: 2%;
+
+}
+.login{
+    width:26%;
+    background: #b9c9fe;
+    height: auto;
+    margin: auto;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-bottom: 30px;
+    border-radius: 7px;
+    /*Sombras*/ 
+    -webkit-box-shadow: 0px 2px 14px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 2px 14px 5px rgba(0,0,0,0.75);
+    box-shadow: 0px 2px 14px 5px rgba(0,0,0,0.75);
+}
+
+.login #textoLogin{
+    padding-top: 15px;
+    width: 40%;
+    height: 20px;
+    color: #003DA6;
+    margin: auto;
+    font-size: 20px;
+    padding-left: 7%;
+
+
+}
+.login p{
+    font-weight: bold;
+}
+.txtlogin{
+    width: 100%;
+    height: 40px;
+    border:1px solid #003DA6;
+    border-radius:5px  ;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    font-family:sans-serif;
+    font-size: 15px;
+    color: #003DA6;
+    padding-left: 3px;
+    margin-top: 3px;
+
+}
+.txtlogin:hover{
+    /*Sombras que hacer que los text del login alumbren*/
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+    -moz-box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+    box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+}
+#imgLogin{
+    padding-left: 3.5%;
+
+    margin: auto;
+    width:60%;
+  
+}
+#btnLogin{
+    width: 100%;
+    margin-top: 20px;
+    background: #003DA6;
+    height: 40px;
+    color: #cbcfb1;
+    border:1px solid #003DA6;
+    border-radius:10px  ;
+    font-size: 15px;
+    opacity: 0.90;
+}
+#btnLogin:hover{
+    opacity:100;
+    font-weight:bold;
+
+}
+
+/*<------Fin estilos de la hoja de LOGIN*/
+
+
+/*<------Inicio estilos MENU------------>*/
+#menu {
+
+    width:100%;
+    height: 65px;
+    background: #003DA6;
+    border-bottom: 3px solid #cbcfb1;
+    z-index:10;
+
+}
+
+#menu nav {
+
+    padding-top: 25px;
+    padding-bottom: 10px;
+    float:right;	
+    width: 65%;
+    height: 60px;
+    background:#003DA6;
+    /*background:red;*/
+    text-decoration: none;
+}
+
+header #menu nav .ul {	
+
+    text-align: center;
+    width: 900px;
+    text-decoration: none;
+    float: right;
+}
+
+
+
+header #menu nav .ul > li {
+    display: inline;
+   /* background: #E9EBEE;*/
+    border-radius: 3px;
+    width:15%;
+    margin-right: 0.5%;
+    height: 15px;
+    padding: 15px 5px 15px 5px;
+    text-decoration: none;	
+}
+header #menu nav .ul > li:hover{
+   background:  #0e2655 ; 
+}
+header #menu nav .ul li a {
+   /* color: #003DA6;*/
+   color: white;
+    font-family: "Helvetica Neue",Helvetica,sans-serif;
+    font-size: 1.1em;
+    padding: 1%;
+    text-decoration: none;
+}
+
+#menu nav .ul li a span {
+    margin-right: 1%; 
+}
+
+
+/*------------------INICIO ESTILOS Submenu -------------------*/
+
+.submenu {
+    position:absolute;
+    text-decoration: none;
+    display: none;
+    top:91px;
+    z-index: 1;
+}
+#flechasubmenu{
+    display: none;
+    position: relative;
+    font-size: 150%;
+    width: 10%;
+    color: white;
+    float: right;
+    margin-right: 5%;
+    top: -30px;
+}
+.ul li #submenu1 {
+
+    right:660px;	
+    position: fixed;
+    text-decoration: none;
+
+}
+.ul li #submenu2 {
+
+    right:550px;	
+    position: fixed;
+    text-decoration: none;
+
+}
+.ul li #submenu3 {
+
+    right:420px;	
+    position: fixed;
+    text-decoration: none;
+
+}
+
+
+.submenu li{
+    width:150px;
+    text-decoration: none;
+    list-style: none;
+    border-bottom:1px solid #003DA6;;
+    padding: 5px;
+    z-index: 100;
+}
+
+#header nav .ul li .salir:hover{
+    color: red;
+
+}
+
+header #menu nav .ul .mostrarsubmenu .submenu li a{
+
+    text-decoration: none;
+    padding: 5px;
+
+}
+header #menu nav .ul li a:hover {
+    color:#E9EBEE;;
+    text-decoration: none;
+}
+header #menu nav .ul .submenu{
+    border-top-width: 2px;
+    /*border-top: 3px solid #cbcfb1;*/
+    background: white;
+    z-index: 12;
+
+    text-align: none;
+}
+header #menu nav .ul .submenu li a{
+    color: black;
+}
+header #menu nav .ul .submenu li a:hover{
+    color:#003DA6;
+}
+
+.ul li > .submenu li  {
+    text-decoration: none;
+
+}
+.ul li:hover > .submenu {
+    display:block;
+}
+/*<--------fIN Estilos SUBMENU------->*/
+
+/*<--------fIN Estilos Menu------->*/
+
+
+/*Necesario para fijar el menu en la parte superior*/
+.fixed {	
+    position:fixed;
+    top:0;
+}
+/* Estilos hoja Inicio */
+
+.imgInicio{
+    width:80%;
+    margin: auto;
+}
+
+
+/*------Estilos para la hoja de Usuarios.php--------*/
+.formUsuarios{
+    width: 70%;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 40px;
+    background-color: #FFFFFF;
+    border-radius: 3px;
+    border: 1px solid #DDDFE2;
+}
+/*--Forumulario Registro de Usuartios--*/
+#contenedor{
+
+}
+#Nombre, #usuario, #contra,#rol{
+    border:1px solid #003DA6; 
+}
+.formularioUsuario{
+    top:200px;
+    width: 60%;
+    height: auto;
+   
+     background:#b9c9fe;
+    border-radius: 5px;
+    margin: auto;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border:1px solid #003DA6; 
+    overflow: hidden;
+}
+.txtUsuario{
+    width: 70%;
+    height: 30px;
+    font-size: 15px;
+    border:1px solid #003DA6;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding-left: 5px;
+    margin-left: 10px;
+    
+
+}
+.rboUsuarios{
+    margin: auto;
+    width: 50%;
+    margin-bottom: 2%;
+}
+.buscarUsuario{
+    width: 83%;
+    padding-left: 36%;
+}
+/*Responsive para acomodar el campo de texto buscar*/
+@media screen and (max-width: 990px){
+    .buscarUsuario{
+        width: 100%;
+        padding-left: 0%;
+        margin-left: 2%;
+        /*background: red;*/
+
+    }
+}
+
+
+.txtUsuario:hover{
+    /*Sombras que hacer que los text del login alumbren*/
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+    -moz-box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+    box-shadow: 0px 0px 6px 0px rgba(0,61,166,1);
+
+}
+
+#btnBuscar{
+    border: 1px solid #003DA6;
+}
+.imgEstado{
+    cursor: pointer;
+}
+/*<---------------Fin hoja de Usuarios.php --------------->*/
+
+/*<-------------Estilos para Pagina Proyectos.php------------>*/
+#mensajeForm{
+    float: right;
+    padding-bottom : 15px;
+    margin-bottom: 10px;
+    padding-right: 5px;
+    display: none;
+}
+#headerForm{
+    height: auto;
+    padding-bottom: 3px;
+}
+#mensajeForm p{
+    padding-bottom: 3px;
+}
+#contenedorProyectos{
+    margin-top: 5%;
+}
+.buscarProyecto{
+    width: 60%;
+    margin: auto;
+
+}
+.btnExpandir{
+    float: left;
+    margin-top: 5px;
+}
+.informacionProyecto{
+   /* top: 50%;*/
+   overflow: hidden;
+   z-index: 0;
+    margin-top: 0.5%;
+    width: 100%;
+    height: auto;
+    display: none;
+}
+.materiales{
+    width: 49%;
+    height: auto;
+    float: left;
+     /*background:#b9c9fe;*/
+     background-color: #FFFFFF;
+     border: 2px solid #DDDFE2;
+    /*background:#cbcfb1;*/
+    /*border: 1px solid #003DA6;*/
+    border-radius:3px;
+    margin-right: 0.5%;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    margin-left: 0.5%;
+    padding-bottom: 3%;
+
+}
+.titulomaterialesherramienta{
+    width:40%;
+    margin: auto;
+}
+.herramientas{
+    
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    margin-right: 0.5%;
+    width: 49%;
+    margin-left: 0.5%;
+    height: 300px;
+    background:#b9c9fe;
+    /*background:#cbcfb1;*/
+    border: 1px solid #003DA6;
+    /*border-radius:5px; */
+    float: left;
+
+}
+.mostrarProyectos{
+    width: 60%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 1%;
+    padding-bottom: 2%;
+    float:left;
+    margin-left: 5%;
+ 
+
+}
+#cboPedidos2{
+    margin-bottom: 8px;
+}
+#pnlListaPedidos{
+    margin-top: 7px;
+}
+#pnlnuevoPedido{
+  margin-top: 7px;  
+}
+/*dvi que contiene los proyectos y el menu de botones a la derecha*/
+.contieProyectoBtns{
+    width: 100%;
+    height: 200px;
+}
+.menuBotones{
+    width: 23%;
+    float: left;
+    margin-left: 8%;
+    margin-top: 5%;
+    padding-top: 1%;
+    padding-left: 1%;
+    padding-bottom: 1%;
+    background: #b9c9fe;
+    border: 1px solid #003DA6;
+   /* border-radius:5px;*/
+  
+}
+.btnProyectos{
+    width: 95%;
+    height: 40px;
+    border: 1px solid #003DA6;
+    border-radius:5px;
+    margin-top:3%;
+    background: #003DA6;
+    color: white;
+}
+.btnProyectos:hover{
+    opacity: 0.9;
+}
+.menuBotones h4{
+    color: #003DA6;
+}
+.nombreProyecto{
+    width: 50%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;
+
+}
+.mostrarProyectos .proyecto{
+   /* border: 1px solid #003DA6;
+    /*border-radius:5px;*/ 
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    width: 154%;
+    height: auto;
+    margin-top: 5px;
+    /*background: #cbcfb1;*/
+    /*background:#b9c9fe;*/
+      background: #E9EBEE;
+    /* background-color: #FFFFFF;*/
+     border: 2px solid #DDDFE2;
+}
+.imgEditarProyecto{
+    float:right;
+    margin-top: -30px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+.btnEnviarMateriales{
+    border: 1px solid #003DA6;
+    border-radius:5px;
+    font-size: 15px;
+    height: 35px;
+    width: 20%;
+   display: inline;
+    background: #003DA6;
+    color: white;
+    font-weight: bold;
+}
+.agregarProyecto{
+
+    width: 100%;
+    /*background: #cbcfb1;*/
+    background:#b9c9fe;
+    height: auto;
+    border: 1px solid #003DA6;
+    /*border-radius:5px;*/
+    margin-left: 3%;
+    /*padding-left: 1%;*/
+    
+    
+}
+.btnEnviarMateriales:hover{
+    opacity: 0.9;
+}
+
+.contenidoPedidos{
+    /*margin-top:5%;*/
+    height: auto;
+    width: 100%;
+}
+
+.btnImprimir{
+
+    margin-top: -35px;
+    margin-bottom: 10px;
+    float:right;
+
+}
+.btnExcel{
+    margin-top: -35px;
+    margin-bottom: 10px;
+    float:right;  
+}
+
+.btnImprimir:hover{
+    opacity: 0.9;
+}
+
+.pedidos{
+
+    width: 53%;
+    height: auto;
+    overflow: hidden;
+    overflow: auto;
+    margin: auto;
+    background: #ffffff;
+    display: none;
+  /*  margin-top: -100px;*/
+    border-radius: 3px;
+
+    
+}
+/*.pedidosClase{
+    padding-top: 0.5%;
+    padding-left: 3px;
+    padding-right: 3px;
+}*/
+ .lospedido{
+    width: 100%;
+    border: 1px solid #003DA6;
+    margin-top: 10px;
+    margin-bottom: 7px;
+    
+}
+ .lospedido  table tbody tr{
+    height: 50px;
+    width: 75%;
+    text-align: center;
+}
+.cboPedidos{
+    margin-top: 8px;
+    width: 150px;
+     border: 1px solid #003DA6;
+     height: 30px;
+}
+#pedidoProveduria{
+    display: none;
+   
+   
+}
+.btnRemoverFila:hover{
+    
+}
+#MostraPedidoSeleccionado{
+    padding-top: 40px;
+}
+
+
+
+    /*Proyectos.php formulario PEDIDOS DE MATERIANLES*/
+    #headPedidos{
+        overflow: hidden;
+    }
+    #btnRegresar{
+        display: none
+    }
+    .nuevoPedido{
+      width: 100%;
+      margin: auto;
+      background: white;
+      height: auto;
+      display: none;
+      
+    }
+    .nuevoPedido .headerPedidoMaterial{
+        padding-left: 5px;
+        padding-bottom: 3px;
+        width: 100%;
+        border: 1px solid #003DA6;
+        border-radius: 5px;
+        height: auto;
+    }
+    .nuevoPedido .headerPedidoMaterial .tableFechaPedido table thead tr{
+         border-radius: 5px;
+    }
+    .nuevoPedido .headerPedidoMaterial .tableFechaPedido table thead th{
+        background: black;
+        color: white; 
+        text-align: center;
+         border: 1px  solid black;
+       
+    }
+    .nuevoPedido .headerPedidoMaterial .tableFechaPedido table tbody tr{
+         border: 1px  solid black;;
+    }
+    .nuevoPedido .headerPedidoMaterial .tableFechaPedido table tbody tr td{
+        border: 1px  solid black;
+        background: white;
+        color: black;
+        text-align: center;
+    }
+    .nuevoPedido .headerPedidoMaterial table{
+        margin-top: 8px;
+    }
+    .nuevoPedido .headerPedidoMaterial table tbody tr td{
+        padding-right: 10px;
+        background: white;
+    }
+    #PedidoHerramientas{
+        display: none;
+    }
+    
+    /*Cuerpo del pedido*/
+    .nuevoPedido .bodyPedido{
+        padding-top: 3px;
+        background: white;
+        width: 100%;
+        border: 1px solid #003DA6;
+        border-radius: 5px;
+        margin-top: 1px;
+    }
+    .tablaPedidos thead tr{
+          border: 1px  solid black;
+          height: 25px;
+    }
+    .tablaPedidos  thead tr th {
+        background: white;
+        text-align: center;
+        color: black;
+        font-weight: bold;
+        padding-left: 5px;
+         border: 1px  solid black;
+    }
+   .tablaPedidos  tbody tr td {
+         background: white;
+         text-align: center;
+         color: black;
+         border: 1px  solid black;
+    }
+    .btnRemover{
+        
+        display: none;
+    }
+    #comentarios{
+        margin-top: 5px;
+        padding: 5px;
+        color:red;
+        font-size: 14px;
+        background: white;
+        
+    }
+    .headerModal{
+        background:#003DA6
+       ;color: white
+    }
+    
+    #tblDevoluvion{
+        display: none;
+        margin-bottom: 10px;
+    }
+    #tblDevoluvionMat{
+        background: white;
+    }
+    #tblDevoluvionMat tbody tr td{
+        padding-left: 10px;
+        background: white;
+    }
+/*Estilos para la pagina de HERRAMIENTA.PHP*/
+
+#btnImprimirHerramientas{
+    margin-top: 1px;
+}
+
+.formHerramientas{
+    width: 50%;
+   vertical-align: middle;
+     float: left; 
+    /*background: #b9c9fe;*/
+    background-color: #FFFFFF;
+    border-radius: 3px;
+    border:1px solid #DDDFE2;
+    margin-left: 25%;
+}
+#formHerramientas{
+    display: none;
+}
+
+.formularioMenuHerramientas{  
+    width: 100%;
+    margin: auto;
+   
+}
+
+.buscarHerramienta{
+    padding-top: 1%;
+    width: 50%;
+    margin-left: 14%;
+}
+#btnResponsive{
+    display: none;
+}
+
+#contenedor .MostrarBusquedaHerramienta{
+    padding-top: 3.5%;
+    width: 75%;
+    display: none;
+  /*  margin: auto;*/
+   
+  
+}
+.MostrarBusquedaHerramienta th{
+    width: 15%;
+}
+.MostrarBusquedaHerramienta td{
+    height: 30px;
+}
+.botonesHerramientas{
+padding-bottom: 10px;
+}
+
+.btnsHerramientas{
+    margin-top: -5%;
+    /*position: fixed;*/
+    z-index: 12;
+    float:right;
+    width: 230px;
+    margin-right: 0%;
+    padding-top: 1%;
+    padding-left: 1%;
+    padding-bottom: 1%;
+    background: #FFFFFF;
+    border-radius: 3px;
+    border: 2px solid #DDDFE2;
+   /* border-radius:5px;*/
+    position: relative;
+}
+
+.historialReparaciones{
+   float: left;
+   width: 100%;
+   padding-left: 3%;
+   padding-right: 3%;
+   padding-bottom: 5%;
+}
+.agregarGasto{
+    width: 100%;
+}
+#reparaciones{
+    padding-top: 1%;
+    width: 50%;
+    margin-left: 14%;
+}
+.BolestasReparacion{
+    width: 50%;
+    margin-left: 14%;
+    padding: 5px;
+    height: auto;
+    padding-bottom: 10px;
+    width: 50%;
+    background: #aabcfe;
+    margin-top: 20px;
+}
+.boletaReparacion{
+    width: 100%;
+    height: 50px;
+    background: red;
+    border: solid 1px #003DA6;
+}
+#MostrarHistorialHerramienta{
+    border: solid 1px #003DA6;
+    padding: 5px;
+    margin-top: 50px;
+    padding-bottom: 20px
+}
+.MostrarHistorialHerramienta{
+   float: left;
+   margin-left: 8%;
+    width: 60%;
+}
+.listaMenu{
+    text-decoration: none;
+    list-style: none;
+}
+.listaMenu li{
+    
+    text-decoration: none;
+    padding: 5px;
+    border-bottom: solid 1px #bce8f1;
+}
+.listaMenu li:hover{
+    background-color: #d9edf7;
+}
+.listaMenu li a {
+    text-decoration: none;
+}
+#contenedor .MostrarTransladoHerramienta{
+    padding-top: 3.5%;
+    width: 60%;
+    display: none;
+    margin-left: 10%;
+  
+}
+.MostrarTransladoHerramienta th{
+    width: 15%;
+}
+.MostrarTransladoHerramienta td{
+    height: 30px;
+}
+td.translado {
+background: white;  
+}
+.opcionesHerramientas{
+    width: 100%;
+    overflow: hidden;
+}
+#contienetxtBuscarCodigo{
+   width: 40%;
+   float: left;
+}
+#contienecboFiltrar{
+    float: right;
+    margin-right: 5%;
+    width: 40%;
+}
+#contienetxtBuscarCodigo .buscarHerramienta{
+   width: 100%;
+   
+}
+#btnImprimirHerramientas1{
+    float: right;position: relative;top: -35px
+}
+
+#imgOpciones{
+    z-index: 100;
+}
+#tbl_BotnesTrasdado{
+    /*background: red;*/
+}
+/*Estilos de la tabla por el momeno es temporal*/
+table{
+    width: 100%;
+    border: 1px;
+    
+}
+/*
+th {     font-size: 15px;     font-weight: normal;     padding: 8px;     background: #b9c9fe;
+         border-top: 4px solid #aabcfe;    border-bottom: 1px solid #fff; color: #039;text-align: center; }
+*/
+td {    padding: 10px;     background: #e8edff;     border-bottom: 1px solid #fff;
+        color: #669;    border-top: 1px solid transparent; font-size: 14px;margin-right: 5px }
+
+.historialreparaciones{
+  display: none;  
+}
+.historialReparaciones .agregarGasto {
+    margin-top: 1%;
+    display: none;
+}
+.historialReparaciones .agregarGasto .tablas td{
+    padding-right:1%;
+}
+
+/*
+Estilos para mi Cuenta 
+*/
+
+.colorheadermodal{
+ background: #b9c9fe;
+ color: #003DA6;
+ 
+}
+
+#ActivoUsuario{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: green;
+    float: left;
+    margin-right: 5px;
+    margin-top: 25px;
+}
+#EstadoNombre{
+    overflow:hidden;
+    padding-left: 5px;
+}
+#NombreUsuario{
+    float: left;
+}
+#perfilUsuario{
+    width: 75%;
+padding: 20px;
+background: #ffffff;
+border: solid 1px #E9EBEE;
+border-radius: 3px;
+    overflow: hidden;
+    margin: auto;
+}
+
+@media screen and (max-width: 1200px){
+    #perfilUsuario{
+        width: 100%;
+
+    }
+}
+#imgPerfil{
+    float: left;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+#InformacionCuenta{
+    float: left;
+    width: 70%;
+    margin-left: 40px;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 20px;
+   
+}
+.datosCueta{
+    float: left;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-top: 3px;
+    border-bottom: 1px solid #DDDFE2;
+}
+.MostrarModalCuenta{
+    padding-top: 7px;
+}
+
+/*
+Estilos para la hoja de Pedidos
+*/
+#pp{
+ width: 50%; 
+  margin: auto;
+display: none;
+}
+#generarPedidoProveeduria{
+    
+    padding: 5px;
+    border:1px solid black;
+    background: #ffffff;
+
+}
+
+#imgCorreo{
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+.cursor{
+   cursor: pointer; 
+}
+
+/*Clases para diferentes funcions*/
+
+.td{
+    border:1px  solid black;
+    text-align: center;
+    background: white;
+    
+}
+.th{
+    border:1px  solid black;
+    color: white;
+    background: black;
+    text-align: center;
+}
+.centrar{
+    text-align: center;
+}
+.borde{
+    border:solid 1px black;
+}
+
+#buscarPedido{
+    float: right;
+    width: 50%;margin-top: 8px;margin-bottom: 8px;
+}
+#buscarCodigo{
+   float: left;width: 50%; 
+}
+.tablas{
+    margin-top: 5px;
+}
+.tablas thead tr th {
+     border: solid 1px black;
+     text-align: center;
+     background: white;
+     color: black
+}
+.tablas tbody tr td{
+    border: solid 1px black;
+    text-align: center;
+    background: white;
+    color: black
+}
+.fecha{
+    width: 65%;
+    float: right
+}
+
+
+.fecha thead tr th{
+     border: solid 1px black;
+     text-align: center;
+     color: white;
+     background: black;
+}
+.fecha tbody tr td{
+    border: solid 1px black;
+    text-align: center;
+    color: black;
+    background: white;
+}
+.cometarioProveeduria{
+    display: none;
+}
+/*.tablasG thead tr th{
+    font-size: 17px;
+    color: #003DA6;
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 3px;
+    padding: 3px;
+}*/
+.tablasG thead tr th{
+    background: #003DA6;
+    color: white;
+    text-align: center;
+    padding-bottom: 3px;
+    padding: 3px;
+}
+.tablasG tbody tr{
+    height: 30px;
+}
+.tablasG tbody tr td{
+  padding: 3px;
+  text-align: center;
+  border: 1px solid white; 
+  font-size: 15px;
+  color: black;     
+}
+.talaFecha{
+ width: 65%;
+ float: right   
+}
+.talaFecha thead tr th{
+    border:1px  solid black;
+    color: white;
+    background: black;
+    text-align: center;
+}
+.talaFecha tbody tr td{
+   border:1px  solid black;
+   color:black;
+   text-align: center;
+}
+
+
+/*----Mensajes----*/
+
+.mensajeCorrecto{
+    background: #dff0d8;
+    color: green;
+    font-weight: bold;
+    border: 1px solid #d6e9c6;
+}
+
+.mensajeError{
+    background: #f2dede;
+    color: #b94a48;
+    font-weight: bold;
+    border: 1px solid #ebccd1; 
+}
+.mensajeCorrectoPanel{
+    background: #dff0d8;
+    color: green;
+    font-weight: bold;
+    height: 40px;
+    border: 1px solid #d6e9c6;
+}
+.mensajeAdvertencia{
+    background:#d9edf7;
+    color: #3a87ad;
+    border: 1px solid #bce8f1;  
+}
+
+.usuarioBolqueado{
+    background: #f5bdb1;
+}
+
+/*Estilo Solicitud Peidos*/
+.nuevoPedidoProveduria{
+   border: solid 1px black;
+   width: 45%;
+   float:left;
+   padding: 10px;
+   overflow: hidden;
+
+    
+}
+.BoletaSalidaBodega{
+    position: relative;
+    width: 50%;
+    float: right;
+    padding: 10px;
+    background: red;
+    height: auto;
+    overflow: hidden;
+}
+.BoletaBodega{
+    border: solid 1px black;
+    margin-left: 10px;
+    padding: 10px;
+    width: 50%;
+    float: right;
+
+    
+}
+#GeneraBoletaSalida{
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden
+}
+
+#destinariosCorreo{
+    padding: 10px;
+    border: solid 1px #E9EBEE;
+}
+
+/*SolicitudPEDIDO.PHP*/
+.tbl_txt_btn{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width:60%;
+ }
+
+.tbl_txt_btn tbody tr td{
+    background: white;
+    padding-right: 10px;
+}
+
+/*FinalizarProyecto.php*/
+.seccionCerrarProyecto{
+    width: 75%;
+     border: 2px solid #DDDFE2;
+     padding-top: 10px;
+     padding-left: 20px;
+     padding-bottom: 15px;
+     padding-right: 10px;
+     margin: auto;
+     
+   
+    
+}
+#tbl_agregarMaterialPedido{
+  width:60%;  
+}
+.seccionCerrarProyecto h3 {
+    font-weight: bold;
+    color:#f0ad4e;   
+}
+.seccionCerrarProyecto h4 {
+    font-weight: bold;
+    color:green;   
+}
+.ulFinalizarProyecto{
+    margin-left: 15px;
+}
+
+.over{
+    overflow: hidden;
+}
+
+.contieneDatos{
+    width: 100%;
+
+    overflow: hidden;
+    margin-top: 10px
+}
+.flotarIz{
+    float: left;
+    margin-left: 5%;
+
+}
+.tma{
+    width: 150px;
+    font-weight: bold;
+}
+
+

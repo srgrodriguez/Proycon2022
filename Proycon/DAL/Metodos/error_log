@@ -1,0 +1,40 @@
+[31-Oct-2022 21:42:39 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[31-Oct-2022 22:23:09 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[31-Oct-2022 22:23:25 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[31-Oct-2022 22:23:26 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[31-Oct-2022 22:23:27 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[31-Oct-2022 22:23:38 UTC] PHP Fatal error:  Uncaught Error: Interface "IUsuarios" not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[01-Nov-2022 01:48:08 America/New_York] PHP Fatal error:  Uncaught Error: Interface 'IUsuarios' not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[01-Nov-2022 01:48:09 America/New_York] PHP Fatal error:  Uncaught Error: Interface 'IUsuarios' not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[01-Nov-2022 01:48:10 America/New_York] PHP Fatal error:  Uncaught Error: Interface 'IUsuarios' not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
+[01-Nov-2022 01:48:10 America/New_York] PHP Fatal error:  Uncaught Error: Interface 'IUsuarios' not found in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/proycon/bodega.proycon.com/DAL/Metodos/MUsuarios.php on line 3
