@@ -187,4 +187,6 @@ function herramientas($proyecto) {
     $datos = $datos . "</table>";
 
     echo $datos;
+
+    
 }
