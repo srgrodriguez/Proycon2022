@@ -12,7 +12,7 @@ and open the template in the editor.
 ?>
 <html>
     <head>
-        		<link rel="icon" href="resources\imagenes\favicon.ico"  type="image/x-icon">
+        <link rel="icon" href="resources\imagenes\favicon.ico"  type="image/x-icon">
         <title> Software Inventarios Costructora Proycon.SA</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <meta charset="UTF-8">
@@ -39,7 +39,7 @@ and open the template in the editor.
            
          </div>
 	
-	 <main id="contenedor" style="" >
+	 <main id="contenedor" >
         <div class="container">    
         <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
             <div class="panel panel-info" >

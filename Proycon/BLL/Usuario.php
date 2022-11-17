@@ -6,6 +6,7 @@ include '../DAL/Conexion.php';
 include '../DAL/FuncionesGenerales.php';
 include '../DATA/Resultado.php';
 require_once 'Autorizacion.php';
+require_once '../DAL/Log.php';
 
 Autorizacion();
 if (isset($_GET['opc'])) {

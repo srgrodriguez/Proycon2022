@@ -1,5 +1,5 @@
 <?php
-
+//require_once '../Log.php';
 class MUsuarios implements IUsuarios {
 
     var $conn;
@@ -182,8 +182,9 @@ class MUsuarios implements IUsuarios {
                 return $result;
             }         
 
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+        } catch (Exception $e) {
+            Log::GuardarEvento('ValidarLogin',$e);
+            //echo $e->getTraceAsString();
         }
     }   
 

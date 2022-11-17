@@ -20,3 +20,9 @@ function LimpiarCadenaCaracter($conexionBD, $candena) {
    $resultado= $conexionBD->real_escape_string(strip_tags($candena));
    return $resultado;
 }
+
+function EsProduccion()
+{
+    $servername = $_SERVER['SERVER_NAME'];
+    return !($servername == "localhost");
+}
