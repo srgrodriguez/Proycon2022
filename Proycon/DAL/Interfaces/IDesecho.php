@@ -1,6 +1,6 @@
 <?php
 
-interface IHerrramientas {
+interface IDesecho {
 
     public function listarDesecho();
 
