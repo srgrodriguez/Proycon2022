@@ -11,6 +11,7 @@ require_once '../DAL/Metodos/MHerramientas.php';
 require_once '../DAL/Conexion.php';
 require_once 'Autorizacion.php';
 require_once '../DAL/FuncionesGenerales.php';
+require_once '../DAL/Log.php';
 
 Autorizacion();
 if (isset($_GET['opc'])) {

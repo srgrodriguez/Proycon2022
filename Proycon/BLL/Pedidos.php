@@ -4,6 +4,7 @@ require_once '..//DAL/Interfaces/IPedidos.php';
 require_once '..//DAL/Metodos/MPedidos.php';
 require_once '..//DATA/PedidoProveeduria.php';
 require_once 'Autorizacion.php';
+require_once '../DAL/Log.php';
 
 Autorizacion();
 if (isset($_GET['opc'])) {
@@ -35,7 +36,8 @@ if (isset($_GET['opc'])) {
 
 function BuscarHerramientasPedido($consulta){
     $bdPedidos = new MPedidos();
-    $result = $bdPedidos->ContarHerramientaDisponible($consulta);
+    try {
+        $result = $bdPedidos->ContarHerramientaDisponible($consulta);
     if (mysqli_num_rows($result)>0) {
         $concatenar ="<table class='tablasG' id='tbl_Peido_Proveeduria' style='margin-top: 10px;'>
                         <thead>
@@ -64,114 +66,133 @@ function BuscarHerramientasPedido($consulta){
     else{   
      echo "<h2>No se encontraron resultado :(</h2>";
     } 
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "BuscarHerramientasPedido");
+    }
+   
 }
 
 function ObternerCosecutivoPedido(){
     $bdPedidos = new MPedidos();
-    $result = $bdPedidos->ObternerCosecutivoPedido();
+
+    try {
+        $result = $bdPedidos->ObternerCosecutivoPedido();
     if (mysqli_num_rows($result)> 0) {
         $fila = mysqli_fetch_array($result,MYSQLI_ASSOC);
          echo 1+$fila['Consecutivo'];    
     }
     else{
         echo 1;
-       // echo '<script>alert("Ocurrio un Error al Obtener el consecutivo del pedido")</script>';  
-        
     }
-   
-    
+    }catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObternerCosecutivoPedido");
+    }
+  
 }
 
 /*Esta funcion se comunica con DAL/MProyectos ya que es la misma consulta que ocupo*/
 function ListarProyectos(){
     $bdPedidos = new MPedidos();
-   $result =  $bdPedidos->ListarProyectos(); 
-   if (mysqli_num_rows($result)> 0) {
-       $concatenar="";
-       while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-         $concatenar.= "<section class='proyecto'>
-                         <h3> <a href='javascript:void(0);' id='".$fila['ID_Proyecto']."' onclick='MostrarPedidosProyecto(".$fila['ID_Proyecto'].")'>".$fila['Nombre']."</a></h3>  
-                        </section>";  
-       }
-       echo $concatenar;
-       
-   }
-   else{
-       //echo '<script>alert("Ocurrio un error a la Hora de LISTAR LOS Proyectos")</script>';  
-       
-   }
+    try {
+        $result =  $bdPedidos->ListarProyectos(); 
+        if (mysqli_num_rows($result)> 0) {
+            $concatenar="";
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+              $concatenar.= "<section class='proyecto'>
+                              <h3> <a href='javascript:void(0);' id='".$fila['ID_Proyecto']."' onclick='MostrarPedidosProyecto(".$fila['ID_Proyecto'].")'>".$fila['Nombre']."</a></h3>  
+                             </section>";  
+            }
+            echo $concatenar;         
+        }
+        else{
+            //echo '<script>alert("Ocurrio un error a la Hora de LISTAR LOS Proyectos")</script>';  
+            
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ListarProyectos");
+    }
+
 }
 
 function ListarPedidosProyecto($ID_Proyecto){
     $bdPedidos = new MPedidos();
-    $result = $bdPedidos->ListarPedidosProyecto($ID_Proyecto);
-    if (mysqli_num_rows($result)>0) {
-        $concatenar = "";
-       $concatenar.="<table class='tablasG'>"
-                    . "<thead>"
-                    . "<th>#Boleta</th>"
-                     ."<th>Generada por</th>"
-                    . "<th>Fecha</th>"
-                    . "<th></th>"
-                    . "</thead><tbody>";
-        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-         $concatenar.="<tr><td>".$fila['Consecutivo']."</td><td>".$fila['Nombre']."</td><td>".$fila['Fecha']."</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";   
-                    
+    try {
+        $result = $bdPedidos->ListarPedidosProyecto($ID_Proyecto);
+        if (mysqli_num_rows($result)>0) {
+            $concatenar = "";
+           $concatenar.="<table class='tablasG'>"
+                        . "<thead>"
+                        . "<th>#Boleta</th>"
+                         ."<th>Generada por</th>"
+                        . "<th>Fecha</th>"
+                        . "<th></th>"
+                        . "</thead><tbody>";
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+             $concatenar.="<tr><td>".$fila['Consecutivo']."</td><td>".$fila['Nombre']."</td><td>".$fila['Fecha']."</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";   
+                        
+            }
+            $concatenar.="</tbody></table>";
+            echo $concatenar;
+            
         }
-        $concatenar.="</tbody></table>";
-        echo $concatenar;
-        
-    }
-       else{
-       echo '<h3>No hay pedidos registrados</h3>';    
-   }
-    
+           else{
+           echo '<h3>No hay pedidos registrados</h3>';    
+       }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ListarPedidosProyecto");
+    }   
 }
 
 function GenerarPedido(){
-   // echo "Me cago en la puta";
-     session_start();
-    $arreglo = json_decode($_POST['arreglo'], true);
-    $headerPedido = new HeaderPedido();
-    $contenido = new CuerpoPedido();
-    $bdPedidos = new MPedidos();
-    $headerPedido->Comentarios =$_POST['comentarios'];
-    $headerPedido->Consecutivo=$_POST['consecutivo'];
-    $headerPedido->Fecha=$_POST['fecha'];
-    $headerPedido->ID_Proyecto=$_POST['idProyecto'];
-    $headerPedido->ID_Usuairo=$_SESSION['ID_Usuario'];
-    $tam = sizeof($arreglo);
-    $result1 = $bdPedidos->GenerarPedido($headerPedido);
-    $contenidoPedido="";
-      for ($i = 0; $i < $tam; $i++) {
-            for ($j = 0; $j <= 3; $j++) {
-                $contenido->Tipo=$arreglo[$i][$j];
-                $contenido->Codigo= $arreglo[$i][$j + 1];
-                $contenido->Cantidad=$arreglo[$i][$j + 2];
-                $contenidoPedido.="<tr>".
-                "<td>".$arreglo[$i][$j + 1]."</td>".
-                "<td>".$arreglo[$i][$j + 2]."</td>".
-                "<td>".$arreglo[$i][$j + 3]."</td>"."</tr>";
-                $j = 4;
+    try {
+        session_start();
+        $arreglo = json_decode($_POST['arreglo'], true);
+        $headerPedido = new HeaderPedido();
+        $contenido = new CuerpoPedido();
+        $bdPedidos = new MPedidos();
+        $headerPedido->Comentarios =$_POST['comentarios'];
+        $headerPedido->Consecutivo=$_POST['consecutivo'];
+        $headerPedido->Fecha=$_POST['fecha'];
+        $headerPedido->ID_Proyecto=$_POST['idProyecto'];
+        $headerPedido->ID_Usuairo=$_SESSION['ID_Usuario'];
+        $tam = sizeof($arreglo);
+        $result1 = $bdPedidos->GenerarPedido($headerPedido);
+        $contenidoPedido="";
+          for ($i = 0; $i < $tam; $i++) {
+                for ($j = 0; $j <= 3; $j++) {
+                    $contenido->Tipo=$arreglo[$i][$j];
+                    $contenido->Codigo= $arreglo[$i][$j + 1];
+                    $contenido->Cantidad=$arreglo[$i][$j + 2];
+                    $contenidoPedido.="<tr>".
+                    "<td>".$arreglo[$i][$j + 1]."</td>".
+                    "<td>".$arreglo[$i][$j + 2]."</td>".
+                    "<td>".$arreglo[$i][$j + 3]."</td>"."</tr>";
+                    $j = 4;
+                }
+                 $bdPedidos = new MPedidos();
+                $contenido->Consecutivo=$_POST['consecutivo'];
+                $result2 = $bdPedidos->ContenidoPedido($contenido);
             }
-             $bdPedidos = new MPedidos();
-            $contenido->Consecutivo=$_POST['consecutivo'];
-            $result2 = $bdPedidos->ContenidoPedido($contenido);
-        }
-      //Descomentariar esta funcion cuando se suba al hosting;
-       EnviarCorreoElectronico($_POST['consecutivo'],$_POST['nombreProyecto'],$_SESSION['Nombre'],$contenidoPedido,$_POST['mensajeCorreo'],$_SESSION['Usuario']);
-       if ($result1 == 1 && $result2== 1) {
-            ECHO 1;
-        }
-       else {
-            echo 0;
+          //Descomentariar esta funcion cuando se suba al hosting;
+           EnviarCorreoElectronico($_POST['consecutivo'],$_POST['nombreProyecto'],$_SESSION['Nombre'],$contenidoPedido,$_POST['mensajeCorreo'],$_SESSION['Usuario']);
+           if ($result1 == 1 && $result2== 1) {
+                ECHO 1;
             }
-    
+           else {
+                echo 0;
+                }
+        
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GenerarPedido");
+    }   
+   
     
 }
 function BuscarCorreoElectronico($busqueda){
    $bdPedidos = new MPedidos();
-   $result = $bdPedidos->BuscarCorreoElectronico($busqueda);
+
+   try {
+    $result = $bdPedidos->BuscarCorreoElectronico($busqueda);
    if (mysqli_num_rows($result)>0) {
        $concatenar="<table  class='tablasG' id='tblCorreosBuscados' style='margin-top: 10px;'>
                             <thead>
@@ -202,6 +223,10 @@ function BuscarCorreoElectronico($busqueda){
    }else{
        echo "<h3>No se encontraro Resultado :( </h3>";
    }
+   } catch (Exception $ex) {
+    echo Log::GuardarEvento($ex, "BuscarCorreoElectronico");
+}   
+  
     
 }
 

@@ -6,6 +6,7 @@ require_once '../DAL/Conexion.php';
 include '../DAL/FuncionesGenerales.php';
 include '../DATA/Resultado.php';
 require_once 'Autorizacion.php';
+require_once '../DAL/Log.php';
 
 if (isset($_POST['Usuario'])) {
     ValidarLogin($_POST['Usuario'], $_POST['Pass']);
@@ -14,11 +15,10 @@ if (isset($_POST['Usuario'])) {
 function ValidarLogin($Usuario, $Pass) {
     $usuario = new MUsuarios();
     $Resultado = new Resultado();
-    $result = $usuario->ValidarLogin($Usuario);
-
+    try {
+        $result = $usuario->ValidarLogin($Usuario);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqlI_fetch_array($result, MYSQLI_ASSOC); // traer el usuario
-
        
         if (password_verify($Pass, $row['Pass'])) { // Verifico que el password sea el correcto
             $usuario = new MUsuarios();
@@ -45,6 +45,10 @@ function ValidarLogin($Usuario, $Pass) {
         $Resultado->mensaje = "Usuario no existe";
         echo json_encode($Resultado);
     }
+    } catch (Exception $ex) {
+        echo  Log::GuardarEvento($ex,"ValidarLogin");
+    }
+       
 }
 
 function crearSessionesSistema(){

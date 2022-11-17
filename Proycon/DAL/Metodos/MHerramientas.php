@@ -220,7 +220,7 @@ class MHerramientas implements IHerrramientas {
         if ($conn->connect_errno) {
             return -1;
         }
-        $sql = "UPDATE tbl_reparacionherramienta SET Descripcion='$DescripcionTipo' WHERE ID_Tipo='$ID_Tipo'";
+        $sql = ""; //"UPDATE tbl_reparacionherramienta SET Descripcion='$DescripcionTipo' WHERE ID_Tipo='$ID_Tipo'";
         $resultado = $conn->query($sql);
         $conn->close();
         return $resultado;
