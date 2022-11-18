@@ -7,6 +7,12 @@
  */
 
 function LimpiarCadenaCaracter($conexionBD, $candena) {
+    if($conexionBD == null || $conexionBD == "")
+    {
+        $strMensaje = "En LimpiarCadenaCaracter la conexion con la BD llego nula";
+        Log::GenerarArchivoLog($strMensaje);
+        exit();
+    }
     $ArregloPalabras = array("DROP", "TABLE", "DATABASE", "SCRIPT", "DELETE", "INSERT", "UPDATE", "SELECT");
     $cadenaMayuscula = strtoupper($candena);
     for ($index = 0; $index < count($ArregloPalabras); $index++) {
