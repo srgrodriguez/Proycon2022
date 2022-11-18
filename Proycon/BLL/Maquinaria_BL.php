@@ -25,6 +25,9 @@ if (isset($_GET['opc'])) {
         case "eliminar":
             EliminarMaquinaria();
             break;
+        case "buscarTiempoReal":
+            BuscarMaquinariaEnTiempoReal();
+            break;
         default:
             break;
     }
@@ -101,17 +104,22 @@ function ListarTotalMaquinaria()
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
                 $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
-                if ($fila['numEstado'] == '1') {
+                if ($fila['numEstado'] == Constantes::EstadoOK) {
 
                     $resultadoHTML .= "<tr>
                             <td>" . $fila['Codigo'] . "</td>
                             <td style='text-align: left'>" . $fila['Tipo'] . "</td>
                             <td style='text-align: left'>" . $fila['Descripcion'] . "</td>    
                             <td>" . $Fecha . "</td>
-                <td style='text-align: right'>" . $Monto . "</td>
+                            <td style='text-align: right'>" . $Monto . "</td>
                             <td>" . $fila['Disposicion'] . "</td>
                             <td>" . $fila['Ubicacion'] . "</td>
                             <td>" . $fila['Estado'] . "</td>
+                            <td style='text-align: center'>
+                                    <button class='btn btn-default' onclick='VerDetalleHerramienta(this)'>
+                                      Ver detalle
+                                    </button>
+                            </td>
                            </tr>";
                 } else {
                     $resultadoHTML .= "<tr>
@@ -123,6 +131,11 @@ function ListarTotalMaquinaria()
                             <td class='usuarioBolqueado'>" . $fila['Disposicion'] . "</td>
                             <td class='usuarioBolqueado'>" . $fila['Ubicacion'] . "</td>
                             <td class='usuarioBolqueado'>" . $fila['Estado'] . "</td>
+                            <td class='usuarioBolqueado' style='text-align: center'>
+                            <button class='btn btn-default' onclick='VerDetalleHerramienta(this)'>
+                               Ver detalle
+                            </button>
+                </td>
                            </tr>";
                 }
             }
@@ -157,5 +170,45 @@ function EliminarMaquinaria()
         }
     } catch (Exception $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
+    }
+}
+
+function BuscarMaquinariaEnTiempoReal()
+{
+    try {
+
+        $bdMaquinaria = new MMaquinaria();
+        $request  = json_decode(file_get_contents('php://input'));
+        $strConsulta = $request->consulta;
+        $resultado =  $bdMaquinaria->BuscarMaquinariaEnTiempoReal($strConsulta);
+
+        if (mysqli_num_rows($resultado) > 0) {
+            $resultadoHTML = "";
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+
+                $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+                $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
+                $resultadoHTML .= "<tr>
+                        <td>" . $fila['Codigo'] . "</td>
+                        <td>" . $fila['Tipo'] . "</td>
+                         <td>" . $fila['Descripcion'] . "</td>
+                        <td>" . $Fecha . "</td>
+                        <td>" . $Monto . "</td>
+                        <td>" . $fila['Disposicion'] . "</td>
+                        <td>" . $fila['Nombre'] . "</td>
+                        <td>" . $fila['Estado'] . "</td>
+                        <td style='text-align: center'>
+                                    <button class='btn btn-default' onclick='VerDetalleHerramienta(this)'>
+                                       Ver detalle
+                                    </button>
+                        </td>
+                    </tr>";
+            }
+            echo $resultadoHTML;
+        } else {
+            echo "<h2>No se encontraron Resultados :( </h2>";
+        }
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "listarTotalMaquinaria"));
     }
 }
