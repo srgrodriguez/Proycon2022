@@ -19,4 +19,67 @@ class Desecho {
  public $FechaDesecho;
  public $ID_Usuario;
  public $TipoDesecho;
+
+
+ function Desecho() {
+        
+}
+
+function getId() {
+    return $this->idHerramienta;
+}
+function getID_Herramienta() {
+    return $this->ID_Herramienta;
+}
+
+
+function getCodigo() {
+    return $this->Codigo;
+}
+
+function getMotivo() {
+    return $this->Motivo;
+}
+
+function getFechaDesecho() {
+    return $this->FechaDesecho;
+}
+
+function getID_Usuario() {
+    return $this->ID_Usuario;
+}
+
+function getTipoDesecho() {
+    return $this->TipoDesecho;
+}
+
+function setID($Id) {
+    $this->Id = $Id;
+}
+
+function setID_Herramienta($ID_Herramienta) {
+    $this->ID_Herramienta = $ID_Herramienta;
+}
+
+function setCodigo($Codigo) {
+    $this->Codigo = $Codigo;
+}
+
+function setMotivo($Motivo) {
+    $this->Motivo = $Motivo;
+}
+
+function setFechaDesecho($FechaDesecho) {
+    $this->FechaDesecho = $FechaDesecho;
+}
+
+function setID_Usuario($ID_Usuario) {
+    $this->ID_Usuario = $ID_Usuario;
+}
+
+
+function setTipoDesecho($TipoDesecho) {
+    $this->TipoDesecho = $TipoDesecho;
+}
+
 }
