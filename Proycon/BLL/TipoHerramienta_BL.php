@@ -46,7 +46,7 @@ function AgregarTipoHerramienta()
 
         $resultado =  $bdMaquinaria->AgregarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
     }
 }
@@ -65,7 +65,7 @@ function ActualizarTipoHerramienta()
         $tipoMaquinaria->MonedaCobro= $request->monedaCobro;
         $resultado =  $bdMaquinaria->ActualizarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
     }
 }
@@ -99,7 +99,7 @@ function ListarTipoHerramientas()
             echo $resultadoHTML;
         } else
             echo "No hay datos para mostrar";
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
     }
 }
@@ -112,7 +112,7 @@ function EliminarTipoHerramienta()
         $request  = json_decode(file_get_contents('php://input'));
         $resultado =  $bdMaquinaria->EliminarTipoHerramienta($request->id);
         echo json_encode($resultado);
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
     }
 }

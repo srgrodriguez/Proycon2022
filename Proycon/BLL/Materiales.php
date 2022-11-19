@@ -60,7 +60,7 @@ function BuscarMaterialNombre($nombre)
         } else {
             echo 0;
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  Log::GuardarEvento($ex, "BuscarMaterialNombre");
     }
 }
@@ -78,7 +78,7 @@ function AgregarMateriales()
         $Materiales->Devolucion = $_POST['devolucion'];
 
         echo $resultadoConsulta = $MMaterial->AgregarMateriales($Materiales);
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "AgregarMateriales");
     }
 }
@@ -96,7 +96,7 @@ function verificarMaterialExistente()
         } else {
             echo 0;
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "verificarMaterialExistente");
     }
 }
@@ -117,7 +117,7 @@ function updateMateriales()
 
         $resultado = $MMaterial->UpdateMateriales($Materiales);
         echo $resultado;
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "updateMateriales");
     }
 }
@@ -142,7 +142,7 @@ function CrearTablaListarMateriales()
             }
             echo $concatenar;
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "CrearTablaListarMateriales");
     }
 }
@@ -170,7 +170,7 @@ function BuscarTiempoRealMaterial($consulta)
         } else {
             echo "<h2>No se encontraron Resultados :( </h2>";
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "BuscarTiempoRealMaterial");
     }
 }
@@ -194,7 +194,7 @@ function BuscarMaterialCodigo()
         } else {
             echo "<h3>El codigo Ingresado no Existe</h3>";
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "BuscarMaterialCodigo");
     }
 }

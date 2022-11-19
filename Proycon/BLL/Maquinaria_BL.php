@@ -32,7 +32,7 @@ if (isset($_GET['opc'])) {
             break;
     }
 } else {
-    throw new Exception("Parametro no valido");
+    throw new \Throwable("Parametro no valido");
 }
 
 function AgregarMaquinaria()
@@ -63,7 +63,7 @@ function AgregarMaquinaria()
             $resultado =  $bdMaquinaria->AgregarMaquinaria($maquinaria);
             echo json_encode($resultado);
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "AgregarMaquinaria"));
     }
 }
@@ -88,7 +88,7 @@ function ActualizarMaquinaria()
         $maquinaria->numFactura = $request->numFactura;
         $resultado =  $bdMaquinaria->ActualizarMaquinaria($maquinaria);
         echo json_encode($resultado);
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
     }
 }
@@ -142,7 +142,7 @@ function ListarTotalMaquinaria()
             echo $resultadoHTML;
         } else
             echo 'No hay datos para mostara';
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "listarTotalMaquinaria"));
     }
 }
@@ -166,9 +166,9 @@ function EliminarMaquinaria()
                 echo json_encode($resultado);
             }
         } else {
-            throw new Exception("Codigo vacio");
+            throw new \Throwable("Codigo vacio");
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
     }
 }
@@ -208,7 +208,7 @@ function BuscarMaquinariaEnTiempoReal()
         } else {
             echo "<h2>No se encontraron Resultados :( </h2>";
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "listarTotalMaquinaria"));
     }
 }

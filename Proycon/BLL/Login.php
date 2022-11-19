@@ -45,7 +45,7 @@ function ValidarLogin($Usuario, $Pass) {
         $Resultado->mensaje = "Usuario no existe";
         echo json_encode($Resultado);
     }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo  Log::GuardarEvento($ex,"ValidarLogin");
     }
        

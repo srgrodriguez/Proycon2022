@@ -124,7 +124,7 @@ class MMaquinaria implements IMaquinaria
         $this->conn->close();
         return $resultado;
     }
-    public function EliminarMaquinaria($codigo)
+    public function EliminarMaquinaria(string $codigo)
     {
         $resultado = new Resultado();
         $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
@@ -156,10 +156,10 @@ class MMaquinaria implements IMaquinaria
         $this->conn->close();
         return $resultado;
     }
-    public function BuscarMaquinariaEnTiempoReal($strDescripcion)
+    public function BuscarMaquinariaEnTiempoReal(string $strDescripcion)
     {
         session_start();
-        $consulta = LimpiarCadenaCaracter($this->conn, $strDescripcion);
+        $strDescripcion = LimpiarCadenaCaracter($this->conn, $strDescripcion);
 
         if ($_SESSION['ID_ROL'] == Constantes::RolBodega) {
             $sql = "select
@@ -207,7 +207,7 @@ class MMaquinaria implements IMaquinaria
         return $resultado;
     }
 
-    public function BuscarMaquinariaPorCodigo($Codigo)
+    public function BuscarMaquinariaPorCodigo(string $Codigo )
     {
         $Codigo = LimpiarCadenaCaracter($this->conn, $Codigo);
         $sql = "select 

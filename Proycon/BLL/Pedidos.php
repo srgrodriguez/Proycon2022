@@ -66,7 +66,7 @@ function BuscarHerramientasPedido($consulta){
     else{   
      echo "<h2>No se encontraron resultado :(</h2>";
     } 
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "BuscarHerramientasPedido");
     }
    
@@ -84,7 +84,7 @@ function ObternerCosecutivoPedido(){
     else{
         echo 1;
     }
-    }catch (Exception $ex) {
+    }catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "ObternerCosecutivoPedido");
     }
   
@@ -108,7 +108,7 @@ function ListarProyectos(){
             //echo '<script>alert("Ocurrio un error a la Hora de LISTAR LOS Proyectos")</script>';  
             
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "ListarProyectos");
     }
 
@@ -138,7 +138,7 @@ function ListarPedidosProyecto($ID_Proyecto){
            else{
            echo '<h3>No hay pedidos registrados</h3>';    
        }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "ListarPedidosProyecto");
     }   
 }
@@ -182,7 +182,7 @@ function GenerarPedido(){
                 echo 0;
                 }
         
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "GenerarPedido");
     }   
    
@@ -223,7 +223,7 @@ function BuscarCorreoElectronico($busqueda){
    }else{
        echo "<h3>No se encontraro Resultado :( </h3>";
    }
-   } catch (Exception $ex) {
+   } catch (\Throwable $ex) {
     echo Log::GuardarEvento($ex, "BuscarCorreoElectronico");
 }   
   

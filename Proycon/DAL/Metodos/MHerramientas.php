@@ -661,7 +661,9 @@ class MHerramientas implements IHerrramientas {
 
     public function BuscarTiempoRealHerramienta($consulta) {
         $consulta = LimpiarCadenaCaracter($this->conn, $consulta);
-        session_start();
+        if (!isset($_SESSION)) 
+            session_start();
+
         if ($_SESSION['ID_ROL'] == '4') {
             $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
         } else {

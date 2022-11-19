@@ -13,7 +13,7 @@ function LimpiarCadenaCaracter($conexionBD, $candena) {
         Log::GenerarArchivoLog($strMensaje);
         exit();
     }
-    $ArregloPalabras = array("DROP", "TABLE", "DATABASE", "SCRIPT", "DELETE", "INSERT", "UPDATE", "SELECT");
+    $ArregloPalabras = array("DROP", "TABLE", "DATABASE", "SCRIPT", "DELETE", "INSERT", "UPDATE", "SELECT","ALTER");
     $cadenaMayuscula = strtoupper($candena);
     for ($index = 0; $index < count($ArregloPalabras); $index++) {
         $revision = strpos($cadenaMayuscula, $ArregloPalabras[$index]);
