@@ -3,25 +3,36 @@
 require_once 'Autorizacion.php';
 require_once '../DAL/Conexion.php';
 require_once '../DAL/Log.php';
-require_once '../DAL/Interfaces/IMaquinaria.php';
+require_once '../DAL/Interfaces/ITipoHerramienta.php';
 require_once '..//DAL/Metodos/MTipoHerramienta.php';
 require_once '../DATA/Resultado.php';
 require_once '../DATA/TipoMaquinaria.php';
+require_once '../DAL/FuncionesGenerales.php';
+require_once '../DAL/Constantes.php';
 
 //Autorizacion();
 if (isset($_GET['opc'])) {
     $opc = $_GET['opc'];
     switch ($opc) {
-        case "agregarTipoHerramienta":AgregarTipoMaquinaria();break;
-        case "actualizarTipoHerramienta":ActualizarTipoHerramienta();break;
-        case "listarTipoHerramienta":ListarTipoHerramientas();break;
+        case "agregar":
+            AgregarTipoHerramienta();
+            break;
+        case "actualizar":
+            ActualizarTipoHerramienta();
+            break;
+        case "listar":
+            ListarTipoHerramientas();
+            break;
+        case "eliminar":
+            EliminarTipoHerramienta();
+            break;
         default:
             break;
     }
 }
 
 
-function AgregarTipoMaquinaria()
+function AgregarTipoHerramienta()
 {
     $tipoMaquinaria = new TipoHerramienta();
     try {
@@ -29,7 +40,10 @@ function AgregarTipoMaquinaria()
         $request  = json_decode(file_get_contents('php://input'));
         $tipoMaquinaria->Descripcion = $request->descripcion;
         $tipoMaquinaria->Precio = $request->precio;
-        $tipoMaquinaria->TipoEquipo = "M"; //M= maquinaria; H= HERRAMIENTA
+        $tipoMaquinaria->TipoEquipo = Constantes::TipoEquipoMaquinaria; //M= maquinaria; H= HERRAMIENTA
+        $tipoMaquinaria->CodigoFormadeCobro =$request->codigoFormadeCobro;
+        $tipoMaquinaria->MonedaCobro =$request->monedaCobro;
+
         $resultado =  $bdMaquinaria->AgregarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
     } catch (Exception $ex) {
@@ -47,6 +61,8 @@ function ActualizarTipoHerramienta()
         $tipoMaquinaria->Descripcion = $request->descripcion;
         $tipoMaquinaria->Precio = $request->precio;
         $tipoMaquinaria->TipoEquipo = $request->tipoEquipo; //M= maquinaria; H= HERRAMIENTA
+        $tipoMaquinaria->CodigoFormadeCobro=$request->codigoFormadeCobro;
+        $tipoMaquinaria->MonedaCobro= $request->monedaCobro;
         $resultado =  $bdMaquinaria->ActualizarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
     } catch (Exception $ex) {
@@ -69,7 +85,10 @@ function ListarTipoHerramientas()
                             <td>" . $fila['ID_Tipo'] . "</td>
                             <td>" . $fila['Descripcion'] . "</td>
                             <td>" . $fila['PrecioEquipo'] . "</td>
-                            <td>" . $fila['TipoEquipo'] . "</td>
+                            <td>" . $fila['DescripcionFormaDeCobro'] . "</td>
+                            <td>" . ObtenerDescripcionMoneda($fila['CodigoMonedaCobro'] ). "</td>
+                            <td style='display:none'>" . $fila['TipoEquipo'] . "</td>                           
+                            <td style='display:none'>" . $fila['CodigoMonedaCobro'] . "</td>
                             <td style='text-align: center'>
                                     <button class='btn btn-default' onclick='EditarTipoHerramienta(this)'>
                                         <img src='../resources/imagenes/Editar.png' width='20px' alt=''/>
@@ -78,12 +97,34 @@ function ListarTipoHerramientas()
                             </tr>";
             }
             echo $resultadoHTML;
-        }
-        else
-         echo "No hay datos para mostrar"; 
-
+        } else
+            echo "No hay datos para mostrar";
     } catch (Exception $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
     }
 }
 
+function EliminarTipoHerramienta()
+{
+
+    try {
+        $bdMaquinaria = new MTipoHerramienta();
+        $request  = json_decode(file_get_contents('php://input'));
+        $resultado =  $bdMaquinaria->EliminarTipoHerramienta($request->id);
+        echo json_encode($resultado);
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
+    }
+}
+
+function ObtenerDescripcionMoneda($codigoMoneda){
+
+    if($codigoMoneda != null && $codigoMoneda != "")
+    {
+      if($codigoMoneda == "C")
+        return "Colones";
+      else
+        return "Dólares";
+    }
+    return "";
+}

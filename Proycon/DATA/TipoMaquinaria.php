@@ -4,4 +4,7 @@ class TipoHerramienta{
     public string $Descripcion;
     public float $Precio;
     public string $TipoEquipo; 
+    public string $MonedaCobro;
+    public string $CodigoFormadeCobro;
+    public string $DescripcionFormadeCobro;
 }

@@ -1,6 +1,7 @@
 <?php
 
 class Herramientas {
+    public int $idHerramienta;
     public $codigo;
     public $tipo;
     public $marca;
