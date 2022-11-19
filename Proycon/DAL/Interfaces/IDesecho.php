@@ -12,5 +12,7 @@ interface IDesecho {
 
     public  function ActualizarDesecho(Desecho $Desecho);
 
-    
+    public  function ConsultarDesecho($id);
+
+    public function ObternerCosecutivoPedido();
 }
