@@ -42,8 +42,8 @@ class MMaquinaria implements IMaquinaria
             $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
             $stmt->bind_param(
                 "sisssiisiis",
-                $maquinaria->tipo,
                 $maquinaria->codigo,
+                $maquinaria->tipo,
                 $maquinaria->marca,
                 $maquinaria->descripcion,
                 $maquinaria->fechaIngreso,
@@ -124,8 +124,12 @@ class MMaquinaria implements IMaquinaria
         $this->conn->close();
         return $resultado;
     }
-    public function EliminarMaquinaria(string $codigo)
+    public function EliminarMaquinaria(string $codigo, string $motivo)
     {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $idUsuario = $_SESSION['ID_Usuario'];
         $resultado = new Resultado();
         $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
         $sql = "SELECT Codigo FROM tbl_historialherramientas WHERE Codigo = ?";
@@ -147,6 +151,8 @@ class MMaquinaria implements IMaquinaria
                     $stmt2->close();
                 }
                 $resultado->mensaje =  $resultado->esValido ? "Datos eliminados correctamente" : "Ocurrio un error al eliminar los datos";
+                
+                MBitacora::InsertarBitacora($motivo, $idUsuario , "Eliminar maquinaria");
             }
             $stmt->close();
         } else {
@@ -207,7 +213,7 @@ class MMaquinaria implements IMaquinaria
         return $resultado;
     }
 
-    public function BuscarMaquinariaPorCodigo(string $Codigo )
+    public function BuscarMaquinariaPorCodigo(string $Codigo)
     {
         $Codigo = LimpiarCadenaCaracter($this->conn, $Codigo);
         $sql = "select 

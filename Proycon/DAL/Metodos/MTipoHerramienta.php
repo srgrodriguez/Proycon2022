@@ -103,7 +103,9 @@ class MTipoHerramienta implements ITipoHerramienta
         CodigoMonedaCobro
         from tbl_tipoherramienta th
         LEFT JOIN tbl_FormasCobroEquipo fc
-        on th.CodigoFormaCobro = fc.CodigoFormaCobro  where TipoEquipo = ?";
+        on th.CodigoFormaCobro = fc.CodigoFormaCobro  where TipoEquipo = ?
+        ORDER BY ID_Tipo DESC
+        ";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $datoLimpio);
         $stmt->execute();
@@ -128,11 +130,10 @@ class MTipoHerramienta implements ITipoHerramienta
                 $resultado->mensaje="Este tipo de herramienta ya presenta equipo asociado, por lo tanto no puede ser eliminada.";
             }else
             {
-                $sqlDelete = "DELETE FROM tbl_tipoherramienta WHERE ID_Tipo =?";
+                $sqlDelete = "DELETE FROM tbl_tipoherramienta WHERE ID_Tipo =".$ID;
                 if ($stmt2 = $this->conn->prepare($sqlDelete)) {
-                    $stmt2->bind_param("i", $ID);
                     $stmt2->execute();                   
-                    $resultado->esValido = $stmt2->get_result();
+                    $resultado->esValido = $stmt2->affected_rows >0;
 
                     $stmt2->close();
                 }
@@ -147,6 +148,60 @@ class MTipoHerramienta implements ITipoHerramienta
         }
         $this->conn->close();
         return $resultado;
+    }
+
+    public function CargarComboBoxTipoHerramienta(string $tipoEquipo){
+
+        $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta 
+                where TipoEquipo = ?
+               order by Descripcion";
+        if ($stmt2 = $this->conn->prepare($sql)) {
+            $stmt2->bind_param("s", $tipoEquipo);
+            $stmt2->execute();                   
+            $resultado  = $stmt2->get_result();
+            $stmt2->close();
+            return $resultado;
+        }
+
+    }
+
+    public function CargarComboBoxFormaCobroHerramienta(){
+
+        $sql = "SELECT CodigoFormaCobro,DescripcionFormaDeCobro FROM `tbl_formascobroequipo`
+                ORDER BY CodigoFormaCobro";
+        if ($stmt2 = $this->conn->prepare($sql)) {     
+            $stmt2->execute();                   
+            $resultado  = $stmt2->get_result();
+            $stmt2->close();
+            return $resultado;
+        }
+
+    }
+
+    public function ConsultarTipoHerramientaPorID(int $id)
+    {
+        $id= LimpiarCadenaCaracter($this->conn, $id);
+        $sql = "select 
+                ID_Tipo,
+                Descripcion,
+                PrecioEquipo,
+                TipoEquipo,
+                CodigoMonedaCobro,
+                CodigoFormaCobro
+                from tbl_tipoherramienta 
+                where ID_Tipo = ?";
+        if( $stmt = $this->conn->prepare($sql))
+        {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;
+        }
+        else{
+            echo "Error de sintaxis SQL ";
+        }
     }
 }
 
