@@ -2,6 +2,7 @@
 include '../DAL/Conexion.php';
 require_once 'Autorizacion.php';
 require_once '../DAL/Log.php';
+require_once '../DAL/FuncionesGenerales.php';
 
 Autorizacion();
 $conn = new Conexion();

@@ -13,7 +13,7 @@ class MDesecho implements IDesecho {
 
     public function listarDesecho(){
               
-        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario";
+        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho, Cantidad FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
         } else {
@@ -28,7 +28,7 @@ class MDesecho implements IDesecho {
 
     public function listarDesechoHerramienta(){
         // El id Para Listar el desecho de herramienta es 0
-        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario AND TipoDesecho = 0;";
+        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho, Cantidad FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario AND TipoDesecho = 0;";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
         } else {
@@ -44,7 +44,7 @@ class MDesecho implements IDesecho {
 
     public function listarDesechoMateriales(){
         // El id Para Listar el desecho de Materiales es 1
-        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario AND TipoDesecho = 1;";
+        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, u.Usuario, TipoDesecho, Cantidad FROM tbl_bitacoradesecho a, tbl_usuario u WHERE a.ID_usuario = u.ID_Usuario AND TipoDesecho = 1;";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
         } else {
@@ -58,7 +58,7 @@ class MDesecho implements IDesecho {
 
     public  function AgregarDesecho(Desecho $desecho){
 
-        $sql = "INSERT INTO tbl_bitacoradesecho(ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho) VALUES (?,?,?,?,?,?)";
+        $sql = "INSERT INTO tbl_bitacoradesecho(ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho,Cantidad) VALUES (?,?,?,?,?,?,?)";
        
          if ($stmt = $this->conn->prepare($sql)) {
              
@@ -71,7 +71,7 @@ class MDesecho implements IDesecho {
 
 
 
-             $stmt->bind_param("isssii", $desecho->ID_Herramienta, $desecho->Codigo, $desecho->Motivo, $desecho->FechaDesecho, $desecho->ID_Usuario, $desecho->TipoDesecho);
+             $stmt->bind_param("isssiii", $desecho->ID_Herramienta, $desecho->Codigo, $desecho->Motivo, $desecho->FechaDesecho, $desecho->ID_Usuario, $desecho->TipoDesecho,$desecho->Cantidad);
              $OK = $stmt->execute();
              
         } else {
@@ -109,7 +109,7 @@ class MDesecho implements IDesecho {
 
     public  function ConsultarDesecho($id){
 
-        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho FROM tbl_bitacoradesecho WHERE = ?";
+        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho,Cantidad FROM tbl_bitacoradesecho WHERE = ?";
 
 
             $filtradoCadena = LimpiarCadenaCaracter($this->conn, $id);
