@@ -91,7 +91,7 @@ function BuscarHerramientaCodigo($codigo) {
         } else {
             echo $concatenar;
         }
-    } catch (Exception $ex) {
+    } catch (\Throwable $ex) {
         echo "-1" . $ex;
     }
 }

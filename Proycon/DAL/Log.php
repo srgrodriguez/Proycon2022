@@ -1,18 +1,37 @@
 <?php
  class Log {
 
-    public static function GuardarEvento($exception,$nombreTrasaccion){
+    public static function GuardarEvento(\Throwable $exception,$nombreTrasaccion){
+        $resultado = new Resultado();
         try {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
-        $getError =$exception->getMessage()." \n ". $exception->getTrace()." ".date("Y-m-d H:i:s");
-        $sql5 = "Insert into tbl_manejoerrores(NombreTrasaccion,Descripcion) values ('" .$nombreTrasaccion  . "','" . $getError . "');";
+        $getError =$exception->getMessage()." \n ". json_encode($exception->getTrace())  ." ";
+        $sql5 = "Insert into tbl_manejoerrores(NombreTrasaccion,Descripcion,Fecha) values ('" .$nombreTrasaccion  . "','" . $getError . "',Now());";
         $conn->query($sql5);
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
+            Log::GenerarArchivoLog($e->getMessage());
+        }
+        $resultado->esValido = false;
+        $resultado->mensaje = "Ocurrio un error al procesar la transacción";
+        return json_encode($resultado);
+       
+    }
+
+    public static function GuardarEventoString($mensaje,$nombreTrasaccion){
+        $resultado = new Resultado();
+        try {
+        $conexion = new Conexion();
+        $conn = $conexion->CrearConexion();
+        $sql5 = "Insert into tbl_manejoerrores(NombreTrasaccion,Descripcion,Fecha) values ('" .$nombreTrasaccion  . "','" . $mensaje . "',Now());";
+        $conn->query($sql5);
+        } catch (\Throwable $e) {
             Log::GenerarArchivoLog($e->getMessage());
         }
 
-        echo "Ocurrio un error al procesar la transacción";
+        $resultado->esValido = false;
+        $resultado->mensaje = "Ocurrio un error al procesar la transacción";
+        return json_encode($resultado);
        
     }
 

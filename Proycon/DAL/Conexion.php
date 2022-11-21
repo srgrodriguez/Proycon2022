@@ -20,7 +20,8 @@ class Conexion
             } else {
                 return $connect;
             }
-        } catch (Exception  $e) {
+        } catch (\Throwable  $e) {
+            Log::GenerarArchivoLog($e->getMessage());
             throw $e;
         }
     }

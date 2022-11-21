@@ -4,12 +4,16 @@ require_once '../DAL/Conexion.php';
 require_once '../DAL/Log.php';
 require_once '../DAL/Interfaces/IMaquinaria.php';
 require_once '..//DAL/Metodos/MMaquinaria.php';
+require_once '..//DAL/Metodos/MBitacora.php';
 require_once '../DATA/Resultado.php';
 require_once '../DATA/Herramientas.php';
 require_once '../DAL/FuncionesGenerales.php';
 require_once '../DAL/Constantes.php';
 
-//Autorizacion();
+if (!isset($_SESSION)) {
+    session_start();
+}
+Autorizacion();
 if (isset($_GET['opc'])) {
     $opc = $_GET['opc'];
     switch ($opc) {
@@ -32,7 +36,7 @@ if (isset($_GET['opc'])) {
             break;
     }
 } else {
-    throw new Exception("Parametro no valido");
+    //throw new Exception("Parametro no valido");
 }
 
 function AgregarMaquinaria()
@@ -49,7 +53,7 @@ function AgregarMaquinaria()
         $maquinaria->estado = 1;
         $maquinaria->disposicion = 1;
         $maquinaria->procedencia = $request->procedencia;
-        $maquinaria->ubicacion = $request->ubicacion;
+        $maquinaria->ubicacion = Constantes::Bodega;
         $maquinaria->precio = $request->precio;
         $maquinaria->numFactura = $request->numFactura;
         $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($maquinaria->codigo);
@@ -101,11 +105,19 @@ function ListarTotalMaquinaria()
         $resultado = $bdMaquinaria->ListarTotalMaquinaria();
         if ($resultado != null) {
             $resultadoHTML = '';
+            $eliminarMauinaria = "";
+
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
                 $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
                 if ($fila['numEstado'] == Constantes::EstadoOK) {
-
+                    if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) {
+                        $eliminarMauinaria =  "<td style='text-align: center'>
+                     <button type='button' class='btn btn-danger' onclick=\"AbrirModalEliminarMaquinaria('" . $fila['Codigo'] . "')\" >
+                     <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
+                     </button>
+                      </td>";
+                    }
                     $resultadoHTML .= "<tr>
                             <td>" . $fila['Codigo'] . "</td>
                             <td style='text-align: left'>" . $fila['Tipo'] . "</td>
@@ -120,6 +132,7 @@ function ListarTotalMaquinaria()
                                       Ver detalle
                                     </button>
                             </td>
+                            $eliminarMauinaria
                            </tr>";
                 } else {
                     $resultadoHTML .= "<tr>
@@ -152,21 +165,17 @@ function EliminarMaquinaria()
     try {
 
         $bdMaquinaria = new MMaquinaria();
-        if (isset($_GET['codigo'])) {
-            $codigo = $_GET['codigo'];
-            $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
-            if (mysqli_num_rows($existeMaquinaria)  < 1) {
-                $resultado = new Resultado();
-                $resultado->esValido = false;
-                $resultado->mensaje = "No existen registros para eliminar";
-                echo json_encode($resultado);
-            } else {
-                $bdMaquinaria = new MMaquinaria();
-                $resultado =  $bdMaquinaria->EliminarMaquinaria($codigo);
-                echo json_encode($resultado);
-            }
+        $request  = json_decode(file_get_contents('php://input'));
+        $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($request->codigo);
+        if (mysqli_num_rows($existeMaquinaria)  < 1) {
+            $resultado = new Resultado();
+            $resultado->esValido = false;
+            $resultado->mensaje = "No existen registros para eliminar";
+            echo json_encode($resultado);
         } else {
-            throw new Exception("Codigo vacio");
+            $bdMaquinaria = new MMaquinaria();
+            $resultado =  $bdMaquinaria->EliminarMaquinaria($request->codigo, $request->motivo);
+            echo json_encode($resultado);
         }
     } catch (Exception $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));

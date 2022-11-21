@@ -95,6 +95,8 @@ function Crearmenu() {
             '</li>' .
             '<li> <a href="Herramientas.php"><span class="icon-tools"></span> Herramientas </a>' .
             '</li>' .
+            '<li> <a href="Maquinaria.php"><span class="icon-tools"></span> Maquinaria </a>' .
+            '</li>' .
             '<li> <a href="Materiales.php"><span class="icon-spinner4"></span>  Materiales </a></li>' .
             '<li> <a href="Desecho.php"><span class="icon-tools"></span> Desecho </a>' .
             '</li>' .
