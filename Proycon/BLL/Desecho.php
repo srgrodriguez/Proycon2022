@@ -43,6 +43,7 @@ function CrearTablaListarDesecho()
                     . "<td>" . $fila['id'] . "</td>"
                     . "<td>" . $fila['ID_Herramienta'] . "</td>"
                     . "<td>" . $fila['Codigo'] . "</td>"
+                    . "<td>" . $fila['Cantidad'] . "</td>"
                     . "<td>" . $fila['Motivo'] . "</td>"
                     . "<td>" . $fila['FechaDesecho'] . "</td>"
                     . "<td>" . $fila['Usuario'] . "</td>"
@@ -73,6 +74,7 @@ function ListarDesechoMaterial()
                     . "<td>" . $fila['id'] . "</td>"
                     . "<td>" . $fila['ID_Herramienta'] . "</td>"
                     . "<td>" . $fila['Codigo'] . "</td>"
+                    . "<td>" . $fila['Cantidad'] . "</td>"
                     . "<td>" . $fila['Motivo'] . "</td>"
                     . "<td>" . $fila['FechaDesecho'] . "</td>"
                     . "<td>" . $fila['Usuario'] . "</td>"
@@ -105,6 +107,7 @@ function ListarDesechoHerramientas()
                     . "<td>" . $fila['id'] . "</td>"
                     . "<td>" . $fila['ID_Herramienta'] . "</td>"
                     . "<td>" . $fila['Codigo'] . "</td>"
+                    . "<td>" . $fila['Cantidad'] . "</td>"
                     . "<td>" . $fila['Motivo'] . "</td>"
                     . "<td>" . $fila['FechaDesecho'] . "</td>"
                     . "<td>" . $fila['Usuario'] . "</td>"
@@ -135,6 +138,7 @@ function updateDesecho()
         $Desechos->FechaDesecho = $_POST['fechaDesecho'];
         $Desechos->ID_Usuario = $_POST['iD_Usuario'];
         $Desechos->TipoDesecho = $_POST['tipoDesecho'];
+        $Desechos->Cantidad = $_POST['cantidad'];
 
 
         $resultado = $MDesecho->ActualizarDesecho($Desechos);
@@ -157,6 +161,7 @@ function AgregarDesecho()
         $Desechos->FechaDesecho = $_POST['fechaDesecho'];
         $Desechos->ID_Usuario = $_POST['iD_Usuario'];
         $Desechos->TipoDesecho = $_POST['tipoDesecho'];
+        $Desechos->Cantidad = $_POST['cantidad'];
 
         echo $resultadoConsulta = $MDesecho->AgregarDesecho($Desechos);
     } catch (Exception $ex) {

@@ -19,6 +19,7 @@ class Desecho {
  public $FechaDesecho;
  public $ID_Usuario;
  public $TipoDesecho;
+ public $Cantidad;
 
 
  function Desecho() {
@@ -56,6 +57,17 @@ function getTipoDesecho() {
 function setID($Id) {
     $this->Id = $Id;
 }
+
+
+function cantidadID($Id) {
+    $this->Id = $Id;
+}
+
+function setcantidad($Cantidad) {
+    $this->Cantidad = $Cantidad;
+}
+
+
 
 function setID_Herramienta($ID_Herramienta) {
     $this->ID_Herramienta = $ID_Herramienta;
