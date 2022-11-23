@@ -71,3 +71,49 @@ function AceptarSoloNumerosMonto(evt) {
     $("#btnCloseMensajeCorrecto").click()
     }, 5000);
 }
+
+function esJsonValido(str) {
+  try {
+      return (JSON.parse(str) && !!str);
+  } catch (e) {
+      return false;
+  }
+}
+
+function ValidarArchivo(event) {
+  let constancia = document.getElementById("BNCRMP_cphContenidoPagina_fluCargarCostancia");
+  const mensajeArchivoNoSeleccionado = "Nigún archivo seleccionado";
+  let lblMesaje = document.getElementById("BNCRMP_cphContenidoPagina_lblMensaje");
+  let sizeByte = event.files[0].size;
+  let fileName = event.files[0].name;
+
+  let siezeMegaByte = (sizeByte / (1024 * 1024));
+  console.log(sizeByte)
+  console.log(siezeMegaByte)
+  let extencion = fileName.split('.').pop();
+  extencion = extencion.toLowerCase();
+  let extencionValida = true;
+  switch (extencion) {
+    case 'jpg':
+    case 'pdf': break;
+    default:
+      extencionValida = false;
+  }
+  //Si el archivo pesa más de 10 megas o la extencion es invalidad 
+  if (siezeMegaByte > 10 || !extencionValida) {
+    var clone = event.cloneNode();
+    clone.value = '';
+    event.parentNode.replaceChild(clone, event);
+    lblMesaje.innerHTML = "Formato PDF o imagen JPG, pueden ser firmados digitalmente o escaneados, tamaño máximo 10mb";
+    lblMesaje.focus();
+    if (constancia.id == event.id) {
+      document.getElementById("BNCRMP_cphContenidoPagina_lblAdjuntarConstancia").innerHTML = mensajeArchivoNoSeleccionado;
+    }
+  }
+  else {
+    lblMesaje.innerHTML = "";
+    if (constancia.id == event.id) {
+      document.getElementById("BNCRMP_cphContenidoPagina_lblAdjuntarConstancia").innerHTML = fileName;
+    }
+  }      
+}

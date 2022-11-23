@@ -62,7 +62,7 @@ function ActualizarTipoHerramienta()
         $request  = json_decode(file_get_contents('php://input'));
         $tipoMaquinaria->IDTipo = $request->id;
         $tipoMaquinaria->Descripcion = $request->descripcion;
-        $tipoMaquinaria->Precio = $request->precio;
+        $tipoMaquinaria->Precio = str_replace(",","",$request->precio);
         $tipoMaquinaria->TipoEquipo = $request->tipoEquipo; //M= maquinaria; H= HERRAMIENTA
         $tipoMaquinaria->CodigoFormadeCobro=$request->codigoFormadeCobro;
         $tipoMaquinaria->MonedaCobro= $request->monedaCobro;

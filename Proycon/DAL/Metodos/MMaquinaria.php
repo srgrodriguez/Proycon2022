@@ -26,7 +26,18 @@ class MMaquinaria implements IMaquinaria
              Procedencia, 
              Ubicacion, 
              Precio, 
-             NumFactura) values(?,?,?,?,?,?,?,?,?,?,?)";
+             NumFactura,
+             ID_Archivo
+             ) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+           $idArchivo = null;
+           $errorAgregarArchivo = "";  
+        if ($maquinaria->nombreArchivo != "") {
+            $bdArchivos = new MArchivos();
+            $idArchivo =  $bdArchivos->AgregarArchivo($maquinaria->nombreArchivo,$maquinaria->archivoBinario);
+             if ($idArchivo == 0) {
+                $errorAgregarArchivo ="Falló el registro del archivo";
+             }                 
+        }
 
         if ($stmt = $this->conn->prepare($sql)) {
             $maquinaria->codigo = LimpiarCadenaCaracter($this->conn, $maquinaria->codigo);
@@ -41,7 +52,7 @@ class MMaquinaria implements IMaquinaria
             $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
             $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
             $stmt->bind_param(
-                "sisssiisiis",
+                "sisssiisiisi",
                 $maquinaria->codigo,
                 $maquinaria->tipo,
                 $maquinaria->marca,
@@ -52,12 +63,23 @@ class MMaquinaria implements IMaquinaria
                 $maquinaria->procedencia,
                 $maquinaria->ubicacion,
                 $maquinaria->precio,
-                $maquinaria->numFactura
+                $maquinaria->numFactura,
+                $idArchivo
             );
             $resultado->esValido =  $stmt->execute();
-            $resultado->mensaje =  $resultado->esValido ? "Se agregó la maquinaria correctamente" : "Ocurrio un error al agregar la maquinaria";
+            $resultado->mensaje =  $resultado->esValido ? "Se agregó la maquinaria correctamente ".$errorAgregarArchivo : 
+                                                          "Ocurrio un error al agregar la maquinaria ".$errorAgregarArchivo;
             $stmt->close();
+
+            if(!$resultado->esValido && ($idArchivo!= null || $idArchivo!= ""))
+            {
+                $bdArchivos = new MArchivos();
+                $bdArchivos->EliminarArchivo($idArchivo);
+                Log::GuardarEventoString(mysqli_stmt_error($stmt),"AgregarMaquinaria");              
+            }
         } else {
+            $bdArchivos = new MArchivos();
+            $bdArchivos->EliminarArchivo($idArchivo);
             $resultado->esValido =  false;
             $resultado->mensaje =  "Error de sintaxis en consulta SQL ";
         }
@@ -111,7 +133,11 @@ class MMaquinaria implements IMaquinaria
         IF(a.Estado = '1','Buena','En Reparacion')as Estado,
         a.Estado as numEstado,
         Precio,
-        b.TipoEquipo 
+        b.TipoEquipo,
+        b.PrecioEquipo,
+        b.CodigoMonedaCobro,
+        b.CodigoFormaCobro, 
+        a.ID_Archivo
         from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos 
         c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "'";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -151,8 +177,8 @@ class MMaquinaria implements IMaquinaria
                     $stmt2->close();
                 }
                 $resultado->mensaje =  $resultado->esValido ? "Datos eliminados correctamente" : "Ocurrio un error al eliminar los datos";
-                
-                MBitacora::InsertarBitacora($motivo, $idUsuario , "Eliminar maquinaria");
+                $motivo .= " codigo equipo eliminado " . $codigo;
+                MBitacora::InsertarBitacora($motivo, $idUsuario, "Eliminar maquinaria");
             }
             $stmt->close();
         } else {
@@ -164,7 +190,9 @@ class MMaquinaria implements IMaquinaria
     }
     public function BuscarMaquinariaEnTiempoReal(string $strDescripcion)
     {
-        session_start();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
         $strDescripcion = LimpiarCadenaCaracter($this->conn, $strDescripcion);
 
         if ($_SESSION['ID_ROL'] == Constantes::RolBodega) {
@@ -175,12 +203,21 @@ class MMaquinaria implements IMaquinaria
             a.Descripcion, 
             FechaIngreso, 
             IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, 
-            c.Nombre,IF(a.Estado = '1',
+            c.Nombre as Ubicacion,
+            IF(a.Estado = '1',
             'Buena','En Reparacion')as Estado,
             a.Estado as numEstado,
-            Precio 
+            Precio,
+            b.TipoEquipo,
+            b.PrecioEquipo,
+            b.CodigoMonedaCobro,
+            b.CodigoFormaCobro,
+            a.ID_Archivo   
             from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c 
-            where b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "'  AND a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
+            where b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' 
+             AND a.ID_Tipo = b.ID_Tipo 
+             and a.Ubicacion = c.ID_Proyecto 
+             and b.Descripcion like ? ";
         } else {
             $sql = "select 
             ID_Herramienta,
@@ -189,9 +226,14 @@ class MMaquinaria implements IMaquinaria
             a.Descripcion, 
             FechaIngreso, 
             IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, 
-            c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+            c.Nombre as Ubicacion,
+            IF(a.Estado = '1','Buena','En Reparacion')as Estado,
             a.Estado as numEstado,
-            Precio 
+            Precio,
+            b.TipoEquipo,
+            b.PrecioEquipo,
+            b.CodigoMonedaCobro,
+            b.CodigoFormaCobro   
             from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c 
             where 
             b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' AND
@@ -223,9 +265,16 @@ class MMaquinaria implements IMaquinaria
          a.Descripcion, 
          FechaIngreso, 
          IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, 
-         c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+         c.Nombre as Ubicacion,
+         IF(a.Estado = '1','Buena','En Reparacion')as Estado,
          a.Estado as numEstado,
-         Precio from tbl_herramientaelectrica a,
+         Precio,
+         b.TipoEquipo,
+         b.PrecioEquipo,
+         b.CodigoMonedaCobro,
+         b.CodigoFormaCobro,
+         a.ID_Archivo          
+         from tbl_herramientaelectrica a,
          tbl_tipoherramienta b, tbl_proyectos c 
          where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
         $stmt = $this->conn->prepare($sql);

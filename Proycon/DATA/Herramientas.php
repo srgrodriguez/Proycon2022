@@ -13,6 +13,8 @@ class Herramientas {
     public $numFactura;
     public $estado;
     public $disposicion;
+    public string $nombreArchivo;
+    public string $archivoBinario;
     
     function Herramientas() {
         
