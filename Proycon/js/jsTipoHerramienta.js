@@ -52,20 +52,24 @@ function EliminarTipoHerramienta(codigo, tipoEquipo) {
                 }
             })
             .then((data) => {
-                let resultado = JSON.parse(data);
-                listarTipoHerramientas(tipoEquipo);
+                if (esJsonValido(data)) {
+                    let resultado = JSON.parse(data);
+                    listarTipoHerramientas(tipoEquipo);
 
-                MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
+                }
+                else
+                    MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
 
             })
             .catch((result) => {
-                MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
+                MostrarMensajeResultado(data, false, "respuestaTipoHerramienta");
             });
 }
 
 function AgregarNuevoTipo(tipoEquipo) {
     let nombreTipo = $("#txtnombreTipoMaquinaria").val();
-    let precio = $("#txtPrecio").val();
+    let precio = $("#txtPrecioAlquiler").val();
     let moneda = document.getElementById("cboMoneda").value;
     let formaPago = document.getElementById("cboFormaCobro").value;
     if (StringIsNullOrEmpty(nombreTipo) || StringIsNullOrEmpty(precio) || moneda == "0" || formaPago == "0") {
@@ -99,7 +103,7 @@ function AgregarNuevoTipo(tipoEquipo) {
                 let resultado = JSON.parse(data);
                 MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
                 $("#txtnombreTipoMaquinaria").val("");
-                $("#txtPrecio").val("");
+                $("#txtPrecioAlquiler").val("");
                 document.getElementById("cboMoneda").value = '0';
                 document.getElementById("cboFormaCobro").value = '0';
                 listarTipoHerramientas(tipoEquipo);
@@ -122,7 +126,7 @@ function EditarTipo(id) {
 function ActualizarTipo() {
     btnEditar = document.getElementById('btnEditar');
     let nombreTipo = $("#txtnombreTipoMaquinaria").val();
-    let precio = $("#txtPrecio").val();
+    let precio = $("#txtPrecioAlquiler").val();
     let id = $("#IdTipoHerramienta").val();
     let tipoEquipo = $("#IdTipoEquipo").val();
     let moneda = document.getElementById("cboMoneda").value;
@@ -143,7 +147,7 @@ function ActualizarTipo() {
                     "monedaCobro": moneda,
                     "codigoFormadeCobro": formaPago,
                     "tipoEquipo": 'M',
-                    "id":id
+                    "id": id
                 })
             })
             .then((response) => {
@@ -156,16 +160,21 @@ function ActualizarTipo() {
                 }
             })
             .then((data) => {
-                let resultado = JSON.parse(data);
-                MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
-                $("#txtnombreTipoMaquinaria").val("");
-                $("#txtPrecio").val("");
-                 $("#IdTipoHerramienta").val("");
-                $("#IdTipoEquipo").val("")
-                document.getElementById("cboMoneda").value = '0';
-                document.getElementById("cboFormaCobro").value = '0';
-                listarTipoHerramientas(tipoEquipo);
-                btnEditar.disabled = true;
+                if (esJsonValido(data)) {
+                    let resultado = JSON.parse(data);
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
+                    $("#txtnombreTipoMaquinaria").val("");
+                    $("#txtPrecioAlquiler").val("");
+                    $("#IdTipoHerramienta").val("");
+                    $("#IdTipoEquipo").val("")
+                    document.getElementById("cboMoneda").value = '0';
+                    document.getElementById("cboFormaCobro").value = '0';
+                    listarTipoHerramientas(tipoEquipo);
+                    btnEditar.disabled = true;
+                }
+                else {
+                    MostrarMensajeResultado(data, false, "respuestaTipoHerramienta");
+                }
 
             })
             .catch((result) => {
@@ -198,15 +207,20 @@ function ConsultarTipoHerramientaPorID(id) {
             }
         })
         .then((data) => {
-            let resultado = JSON.parse(data);
-            $("#IdTipoHerramienta").val(id)
-            $("#txtnombreTipoMaquinaria").val(resultado.Descripcion);
-            $("#txtPrecio").val(resultado.PrecioEquipo);
-            $("#IdTipoEquipo").val(resultado.TipoEquipo);
-            document.getElementById("cboMoneda").value = resultado.CodigoMonedaCobro;
-            document.getElementById("cboFormaCobro").value = resultado.CodigoFormaCobro;
+            if (esJsonValido(data)) {
+                let resultado = JSON.parse(data);
+                $("#IdTipoHerramienta").val(id)
+                $("#txtnombreTipoMaquinaria").val(resultado.Descripcion);
+                $("#txtPrecioAlquiler").val(resultado.PrecioEquipo);
+                $("#IdTipoEquipo").val(resultado.TipoEquipo);
+                document.getElementById("cboMoneda").value = resultado.CodigoMonedaCobro;
+                document.getElementById("cboFormaCobro").value = resultado.CodigoFormaCobro;
+            }
+            else {
+                MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
+            }
         })
         .catch((result) => {
-            MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
+            MostrarMensajeResultado(data, false, "respuestaTipoHerramienta");
         });
 }

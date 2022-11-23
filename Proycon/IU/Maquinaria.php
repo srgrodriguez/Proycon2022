@@ -46,42 +46,19 @@ ValidarIniciodeSession();
 
             </div>
             <div class="panel-body">
-                <div class="formularioMenuHerramientas">
-                    <?php if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) { ?>
-                        <section class="btnsHerramientas" style="margin-top:0 ; right:-4%">
-
-                            <ul class="listaMenu">
-                                <li>
-                                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalAgregarMaquinaria">Agregar Maquinaria</button>
-                                </li>
-                                <li>
-                                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalAgregarTipoMaquinaria" onclick="listarTipoHerramientas('M')">Agregar tipo maquinaria</button>
-                                </li>
-                                <li>
-                                    <h4><a onclick="listarTotalHerramientas()" href="Javascript:void(0)">Listar Total Herramientas</a></h4>
-                                </li>
-                                <li>
-                                    <h4><a onclick="MostrarListaReparaciones()" href="Javascript:void(0)">Historial y Reparaciones</a></h4>
-                                </li>
-                                <li>
-                                    <h4><a onclick="MostrarTransladoHerramienta()" href="Javascript:void(0)">Traslado Herramientas</a></h4>
-                                </li>
-                            </ul>
-                        </section>
-                    <?php } ?>
-                </div>
+               <div class="col-lg-10">
                 <div id="buscarMaquinaria" class="form-group codigoHerramienta">
                     <div class="buscarHerramienta">
                         <div class="input-group">
-                            <input id="txtCodigo" name="txtNombreTipoH" type="text" class="form-control" onclick="LimpiarTodo()" placeholder="Ingrese el tipo de maquinaria que desea encontrar">
+                            <input id="txtBuscaraquinariaTiempoReal" name="txtBuscaraquinariaTiempoReal" onkeyup="BuscarMaquinariaEnTiempoReal()" type="text" class="form-control" placeholder="Ingrese el tipo de maquinaria que desea encontrar">
                             <span class="input-group-btn">
-                                <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarHerramientas()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
+                                <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarMaquinariaEnTiempoReal()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <div style="width:75% ;">
+                <div>
                     <div class="panel panel-info" style=" width: auto">
 
                         <div class="panel-heading">
@@ -98,9 +75,10 @@ ValidarIniciodeSession();
                                     <div class="col-lg-4">
                                         <div class="form-group ">
                                             <div class="input-group">
-                                                <input id="txtCodigoHerra" name="txtCodigoHerra" type="text" class="form-control" placeholder="Código" onclick="LimpiarListadoCombo()" onchange="FiltroInicioL()">
+                                                <input id="txtCodigoMaquinariaBuscar" name="txtCodigoMaquinariaBuscar" type="text" 
+                                                onkeypress="BuscarMaquinariaPorCodigoEnter(event)" class="form-control" placeholder="Código">
                                                 <span class="input-group-btn">
-                                                    <button id="btnBuscarCodigo" class="btn btn-default" type="button" onclick="BuscarHerramientasPorCodigo()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
+                                                    <button id="btnBuscarCodigo" class="btn btn-default" type="button" onclick="BuscarMaquinariaPorCodigoGetHtml()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
                                                 </span>
                                             </div>
 
@@ -125,7 +103,7 @@ ValidarIniciodeSession();
                                         <tr>
                                             <th>Código</th>
                                             <th>Tipo</th>
-                                            <th>Descripción</th>
+                                            <th>Precio Alquiler</th>
                                             <th>Fecha Registro</th>
                                             <th>Precio</th>
                                             <th>Disposición</th>
@@ -154,22 +132,33 @@ ValidarIniciodeSession();
                         </div>
                     </div>
                 </div>
+                </div>
+                <div class="col-lg-2">              
+                <div class="formularioMenuHerramientas">
+                    <?php if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) { ?>
+                        <section class="btnsHerramientas" style="margin-top:0 ; right:-4%">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            <ul class="listaMenu">
+                                <li>
+                                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalAgregarMaquinaria">Agregar Maquinaria</button>
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalAgregarTipoMaquinaria" onclick="listarTipoHerramientas('M')">Agregar tipo maquinaria</button>
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-info btn-lg"onclick="ListarTotalMaquinaria()">Listar total maquinaria</button>
+                                </li>
+                                <li>
+                                    <h4><a onclick="MostrarListaReparaciones()" href="Javascript:void(0)">Historial y Reparaciones</a></h4>
+                                </li>
+                                <li>
+                                    <h4><a onclick="MostrarTransladoHerramienta()" href="Javascript:void(0)">Traslado Herramientas</a></h4>
+                                </li>
+                            </ul>
+                        </section>
+                    <?php } ?>
+                </div>
+                </div>
                 <!---Inicio Modals-->
 
                 <div id="ModalAgregarMaquinaria" class="modal fade" role="dialog">
@@ -247,6 +236,12 @@ ValidarIniciodeSession();
                                             <input type="text" name="txtNumFactura" id="txtNumFactura" class=" form-control " placeholder="Numero de Factura" />
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2">Ficha Tecnica</label>
+                                        <div class="col-md-6">
+                                            <input type="file" name="txtFileFichaTecnica" id="txtFileFichaTecnica" accept=".pdf" class=" form-control " placeholder="Numero de Factura" />
+                                        </div>
+                                    </div>
                                 </form>
                                 <div id="respuestaAgregarMaquinaria">
                                 </div>
@@ -259,6 +254,7 @@ ValidarIniciodeSession();
                     </div>
                 </div>
 
+                <iframe id="idVerPDF"></iframe>
                 <!-- AGREGAR TIPO HERRAMIENTA MODAL -->
 
                 <div id="ModalAgregarTipoMaquinaria" class="modal fade" role="dialog">
@@ -282,7 +278,7 @@ ValidarIniciodeSession();
                                     <div class="form-group">
                                         <label class="col-lg-3">Precio equipo</label>
                                         <div class="col-lg-6">
-                                            <input type="text" onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" name="txtPrecio" id="txtPrecio" class="form-control " placeholder="Precio de alquiler de equipo" />
+                                            <input type="text" onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" name="txtPrecioAlquiler" id="txtPrecioAlquiler" class="form-control " placeholder="Precio de alquiler de equipo" />
                                         </div>
                                     </div>
 
