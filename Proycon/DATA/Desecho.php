@@ -20,6 +20,7 @@ class Desecho {
  public $ID_Usuario;
  public $TipoDesecho;
  public $Cantidad;
+ public $Descripcion;
 
 
  function Desecho() {
@@ -52,6 +53,14 @@ function getID_Usuario() {
 
 function getTipoDesecho() {
     return $this->TipoDesecho;
+}
+
+function getDescripcion() {
+    return $this->Descripcion;
+}
+
+function setDescripcion($Descripcion) {
+    $this->Descripcion;
 }
 
 function setID($Id) {

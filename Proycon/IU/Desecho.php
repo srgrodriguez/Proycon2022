@@ -56,6 +56,9 @@ ValidarIniciodeSession();
             </div>
             <div class="panel-body">
 
+            
+            </select>
+
                 <div class="panel panel-info pnlGeneral" style=" width: auto" id="panelContienetblDesecho">
 
                     <div id="headertextopnlMateriales" class="panel-heading">
@@ -101,7 +104,7 @@ ValidarIniciodeSession();
                         <table class="table-bordered table-responsive tablasG" id="tbl_total_herramientas">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th class="hidden">Id</th>
                                     <th>Material/Herramienta</th>
                                     <th>Codigo</th>
                                     <th>Cantidad</th>
@@ -119,6 +122,8 @@ ValidarIniciodeSession();
 
                             </tbody>
                         </table>
+
+
 
                     </div>
                 </div>
@@ -274,12 +279,18 @@ ValidarIniciodeSession();
 
                                             </tbody>
                                         </table>
+
+                                        <div class="form-group col-10" style="padding: 1%;">
+                                            <label for="exampleFormControlTextarea1">Motivo del desecho</label>
+                                            <textarea class="form-control" id="motivoDesechoG" name="motivoDesechoG" rows="2"></textarea>
+                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-estilos" onclick="">
                                             <img src="../resources/imagenes/print.png" alt="" width="30px"/>
                                         </button>
-                                        <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaPedido()">Guardar</button>
+                                        <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaHerramientas()">Guardar</button>
 
                                     </div>
                                 </div>
@@ -336,6 +347,17 @@ ValidarIniciodeSession();
 </html>
 
 
+  <!--MOdal pedido Sucessfull -->
+            <div id="Mensajesucessfull" class="modal fade " role="dialog">   
+                <div class="modal-dialog">
+                    <div class="modal-content alert alert-success">
+
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <strong id="MensajeSucessfull"></strong>
+
+                    </div>
+                </div>
+            </div>
 
 
 <div  id="ModalBuscarMaterial" class="modal fade" role="dialog">   
@@ -393,23 +415,13 @@ ValidarIniciodeSession();
                             <div class="input-group">
                                 <input id="txtBuscarHerramienta" name="txtBuscarHerramienta" type="text" class="form-control" placeholder="Buscar Por Tipo De Herrmienta">
                                 <span class="input-group-btn">
-                                    <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarHerramientaNombre()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                                    <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarHerramientas()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
                                 </span>
 
                             </div>
-                            <table class="tablasH" style="margin-top: 10px;">
-                                <thead>
-                                <th>Codigo</th>
-                                <th>Nombre</th>                               
-                                <th></th>
-                                </thead>
-                                <tbody id="tbl_body_buscarHerramienta">
+                            <div id='ResultadoBusqudaHerramienta'>
 
-
-                                </tbody>
-
-
-                            </table>                     
+                            </div>                         
                             <div class="modal-footer">
 
                                 <button type="submit" class="btn btn-default" data-dismiss="modal">Cerrar</button>
