@@ -167,7 +167,7 @@ function ObternerHyMProyecto($idProyecto) {
 
 
 
-    $form = "<form action='../BLL/ReportesExcel.php' method='POST'>";
+    $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
     $inputOcultos = "<input type='hidden' name='txtID_ProyectoMateriales' value='$idProyecto' /> <input type='hidden' name='txtReporteMaterilesP' value='1' />";
     $concatenar = '<section id="materiales" class="materiales">';
     $combobox = '<div class="form-group">
@@ -183,7 +183,7 @@ function ObternerHyMProyecto($idProyecto) {
         </div>';
     $btnImprimir = "<button class='btnImprimir btn btn-default' title='Exportar Excel' type='submit' id='btnImprimirHerramienas' value='tbl_herramientasProyecto' onclick='MostarMoldalLoanding()'><img src='../resources/imagenes/Excel.png' width='20px' alt=''/></button>";
     ;
-//$btnImprimir = "<a title ='Exportar Excel' class='btnImprimir' href='../BLL/ReportesExcel.php?reporteMaterieles=1&ID_Proyecto=$idProyecto'><img src='../resources/imagenes/Excel.png' width='25px' alt=''/></a>";
+//$btnImprimir = "<a title ='Exportar Excel' class='btnImprimir' href='../BLL/Reportes/ReportesExcel.php?reporteMaterieles=1&ID_Proyecto=$idProyecto'><img src='../resources/imagenes/Excel.png' width='25px' alt=''/></a>";
     ;
     $concatenar .= '<div class="contenidoProyecto">';
     $concatenar .= '<button class=" btn btn-default btnExpandir" type="submit" value="" onclick="ExpandirMateriales(1)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . '<div class="titulomaterialesherramienta"><h4>Materiales</h4> </div>' . $form . $inputOcultos . $btnImprimir . $combobox . "</form>";
@@ -243,7 +243,7 @@ function ObternerHyMProyecto($idProyecto) {
 			  </span>							
                        </div>';
 
-    $form = "<form action='../BLL/ReportesExcel.php' method='POST'>";
+    $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
 
     $concatenar .= $form . '<section id="herramientas" class="materiales">';
     $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"

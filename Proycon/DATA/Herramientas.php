@@ -15,6 +15,8 @@ class Herramientas {
     public $disposicion;
     public string $nombreArchivo;
     public string $archivoBinario;
+    public string $monedaCompra;
+    public int $idArchivo;
     
     function Herramientas() {
         

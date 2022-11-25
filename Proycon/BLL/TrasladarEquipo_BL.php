@@ -9,19 +9,24 @@ require_once '../DATA/TrasladarEquipo.php';
 require_once '../DAL/FuncionesGenerales.php';
 require_once '../DAL/Constantes.php';
 
-//Autorizacion();
+if (!isset($_SESSION)) 
+    session_start();
+
+Autorizacion();
 if (isset($_GET['opc'])) {
     $opc = $_GET['opc'];
     switch ($opc) {
         case "trasladar":
             TrasdalarEquipo();
             break;
+        case "consultarEquipo":
+            ConsultarEquipoTrasladar();
+                break;
         default:
             break;
     }
-} else {
-    throw new Exception("Parametro no valido");
-}
+} 
+
 function TrasdalarEquipo()
 {
     $equipoTrasladar = [];
@@ -29,13 +34,13 @@ function TrasdalarEquipo()
     try {
         $bdTransladarEquipo = new MTrasladarEquipo();
         $request  = json_decode(file_get_contents('php://input'));
+        $consecutivoBoleta = ObternerCosecutivoBoleta();
         foreach ($request as &$equipo) {
             $trasladar = new TrasladarEquipo();
-            $trasladar->NumBoleta= $equipo->numBoleta;
-            $trasladar->CodigoEquipo= $equipo->codigoEquipo;
-            $trasladar->IdProyectoDestino = $equipo->idProyectoDestino;
-            $trasladar->TipoEquipo = $equipo->tipoEquipo;
-            $trasladar->IdUsuario = $equipo->idUsuario;
+            $trasladar->NumBoleta=  $consecutivoBoleta;
+            $trasladar->CodigoEquipo= $equipo->codigo;
+            $trasladar->IdProyectoDestino = $equipo->idUbicacionDestino;
+            $trasladar->IdUsuario = $_SESSION['ID_Usuario'];
             array_push($equipoTrasladar,$trasladar);
         }
 
@@ -46,4 +51,42 @@ function TrasdalarEquipo()
     }
 
    echo json_encode($restultado);
+}
+
+function ConsultarEquipoTrasladar()
+{
+    try {
+       $bdTransladarEquipo = new MTrasladarEquipo();
+       $request  = json_decode(file_get_contents('php://input'));
+      $resultado =  $bdTransladarEquipo->ConsultarMaquinariaTrasladar($request->codigo,$request->idTipo,$request->ubicacion);
+      if ( $resultado != null && mysqli_num_rows($resultado) > 0){
+        $resultadoHTML = '';
+        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+            $resultadoHTML.="<tr>
+            <td>".$fila["Codigo"]."</td>
+            <td>".$fila["Tipo"]."</td>
+            <td>".$fila["Ubicacion"]."</td>
+            <td><input type='checkbox' onClick='SeleccionarEquipoTrasladar(this)'></td>
+            </tr>";
+        }
+        echo $resultadoHTML;
+      }
+      else
+      {
+        echo "No se encontraron resultados";
+      }
+    }  catch (\Throwable $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "TrasdalarEquipo"));
+    }
+}
+
+function ObternerCosecutivoBoleta() {
+    $bdHerramientas = new MTrasladarEquipo();
+    $result = $bdHerramientas->ObternerCosecutivoBoleta();
+    if (mysqli_num_rows($result) > 0) {
+        $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        return $fila['Consecutivo'] + 1;
+    } else {
+        return 1;
+    }
 }

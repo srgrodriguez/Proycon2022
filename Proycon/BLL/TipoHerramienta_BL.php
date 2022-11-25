@@ -139,12 +139,18 @@ function ConsultarTipoHerramientaPorID(){
     }
 }
 
- function CargarComboBoxTipoHerramienta($tipoEquipo)
+ function CargarComboBoxTipoHerramienta($tipoEquipo,$id,$onchage="")
  {
 
     $bdMaquinaria = new MTipoHerramienta();
+    $eventoOnchange= "";
+    if($onchage!= "")
+    {
+        $eventoOnchange ="onchange='$onchage'";
+    }
+    
    $resultado =  $bdMaquinaria->CargarComboBoxTipoHerramienta($tipoEquipo);
-   $resultadoHTML = "<select id='comboHerramientaTipo' name='comboHerramientaTipo' class='form-control ' > 
+   $resultadoHTML = "<select id='$id' name='$id' class='form-control ' $eventoOnchange > 
                        <option value='0' selected='true'>Seleccione el tipo de herramienta</option>";
    if ($resultado != null && mysqli_num_rows($resultado) > 0) {
     while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {

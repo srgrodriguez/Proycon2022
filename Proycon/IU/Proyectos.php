@@ -866,7 +866,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 
                              
                             <div class="modal-footer">
-                                <form action="../BLL/ReportesExcel.php" method="POST" style="display: inline-block">
+                                <form action="../BLL/Reportes/ReportesExcel.php" method="POST" style="display: inline-block">
                                     <input type="hidden" id ='txtIDProyectotblDevolucion' name="txtIDProyectotblDevolucion" />
                                     <input type="hidden" id ='txtIDMaterial' name="txtIDMaterial" />
                                     <input type="hidden" id ='txtNombreMaterialD' name="txtNombreMaterialD" />

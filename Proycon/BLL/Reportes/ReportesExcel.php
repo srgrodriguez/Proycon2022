@@ -4,17 +4,17 @@
   Este Archivo se encargara de realizar todos los reportes a excel
  */
 
-require_once 'Classes/PHPExcel.php';
-require_once '../DAL/Interfaces/IProyectos.php';
-require_once '../DAL/Metodos/MProyectos.php';
-require_once '../DAL/Interfaces/IMateriales.php';
-require_once '../DAL/Interfaces/IHerrramientas.php';
-require_once '../DAL/Metodos/MHerramientas.php';
-require_once '../DAL/Metodos/MMaterial.php';
-require_once '../DAL/Conexion.php';
-require_once '../DAL/FuncionesGenerales.php';
-require_once 'Autorizacion.php';
-require_once '../DAL/Log.php';
+require_once '../Classes/PHPExcel.php';
+require_once '../../DAL/Interfaces/IProyectos.php';
+require_once '../../DAL/Metodos/MProyectos.php';
+require_once '../../DAL/Interfaces/IMateriales.php';
+require_once '../../DAL/Interfaces/IHerrramientas.php';
+require_once '../../DAL/Metodos/MHerramientas.php';
+require_once '../../DAL/Metodos/MMaterial.php';
+require_once '../../DAL/Conexion.php';
+require_once '../../DAL/FuncionesGenerales.php';
+require_once '../Autorizacion.php';
+require_once '../../DAL/Log.php';
 
 Autorizacion();
 //prueba();
@@ -137,7 +137,7 @@ function ExportarExcelMaterialesProyecto($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -229,7 +229,7 @@ function ExportarPendientesProyecto($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -345,7 +345,7 @@ function ExportarExcelHerramientasProyecto($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -447,7 +447,7 @@ function ExportarVerTotalesMateriales($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -526,7 +526,7 @@ function ExportarVerTotalesHerramienta($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -647,7 +647,7 @@ function ExportarTablaDevolucionMaterial($ID_Material, $ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -731,7 +731,7 @@ function ExportarExcelTotalMateriales() {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -815,7 +815,7 @@ function ExportarContenidoTblMateriales($consulta) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -904,7 +904,7 @@ function ExportarExcelFinalizarProyecto($ID_Proyecto) {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -1021,7 +1021,7 @@ function CrearDevoluciones($objPHPExcel, $indice, $Codigo, $ID_Proyecto, $Nombre
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -1102,7 +1102,7 @@ function CrearReporterHerrmientasFinProyecto($objPHPExcel, $indice, $ID_Proyecto
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -1182,6 +1182,7 @@ function ExportarExcelTotalHerramientas() {
                     ->setCellValue("H$i", $fila['Estado']);
             $i++;
         }
+        
     } else if ($x == 2) {
         $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('C2', 'Proycon S.A')
@@ -1252,7 +1253,7 @@ function ExportarExcelTotalHerramientas() {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect
@@ -1412,7 +1413,7 @@ function ExportarHistoriaHerramienta() {
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName('imgNotice');
     $objDrawing->setDescription('Noticia');
-    $img = '../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
     $objDrawing->setPath($img);
     $objDrawing->setOffsetX(28);    // setOffsetX works properly
     $objDrawing->setOffsetY(200);  //setOffsetY has no effect

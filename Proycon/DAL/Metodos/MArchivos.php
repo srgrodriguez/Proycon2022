@@ -60,5 +60,29 @@ class MArchivos
         }
             
     }
+
+    public function EditarArchivo($id,$archivo,$nombre):bool
+    {
+        $resultado  = false;
+        try {
+            $sqlArchivo = "UPDATE tbl_archivos SET Archivo=?,`NombreArchivo`=? WHERE ID_Archivo = ?";
+            $stmt = mysqli_prepare($this->conn, $sqlArchivo);
+
+            $stmt->bind_param('ssi', $archivo, $nombre,$id);
+            if (mysqli_stmt_execute($stmt)) {
+                $resultado = true;
+            } else {            
+                $error = mysqli_stmt_error($stmt);
+                Log::GuardarEventoString($error, "Guardar archivo");
+            }
+            mysqli_stmt_close($stmt);
+            mysqli_close($this->conn);
+        } catch (\Throwable $th) {
+            mysqli_close($this->conn);
+            Log::GuardarEvento($th, "Guardar archivo");
+        }
+
+        return $resultado;
+    }
 }
 

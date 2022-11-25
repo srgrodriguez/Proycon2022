@@ -983,7 +983,7 @@ function Exportar_Excel(ID_Tabla) {
     alert("Entoro")
     $.ajax({
         type: "POST",
-        url: "../BLL/ReportesExcel.php?opc=exportarmateriales&idProyecto="+$("#idProecto").html(),
+        url: "../BLL/Reportes/ReportesExcel.php?opc=exportarmateriales&idProyecto="+$("#idProecto").html(),
         success: function (respuesta) {
            //alert(respuesta)
            // $(".materiales").html(respuesta);

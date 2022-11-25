@@ -1288,4 +1288,24 @@ display: none;
     font-weight: bold;
 }
 
+.k-grid-toolbar
+{
+    padding: 8px;
+    text-overflow: clip;
+    cursor: default;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.lista-accion {
+    list-style: none;
+    padding-left: 13px;
+}
+
+.btn-accion {
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
 
