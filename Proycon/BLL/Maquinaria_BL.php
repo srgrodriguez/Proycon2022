@@ -36,6 +36,9 @@ if (isset($_GET['opc'])) {
         case "bucarPorCodigoGetHtml":
             BuscarPorCodigoOuputHrml();
             break;
+        case "bucarPorCodigoGetJson":
+            BuscarPorCodigoOuputJson();
+             break;
         case "fichaTecnica":
             ConultarFichaTecinica();
             break;
@@ -51,9 +54,14 @@ function AgregarMaquinaria()
     $maquinaria = new Herramientas();
     try {
         $bdMaquinaria = new MMaquinaria();
-        $archivo_nombre = $_FILES['archivo']['name'];
-        $archivo_temp =  $_FILES['archivo']['tmp_name'];
-        $archivo_binario = (file_get_contents($archivo_temp));
+        $archivo_nombre = "";
+        $archivo_temp  = "";
+        $archivo_binario = "";
+        if (isset($_FILES['archivo'])) {
+            $archivo_nombre = $_FILES['archivo']['name'];
+            $archivo_temp =  $_FILES['archivo']['tmp_name'];
+            $archivo_binario = $archivo_nombre != null && $archivo_nombre != "" ? base64_encode(file_get_contents($archivo_temp)) : "";
+        }
         $maquinaria->codigo = $_POST["codigo"];
         $maquinaria->tipo = $_POST["tipo"];
         $maquinaria->marca = $_POST["marca"];
@@ -63,10 +71,11 @@ function AgregarMaquinaria()
         $maquinaria->disposicion = 1;
         $maquinaria->procedencia = $_POST["procedencia"];
         $maquinaria->ubicacion = Constantes::Bodega;
-        $maquinaria->precio = $_POST["precio"];
+        $maquinaria->precio =str_replace(",","",$_POST["precio"]);
         $maquinaria->numFactura = $_POST["numFactura"];
-        $maquinaria->nombreArchivo = $archivo_nombre == null ? "" : $archivo_nombre;
-        $maquinaria->archivoBinario = $archivo_nombre == null ? "" :   $archivo_binario;
+        $maquinaria->nombreArchivo =  $archivo_nombre;
+        $maquinaria->archivoBinario =  $archivo_binario;
+        $maquinaria->monedaCompra = $_POST["monedaCompra"];
         $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($maquinaria->codigo);
         if (mysqli_num_rows($existeMaquinaria) > 0) {
             $resultado = new Resultado();
@@ -88,21 +97,46 @@ function ActualizarMaquinaria()
     $maquinaria = new Herramientas();
     try {
         $bdMaquinaria = new MMaquinaria();
-        $request  = json_decode(file_get_contents('php://input'));
-        $maquinaria->idHerramienta =  $request->idHerramienta;
-        $maquinaria->codigo =  $request->codigo;
-        $maquinaria->tipo =  $request->tipo;
-        $maquinaria->marca = $request->marca;
-        $maquinaria->descripcion = $request->descripcion;
-        $maquinaria->fechaIngreso = $request->fechaIngreso;
-        $maquinaria->estado = $request->estado;
-        $maquinaria->disposicion = $request->disposicion;
-        $maquinaria->procedencia = $request->procedencia;
-        $maquinaria->ubicacion = $request->ubicacion;
-        $maquinaria->precio = $request->precio;
-        $maquinaria->numFactura = $request->numFactura;
-        $resultado =  $bdMaquinaria->ActualizarMaquinaria($maquinaria);
-        echo json_encode($resultado);
+        $archivo_nombre = "";
+        $archivo_temp  = "";
+        $archivo_binario = "";
+        if (isset($_FILES['archivo'])) {
+            $archivo_nombre = $_FILES['archivo']['name'];
+            $archivo_temp =  $_FILES['archivo']['tmp_name'];
+            $archivo_binario = $archivo_nombre != null && $archivo_nombre != "" ? base64_encode(file_get_contents($archivo_temp)) : "";
+        }
+        $maquinaria->codigo = $_POST["codigoNuevo"];
+        $maquinaria->tipo = $_POST["tipo"];
+        $maquinaria->marca = $_POST["marca"];
+        $maquinaria->descripcion = $_POST["descripcion"];
+        $maquinaria->fechaIngreso = $_POST["fechaIngreso"];
+        $maquinaria->procedencia = $_POST["procedencia"];
+        $maquinaria->ubicacion = Constantes::Bodega;
+        $maquinaria->precio = str_replace(",","",$_POST["precio"]);;
+        $maquinaria->numFactura = $_POST["numFactura"];
+        $maquinaria->nombreArchivo =  $archivo_nombre;
+        $maquinaria->archivoBinario =  $archivo_binario;
+        $maquinaria->monedaCompra = $_POST["monedaCompra"];
+        $maquinaria->idHerramienta = $_POST["idHerramienta"];
+        $maquinaria->idArchivo =   ($_POST["idArchivo"] != null && $_POST["idArchivo"] != "")? $_POST["idArchivo"] : 0;
+        
+        if ($_POST["codigoNuevo"] != $_POST["codigoActual"]) {
+            $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($maquinaria->codigo);
+            if (mysqli_num_rows($existeMaquinaria) > 0) {
+                $resultado = new Resultado();
+                $resultado->esValido = false;
+                $resultado->mensaje = "La maquinaria que intenta agregar ya existe";
+                echo json_encode($resultado);
+            } else {
+                $bdMaquinaria = new MMaquinaria(); //Se vuelve a generar la instancia para abrir la conexion con la BD
+                $resultado =  $bdMaquinaria->ActualizarMaquinaria($maquinaria);
+                echo json_encode($resultado);
+            }
+        } else {
+            $bdMaquinaria = new MMaquinaria(); //Se vuelve a generar la instancia para abrir la conexion con la BD
+            $resultado =  $bdMaquinaria->ActualizarMaquinaria($maquinaria);
+            echo json_encode($resultado);
+        }
     } catch (Exception $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
     }
@@ -114,7 +148,7 @@ function ListarTotalMaquinaria()
     try {
         $bdMaquinaria = new MMaquinaria();
         $resultado = $bdMaquinaria->ListarTotalMaquinaria();
-        if ($resultado != null) {      
+        if ($resultado != null) {
             echo  GenerarHtmlListaMaquinaria($resultado);
         } else
             echo 'No hay datos para mostara';
@@ -183,33 +217,39 @@ function BuscarPorCodigoOuputHrml()
 }
 function BuscarPorCodigoOuputJson()
 {
-
+    $bdMaquinaria = new MMaquinaria();
+    $codigo = $_GET['codigo'];
+    $resultado = $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
+    $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+    echo json_encode($equipo);
+   
 }
 
 function ConultarFichaTecinica()
 {
- $bdArchivo = new MArchivos();
-   $resultado = $bdArchivo ->ConsultarArchivo($_GET['Id']);
-    while($row = mysqli_fetch_array($resultado)){
-        $archivo= $row[0]; //obtener el archivo
-        $nombre=$row[1]; //obtener el nombre del archivo
-      }
-      
+    $bdArchivo = new MArchivos();
+    $resultado = $bdArchivo->ConsultarArchivo($_GET['Id']);
+    while ($row = mysqli_fetch_array($resultado)) {
+        $archivo = $row[0]; //obtener el archivo
+        $nombre = $row[1]; //obtener el nombre del archivo
+    }
 
-      
-      //header para tranformar la salida en el tipo de archivo que hemos guardado
-      header("Content-type: application/pdf"); 
-      header('Content-Disposition: attachment; filename="'.$nombre.'"');
-      
-      //imprimir el archivo
-      echo strval($archivo);
+
+
+    //header para tranformar la salida en el tipo de archivo que hemos guardado
+    header("Content-type: application/pdf");
+    header('Content-Disposition: attachment; filename="' . $nombre . '"');
+
+    //imprimir el archivo
+    echo $archivo;
 }
 
 function GenerarHtmlListaMaquinaria($resultado)
 {
     $resultadoHTML = '';
     while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
+        $monedaCompra =$fila["MonedaCompra"] == "D" ? "$" : "¢";
+        $Monto =  number_format($fila['Precio'], 2, ",", ".");
         $monedaCorbo = $fila['CodigoMonedaCobro'] == "C" ? "¢" : "$";
         $PrecioAlquiler =  number_format($fila['PrecioEquipo'], 2, ",", ".");
         $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
@@ -217,9 +257,12 @@ function GenerarHtmlListaMaquinaria($resultado)
         $btnVerFichaTecnica = " <button class='btn btn-default' disabled onclick='VerFichaTecnica(\"" . $fila['Codigo'] . "\"," . $fila['ID_Archivo'] . ")'>
                                  Ficha técnica
                                  </button>";
+        $btnEditar = " <button class='btn btn-default'  onclick='OpenModalEditarMaquinaria(\"" . $fila['Codigo'] . "\"," . $fila['ID_Archivo'] . ")'>
+                         <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                                 </button>";
 
         if ($fila['ID_Archivo'] != null || $fila['ID_Archivo'] != "")
-               $btnVerFichaTecnica =  str_replace("disabled", "", $btnVerFichaTecnica);
+            $btnVerFichaTecnica =  str_replace("disabled", "", $btnVerFichaTecnica);
 
         if ($fila['numEstado'] == Constantes::EstadoOK) {
             if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) {
@@ -234,14 +277,16 @@ function GenerarHtmlListaMaquinaria($resultado)
                     <td style='text-align: left'>" . $fila['Tipo'] . "</td>
                     <td style='text-align: right'>" .  $monedaCorbo . $PrecioAlquiler . "</td>    
                     <td>" . $Fecha . "</td>
-                    <td style='text-align: right'>" . $Monto . "</td>
+                    <td style='text-align: right'>" .$monedaCompra. $Monto . "</td>
                     <td>" . $fila['Disposicion'] . "</td>
                     <td>" . $fila['Ubicacion'] . "</td>
                     <td>" . $fila['Estado'] . "</td>
                     <td style='text-align: center'>
-                          ". $btnVerFichaTecnica."
+                          " . $btnVerFichaTecnica . "
                     </td>
-                             $eliminarMaquinaria
+                    <td>$btnEditar</td>
+                    $eliminarMaquinaria
+                     
                    </tr>";
         } else {
             $resultadoHTML .= "<tr>
@@ -249,15 +294,24 @@ function GenerarHtmlListaMaquinaria($resultado)
                     <td class='usuarioBolqueado' style='text-align: left'>" . $fila['Tipo'] . "</td>
                     <td class='usuarioBolqueado' style='text-align: right'>" .  $monedaCorbo . $PrecioAlquiler . "</td>
                     <td class='usuarioBolqueado'>" . $Fecha . "</td>
-                    <td class='usuarioBolqueado' style='text-align: right'>" . $Monto . "</td>
+                    <td class='usuarioBolqueado' style='text-align: right'>" .$monedaCompra. $Monto . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Disposicion'] . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Ubicacion'] . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Estado'] . "</td>
                     <td class='usuarioBolqueado' style='text-align: center'>
-                      ". $btnVerFichaTecnica."
+                      " . $btnVerFichaTecnica . "
                      </td>
                    </tr>";
         }
     }
     return $resultadoHTML;
+}
+
+function ObtenerComboBoxMonedas($id)
+{
+    echo " <select id='$id' name='$id' class='form-control '>
+            <option value='0' selected='true'>Seleccione la moneda</option>
+            <option value='C'>Colones</option>
+            <option value='D'>Dólares</option>
+          </select>";
 }

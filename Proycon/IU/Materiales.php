@@ -44,7 +44,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 	}
 	?>
     <div class="panel-body" id="pblContieneMateriales">
-        <form action="../BLL/ReportesExcel.php" method="POST">  
+        <form action="../BLL/Reportes/ReportesExcel.php" method="POST">  
         <div class="form-group codigoHerramienta">
                <div class="buscarHerramienta">
                    <div class="input-group">

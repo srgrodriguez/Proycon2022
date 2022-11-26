@@ -56,7 +56,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                 </button>
             </div>
             <div class="panel-body" id="bodypanelHerramientas">
-                <form action="../BLL/ReportesExcel.php" method="POST">
+                <form action="../BLL/Reportes/ReportesExcel.php" method="POST">
 
                     <div id="buscarHerrmientas" class="form-group codigoHerramienta">
                         <div class="buscarHerramienta">
@@ -364,7 +364,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                 <div id="reparaciones" style="display: none">
                     <div id="btnreparaciones">
                         <h2 id="tituloNoresponsive">Sección de Reparaciones</h2>
-                        <h4 id="tituloResponsive" style="displa:none">Reparaciones</h4>
+                        <h4 id="tituloResponsive">Reparaciones</h4>
                         <div class="input-group">
                             <input id="txtCodigoVista" name="txtCodigoVista" type="text" class="form-control" onclick="LimpiarRegistroReparaciones()"placeholder="Ingrese el código para ver el Historial">
                             <span class="input-group-btn">
@@ -450,7 +450,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 
 
                 <!--MUESTRA EL HISTORIAL DE FACTURAS Y TRASLADOS DE LAS HERARAMIENTAS    MostrarHistorialHerramienta-->
-                <form action="../BLL/ReportesExcel.php" method="POST">
+                <form action="../BLL/Reportes/ReportesExcel.php" method="POST">
                     <input id="codigo" type="hidden" name="codigo" value="" />
                     <div class="MostrarHistorialHerramienta" style="display: none" id=""> 
                         <div class="panel panel-info" style=" width: auto">

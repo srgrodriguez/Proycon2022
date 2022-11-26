@@ -70,7 +70,7 @@ function EliminarTipoHerramienta(codigo, tipoEquipo) {
 function AgregarNuevoTipo(tipoEquipo) {
     let nombreTipo = $("#txtnombreTipoMaquinaria").val();
     let precio = $("#txtPrecioAlquiler").val();
-    let moneda = document.getElementById("cboMoneda").value;
+    let moneda = document.getElementById("cboMonedaTipo").value;
     let formaPago = document.getElementById("cboFormaCobro").value;
     if (StringIsNullOrEmpty(nombreTipo) || StringIsNullOrEmpty(precio) || moneda == "0" || formaPago == "0") {
         MostrarMensajeResultado("Todos los campos son requeridos", false, "respuestaTipoHerramienta")
@@ -224,3 +224,4 @@ function ConsultarTipoHerramientaPorID(id) {
             MostrarMensajeResultado(data, false, "respuestaTipoHerramienta");
         });
 }
+

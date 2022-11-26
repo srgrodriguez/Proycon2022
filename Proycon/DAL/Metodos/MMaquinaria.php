@@ -26,9 +26,10 @@ class MMaquinaria implements IMaquinaria
              Procedencia, 
              Ubicacion, 
              Precio, 
+             MonedaCompra,
              NumFactura,
              ID_Archivo
-             ) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+             ) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
            $idArchivo = null;
            $errorAgregarArchivo = "";  
         if ($maquinaria->nombreArchivo != "") {
@@ -52,7 +53,7 @@ class MMaquinaria implements IMaquinaria
             $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
             $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
             $stmt->bind_param(
-                "sisssiisiisi",
+                "sisssiisiissi",
                 $maquinaria->codigo,
                 $maquinaria->tipo,
                 $maquinaria->marca,
@@ -63,6 +64,7 @@ class MMaquinaria implements IMaquinaria
                 $maquinaria->procedencia,
                 $maquinaria->ubicacion,
                 $maquinaria->precio,
+                $maquinaria->monedaCompra,
                 $maquinaria->numFactura,
                 $idArchivo
             );
@@ -96,10 +98,7 @@ class MMaquinaria implements IMaquinaria
         $maquinaria->marca = LimpiarCadenaCaracter($this->conn, $maquinaria->marca);
         $maquinaria->descripcion = LimpiarCadenaCaracter($this->conn, $maquinaria->descripcion);
         $maquinaria->fechaIngreso = LimpiarCadenaCaracter($this->conn, $maquinaria->fechaIngreso);
-        $maquinaria->estado = LimpiarCadenaCaracter($this->conn, $maquinaria->estado);
-        $maquinaria->disposicion = LimpiarCadenaCaracter($this->conn, $maquinaria->disposicion);
         $maquinaria->procedencia = LimpiarCadenaCaracter($this->conn, $maquinaria->procedencia);
-        $maquinaria->ubicacion = LimpiarCadenaCaracter($this->conn, $maquinaria->ubicacion);
         $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
         $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
 
@@ -109,16 +108,23 @@ class MMaquinaria implements IMaquinaria
         Marca='" . $maquinaria->marca . "',
         Descripcion='" . $maquinaria->descripcion . "',
         FechaIngreso='" . $maquinaria->fechaIngreso . "',
-        Estado=" . $maquinaria->estado . ",
-        Disposicion=" . $maquinaria->disposicion . ",
         Procedencia='" . $maquinaria->procedencia . "',
-        Ubicacion=" . $maquinaria->ubicacion . ",
         Precio=" . $maquinaria->precio . ",
+        MonedaCompra='".$maquinaria->monedaCompra."',
         NumFactura='" . $maquinaria->numFactura . "'
         WHERE ID_Herramienta = " . $maquinaria->idHerramienta . "";
         $resultado->esValido  = $this->conn->query($sql);
+        $errorEditarArchivo="";
+        if ($maquinaria->nombreArchivo != "") {
+            $bdArchivos = new MArchivos();
+            $respuestaEditarArchivo =  $bdArchivos-> EditarArchivo($maquinaria->idArchivo,$maquinaria->archivoBinario,$maquinaria->nombreArchivo);
+             if (!$respuestaEditarArchivo) {
+                $errorEditarArchivo ="Falló la actualización del archivo";
+             }                 
+        }
 
-        $resultado->mensaje =  $resultado->esValido ? "Se actualizó la maquinaria correctamente" : "Ocurrio un error al actualizar la maquinaria";
+        $resultado->mensaje =  $resultado->esValido ? "Se actualizó la maquinaria correctamente ".$errorEditarArchivo : 
+                                                      "Ocurrio un error al actualizar la maquinaria ".$errorEditarArchivo;
 
         $this->conn->close();
         return  $resultado;
@@ -137,6 +143,7 @@ class MMaquinaria implements IMaquinaria
         b.PrecioEquipo,
         b.CodigoMonedaCobro,
         b.CodigoFormaCobro, 
+        a.MonedaCompra,
         a.ID_Archivo
         from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos 
         c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "'";
@@ -168,12 +175,25 @@ class MMaquinaria implements IMaquinaria
                 $resultado->esValido = false;
                 $resultado->mensaje = "Esta maquinaria  ya presenta un historial, por lo tanto no puede ser eliminada.";
             } else {
+                $sqlArchivo = "SELECT ID_Archivo from tbl_herramientaelectrica
+                        where Codigo = '". $codigo."'";
+                $resultadoArchivo = $this->conn->query($sqlArchivo);
+
                 $sqlDelete = "DELETE FROM tbl_herramientaelectrica WHERE Codigo =?";
                 if ($stmt2 = $this->conn->prepare($sqlDelete)) {
+                  
                     $stmt2->bind_param("s", $codigo);
                     $stmt2->execute();
                     $resultado->esValido = $stmt2->affected_rows > 0;
-
+                    if ($resultado->esValido) {
+                        if (mysqli_num_rows($resultadoArchivo )>0) {
+                            $bdArchivos = new MArchivos();
+                            $fila = mysqli_fetch_array($resultadoArchivo, MYSQLI_ASSOC);
+                            if ($fila["ID_Archivo"] != null && $fila["ID_Archivo"] != "")
+                              $bdArchivos->EliminarArchivo($fila["ID_Archivo"]);
+                        }
+ 
+                    }
                     $stmt2->close();
                 }
                 $resultado->mensaje =  $resultado->esValido ? "Datos eliminados correctamente" : "Ocurrio un error al eliminar los datos";
@@ -212,6 +232,7 @@ class MMaquinaria implements IMaquinaria
             b.PrecioEquipo,
             b.CodigoMonedaCobro,
             b.CodigoFormaCobro,
+            a.MonedaCompra
             a.ID_Archivo   
             from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c 
             where b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' 
@@ -233,7 +254,9 @@ class MMaquinaria implements IMaquinaria
             b.TipoEquipo,
             b.PrecioEquipo,
             b.CodigoMonedaCobro,
-            b.CodigoFormaCobro   
+            b.CodigoFormaCobro,
+            a.MonedaCompra,
+            a.ID_Archivo    
             from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c 
             where 
             b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' AND
@@ -273,7 +296,12 @@ class MMaquinaria implements IMaquinaria
          b.PrecioEquipo,
          b.CodigoMonedaCobro,
          b.CodigoFormaCobro,
-         a.ID_Archivo          
+         a.ID_Archivo,
+         a.Marca,
+         b.ID_Tipo,
+         a.Procedencia,
+         a.NumFactura,
+         a.MonedaCompra       
          from tbl_herramientaelectrica a,
          tbl_tipoherramienta b, tbl_proyectos c 
          where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";

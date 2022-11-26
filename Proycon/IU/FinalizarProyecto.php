@@ -50,7 +50,7 @@ require_once '../BLL/Proyectos.php';require_once '../BLL/Autorizacion.php';Valid
                 <li><p>Un resumen de las herramientas que este Proyecto tiene pendiente por devover </p></li>
             </ul>
              <center>
-             <form action="../BLL/ReportesExcel.php">
+             <form action="../BLL/Reportes/ReportesExcel.php">
                  
                <input class ="btn btn-danger" id="btnNoResponsive" type="submit" value="Si está de acuerdo con lo descrito anteriormente presione aquí" />
               <input class ="btn btn-danger" id="btnResponsive" type="submit" value="Presione aqui..." />
