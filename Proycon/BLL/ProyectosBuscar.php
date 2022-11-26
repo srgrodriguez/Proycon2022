@@ -11,7 +11,7 @@ $conexion = $conn->CrearConexion();
 if(isset($_POST['consulta'])){
     $q=$_POST['consulta'];
     $sql ="Select th.ID_Tipo, th.Codigo,tt.Descripcion,th.Marca from tbl_herramientaelectrica th, tbl_tipoherramienta tt "
-            . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1";  
+            . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1 and th.EstadoDesecho = 1";  
 
     $resultado =$conexion->query($sql);
     $conexion->close();

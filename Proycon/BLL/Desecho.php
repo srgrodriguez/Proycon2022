@@ -2,6 +2,8 @@
 include '../DATA/Desecho.php';
 include '../DAL/Interfaces/IDesecho.php';
 include '../DAL/Metodos/MDesecho.php';
+include '../DAL/Interfaces/IHerrramientas.php';
+include '../DAL/Metodos/MHerramientas.php';
 include '../DAL/Conexion.php';
 include '../DAL/FuncionesGenerales.php';
 require_once 'Autorizacion.php';
@@ -20,13 +22,14 @@ if (isset($_GET['opc'])) {
     }
     elseif ($_GET['opc'] == 'update') {
         updateDesecho();
-    }elseif ($_GET['opc'] == 'agregar') {
-        AgregarDesecho();
+    
     }elseif ($_GET['opc'] == 'registrarPedido') {
         if (!isset($_SESSION)) {
             session_start();
         }
         GuardarPedido($_SESSION['ID_Usuario'],$_POST['data'],$_POST['fecha'],$_POST['motivo'],$_POST['consecutivo']);
+    }elseif ($_GET['opc'] == 'buscarherramientapedido') {
+        BuscarHerramientaCodigo($_GET['codigo']);
     }
 }
 
@@ -153,26 +156,7 @@ function updateDesecho()
     }
 }
 
-function AgregarDesecho()
-{
-    $Desechos = new Desecho();
-    $MDesecho = new MDesecho();
 
-    try {
-        $Desechos->Id = $_POST['id'];
-        $Desechos->ID_Herramienta = $_POST['iD_Herramienta'];
-        $Desechos->Codigo = $_POST['codigo'];
-        $Desechos->Motivo = $_POST['motivo'];
-        $Desechos->FechaDesecho = $_POST['fechaDesecho'];
-        $Desechos->ID_Usuario = $_POST['iD_Usuario'];
-        $Desechos->TipoDesecho = $_POST['tipoDesecho'];
-        $Desechos->Cantidad = $_POST['cantidad'];
-
-        echo $resultadoConsulta = $MDesecho->AgregarDesecho($Desechos);
-    } catch (Exception $ex) {
-        echo Log::GuardarEvento($ex, "AgregarDesecho");
-    }
-}
 
 function ObtenerDescripcionTipoHerramienta($TipoDesecho){
 
@@ -211,12 +195,37 @@ function GuardarPedido($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
 
     foreach($arreglo as $item){
         $bdDesechos->RegistrarDesecho($item['codigo'], $item['tipo'],$item['cantidad'], $fecha,$ID_Usuario,$motivo, $consecutivo);
-        $data = $item['codigo'];
+        
     }; 
 
-
+    echo ConsecutivoPedido();
 }
    
+
+function BuscarHerramientaCodigo($codigo) {
+    $bdHerramienta = new MHerramientas();
+    $restultado = $bdHerramienta->BuscarHerramientaPorCodigo($codigo);
+    $concatenar = "";
+    $filasAfectadas = mysqli_num_rows($restultado);
+    if ($filasAfectadas > 0) {
+        $fila = mysqli_fetch_array($restultado, MYSQLI_ASSOC);
+        $concatenar = "
+                         <tr>
+                             <td hidden='true' >" . $fila['ID_Tipo'] . "</td>
+                             <td>" . $fila['Codigo'] . "</td>
+                             <td>" . $fila['Descripcion'] . "</td>
+                             <td>" . $fila['Marca'] . "</td>
+                             <td style='width: 25px;'>
+                             <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
+                                    <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
+                                </button>
+                          </td>
+                         </tr>";
+        echo $concatenar;
+    } else {
+        echo 0;
+    }
+}
     
     
     /*if ($TipoPedido == 1) {

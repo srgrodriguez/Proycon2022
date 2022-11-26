@@ -141,6 +141,8 @@ class MDesecho implements IDesecho {
        
         //Consultar de que proyecto de donde viene la herramienta
 
+        try {
+
         $sqlDos = "SELECT Ubicacion, ID_Herramienta,Descripcion  FROM tbl_herramientaelectrica  WHERE Codigo = ?";
         
         if ($stmtp = $this->conn->prepare($sqlDos)) {
@@ -162,32 +164,67 @@ class MDesecho implements IDesecho {
         $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
         $sql = "INSERT INTO tbl_bitacoradesecho(ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho, ID_Proyecto,Cantidad,Descripcion) VALUES  (?,?,?,?,?,?,?,?,?);";
         $stmt = $this->conn->prepare($sql);
+        
+        //$stmt->bind_param("isssiiiis", $idHerramienta, $codigo, $motivo, $fechaDesecho, $idUsuario, $TipoDesecho, $idUbicacion,$cantidad,$descripcion);
+        //$ok = $stmt->execute();
+        //$stmt->close();
+        $stmt = mysqli_prepare($this->conn, $sql);
         $stmt->bind_param("isssiiiis", $idHerramienta, $codigo, $motivo, $fechaDesecho, $idUsuario, $TipoDesecho, $idUbicacion,$cantidad,$descripcion);
-        $ok = $stmt->execute();
-        $stmt->close();
+        if (mysqli_stmt_execute($stmt)) {
+            $ok = mysqli_stmt_insert_id($stmt);
+        } else {
+            $errorAgregarArchivo = "Falló el registro del archivo";
+            $error = mysqli_stmt_error($stmt);
+            Log::GuardarEventoString($error, "Guardar archivo");
+            $errorAgregarArchivo .= $error;
+        }
+
+        mysqli_stmt_close($stmt);
+        //  mysqli_close($this->conn);
+
 
 // 2 - Insertar en la tabla historial 
 
 
-        $sqlHistorial = "INSERT INTO tbl_historialherramientas(Codigo, Ubicacion, Destino, NumBoleta, Fecha) VALUES (?,?,?,?,?);";
+      /*)  $sqlHistorial = "INSERT INTO tbl_historialherramientas(Codigo, Ubicacion, Destino, NumBoleta, Fecha) VALUES (?,?,?,?,?);";
         $stmt = $this->conn->prepare($sqlHistorial);
         $stmt->bind_param("siiis", $codigo,13,$idUbicacion,$consecutivo,$fechaDesecho);
         $ok = $stmt->execute();
         $stmt->close();
         $this->conn->close();
         return $ok ? 1 : 0;
+        */
+
+        $ubicacionDestino = 13; // Correspondiente a al proyecto Desecho
+
+        $sqlHistorial = "INSERT INTO tbl_historialherramientas(Codigo, Ubicacion, Destino, NumBoleta, Fecha) VALUES (?,?,?,?,?);";
+        $stmtDos = mysqli_prepare($this->conn, $sqlHistorial);
+        $stmtDos->bind_param("siiis", $codigo,$idUbicacion,$ubicacionDestino,$consecutivo,$fechaDesecho);
+        if (mysqli_stmt_execute($stmtDos)) {
+            $ok = mysqli_stmt_insert_id($stmtDos);
+        } else {
+            $errorAgregarArchivo = "Falló el registro del archivo";
+            $error = mysqli_stmt_error($stmtDos);
+            Log::GuardarEventoString($error, "Guardar archivo");
+            $errorAgregarArchivo .= $error;
+        }
 
 
 // 3- Actualizar el estadoDesecho de la herramienta a 0
 
         $sql3 = "UPDATE tbl_herramientaelectrica SET EstadoDesecho = 0 
-        WHERE Codigo = $codigo";
+        WHERE Codigo = '$codigo'";
 
         $this->conn->query($sql3);
 
+       // mysqli_close($this->conn);
 
 
-
+        } catch (\Throwable $th) {
+            mysqli_close($this->conn);
+            $idArchivo = 0;
+            Log::GuardarEvento($th, "Guardar archivo");
+        }
 
 
 

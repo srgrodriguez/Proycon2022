@@ -86,6 +86,40 @@ function FiltrarDesecho() {
 }
 
 
+function ActualizarTablaDesecho() {    
+
+    route =  "../BLL/Desecho.php?opc=listar";
+
+    $.ajax({
+        type: "GET",
+        url: route,
+        //data: {"Opc": Fitro},
+        beforeSend: function(){
+            $("#TablalistadoDesecho").html("Procesando... <center> <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='20px'/></center>");    
+        },
+        success: function (respuesta) {
+            $("#TablalistadoDesecho").html(respuesta);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+
+}
+
+
 
 function MostrarFormHerramienta() {
     $("#panelContienetblDesecho").hide();
@@ -334,7 +368,8 @@ function GuardarBoletaHerramientas(){
     document.querySelectorAll('#tbl_P_Herramientas tbody tr').forEach(function(e){
         let fila = {
           codigo: e.querySelector('#codTabla').innerText,
-          cantidad: 1  // Por defecto 1 ya que es una por registro
+          cantidad: 1,  // Por defecto 1 ya que es una por registro
+          tipo: 1 // Correspondiete a Herramientas  
         };
         ArregloTabla.push(fila);
       });
@@ -363,11 +398,26 @@ function AjaxAgregarHerramientas(datos, fecha,motivo, consecutivo){
 
                 $("#MensajeSucessfull").html("La Boleta se ha generado correctamente");
                 $("#Mensajesucessfull").modal("show");               
-          
+                
+                $("#consecutivoPedidoH").html(" " + respuesta);
+                $("#consecutivoPedidoM").html(" " + respuesta);
+
+                
                 setTimeout(function () {
                     $("#Mensajesucessfull").modal("hide");
+                    
                 }, 2000);
-                return 1;
+                
+                ActualizarTablaDesecho(); // volver a cargar la lista     
+
+                // reiniciar la tabla de la boleta
+                var table = document.getElementById('cuerpoPedidoHerramientas');    
+                table.innerHTML = '';
+
+                $("#motivoDesechoG").val("");
+                
+
+
             } else {
                  $("#tbl_P_Materiales tbody tr").html(respuesta);
                $("#Mensajesucessfull").removeClass("alert-success");
@@ -384,7 +434,41 @@ function AjaxAgregarHerramientas(datos, fecha,motivo, consecutivo){
     });
 }
 
+function AgregarHerramientaPedido() {
+    var codigo = $("#txtCodigoHerramienta").val();
+    $.ajax({
+        type: "POST",
+        url: "../BLL/Desecho.php?opc=buscarherramientapedido&codigo=" + codigo,
+        success: function (respuesta) {
+            if (respuesta == 0) {
+                $("#ModalDefaul").modal("show");
+                $("#MensajeErrorMaterial").html("Codigo Incorrecto");
+                $("#CantMaterialExistente").html("");
+            } else if (respuesta == -1) {
+                $("#ModalDefaul").modal("show");
+                $("#MensajeErrorMaterial").html("<strong>Error de Conexion con el servidor de Base de datos</strong>");
+            } else {
+                $("#cuerpoPedidoHerramientas").html($("#cuerpoPedidoHerramientas").html() + respuesta);
+            }
+        }
 
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+}
 
 
 
