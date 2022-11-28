@@ -108,24 +108,10 @@ class MDesecho implements IDesecho {
 
     public  function ConsultarDesecho($id){
 
-        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho,Cantidad, Descripcion FROM tbl_bitacoradesecho WHERE = ?";
-
-
-            $filtradoCadena = LimpiarCadenaCaracter($this->conn, $id);
-
-            if ($stmt = $this->conn->prepare($sql)) {
-                $stmt->bind_param("i", $filtradoCadena);
-
-                $stmt->execute();  // Ejecutar la consulta en la BD
-                $resultado = $stmt->get_result();           
-
-                $stmt->close();
-                $this->conn->close();
-
-                return $resultado; // retonarnar el usuario correcto
-            } else {
-                echo "Error de conexion";
-            }
+        $sql = "SELECT id, ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho,Cantidad, Descripcion FROM tbl_bitacoradesecho WHERE id= '$id'";
+        $resultado = $this->conn->query($sql);
+        $this->conn->close();
+        return $resultado;
     }
 
 
@@ -229,4 +215,72 @@ class MDesecho implements IDesecho {
 
 
     }
+
+
+
+public function RegistrarDesechoMaterial($codigo,$TipoDesecho,$cantidad,$fechaDesecho,$idUsuario,$motivo) {
+       
+    //Consultar para obtener el Id del material
+
+    try {
+
+        $sql = "SELECT ID_Material,Nombre  FROM tbl_materiales  WHERE Codigo = ?";
+        
+        if ($stmtp = $this->conn->prepare($sql)) {
+            $stmtp->bind_param("s", $codigo);
+
+            $stmtp->execute();
+        } else {
+            echo "Error de sintaxis en consulta SQL ";
+        }
+        $resultado = $stmtp->get_result();
+        
+        $fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+
+
+        $idHerramienta = $fila['ID_Material'];
+        $descripcion = $fila['Nombre'];
+
+    // 1 - Insertar en la tabla  bitacoradesecho
+        $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
+        $sqlDos = "INSERT INTO tbl_bitacoradesecho(ID_Herramienta, Codigo, Motivo, FechaDesecho, ID_Usuario, TipoDesecho, Cantidad,Descripcion) VALUES  (?,?,?,?,?,?,?,?);";
+        $stmt = $this->conn->prepare($sqlDos);
+        
+        //$stmt->bind_param("isssiiiis", $idHerramienta, $codigo, $motivo, $fechaDesecho, $idUsuario, $TipoDesecho, $idUbicacion,$cantidad,$descripcion);
+        //$ok = $stmt->execute();
+        //$stmt->close();
+        $stmt = mysqli_prepare($this->conn, $sqlDos);
+        $stmt->bind_param("isssiiis", $idHerramienta, $codigo, $motivo, $fechaDesecho, $idUsuario, $TipoDesecho,$cantidad,$descripcion);
+        if (mysqli_stmt_execute($stmt)) {
+            $ok = mysqli_stmt_insert_id($stmt);
+        } else {
+            $errorAgregarArchivo = "Falló el registro del archivo";
+            $error = mysqli_stmt_error($stmt);
+            Log::GuardarEventoString($error, "Guardar archivo");
+            $errorAgregarArchivo .= $error;
+        }
+
+        mysqli_stmt_close($stmt);
+        //  mysqli_close($this->conn);
+
+
+    // 2 - Actualizar la cantidad del material en la tabla tbl_materiales
+
+    $sql3 = "UPDATE tbl_materiales set Cantidad = Cantidad - $cantidad WHERE ID_Material = '$idHerramienta'";
+
+
+    $this->conn->query($sql3);
+
+        
+
+
+    } catch (\Throwable $th) {
+        mysqli_close($this->conn);
+        $idArchivo = 0;
+        Log::GuardarEvento($th, "RegistrarDesechoMaterial");
+    }
+
+
+
+}
 }
