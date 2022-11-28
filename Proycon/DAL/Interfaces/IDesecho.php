@@ -13,4 +13,8 @@ interface IDesecho {
     public  function ConsultarDesecho($id);
 
     public function ObternerCosecutivoPedido();
+
+    public function RegistrarDesecho($arreglo,$fechaDesecho,$idUsuario,$motivo,  $consecutivo);
+
+    public function RegistrarDesechoMaterial($arreglo,$fechaDesecho,$idUsuario,$motivo);
 }
