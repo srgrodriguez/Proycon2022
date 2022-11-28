@@ -105,10 +105,7 @@ ValidarIniciodeSession();
                         <table class="table-bordered table-responsive tablasG" id="tbl_total_herramientas">
                             <thead>
                                 <tr>
-                                    <th >Boleta</th>
-                                    <th>Material/Herramienta</th>
-                                    <th>Codigo</th>
-                                    <th>Cantidad</th>
+                                    <th>Boleta</th>                                
                                     <th>Motivo</th>
                                     <th>FechaDesecho</th>
                                     <th>Usuario</th>
@@ -530,7 +527,6 @@ ValidarIniciodeSession();
                                     <img  src="../resources/imagenes/print.png" alt="" width="30px"/>
                                 </button>
                                 <button id="btnAnularBoletaMaterial" style="display: none" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaMaterial()">Anular Boleta</button>
-                                <button id="btnAnularBoletaHerramientas" hidden="true" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaHerramientas()">Anular Boleta</button>
                             </div>
                         </div>
                     </div>

@@ -60,10 +60,7 @@ function CrearTablaListarDesecho()
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $concatenar .=
                     "<tr>"
-                    . "<td>" . $fila['id'] . "</td>"
-                    . "<td>" . $fila['Descripcion'] . "</td>"
-                    . "<td>" . $fila['Codigo'] . "</td>"
-                    . "<td>" . $fila['Cantidad'] . "</td>"
+                    . "<td>" . $fila['Boleta'] . "</td>"
                     . "<td>" . $fila['Motivo'] . "</td>"
                     . "<td>" . $fila['FechaDesecho'] . "</td>"
                     . "<td>" . $fila['Usuario'] . "</td>"
@@ -92,10 +89,7 @@ function ListarDesechoMaterial()
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $concatenar .=
                     "<tr>"
-                        . "<td>" . $fila['id'] . "</td>"
-                        . "<td>" . $fila['Descripcion'] . "</td>"
-                        . "<td>" . $fila['Codigo'] . "</td>"
-                        . "<td>" . $fila['Cantidad'] . "</td>"
+                        . "<td>" . $fila['Boleta'] . "</td>"
                         . "<td>" . $fila['Motivo'] . "</td>"
                         . "<td>" . $fila['FechaDesecho'] . "</td>"
                         . "<td>" . $fila['Usuario'] . "</td>"
@@ -127,10 +121,7 @@ function ListarDesechoHerramientas()
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $concatenar .=
                     "<tr>"
-                    . "<td>" . $fila['id'] . "</td>"
-                    . "<td>" . $fila['Descripcion'] . "</td>"
-                    . "<td>" . $fila['Codigo'] . "</td>"
-                    . "<td>" . $fila['Cantidad'] . "</td>"
+                    . "<td>" . $fila['Boleta'] . "</td>"
                     . "<td>" . $fila['Motivo'] . "</td>"
                     . "<td>" . $fila['FechaDesecho'] . "</td>"
                     . "<td>" . $fila['Usuario'] . "</td>"
@@ -195,7 +186,7 @@ function ConsecutivoPedido() {
     $count = $result->num_rows;
 
     if ($count > 0) {
-        return $fila["id"] + 1;
+        return $fila["Boleta"] + 1;
     } else {
         return 1;
     }
@@ -204,30 +195,27 @@ function ConsecutivoPedido() {
 
 
 function GuardarPedido($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
-    $arreglo = json_decode($arreglo, true);
-    $tam = sizeof($arreglo);
+
     $bdDesechos = new MDesecho();
     
 
-    foreach($arreglo as $item){
-        $bdDesechos->RegistrarDesecho($item['codigo'], $item['tipo'],$item['cantidad'], $fecha,$ID_Usuario,$motivo, $consecutivo);
+    $bdDesechos->RegistrarDesecho($arreglo,$fecha,$ID_Usuario,$motivo, $consecutivo);
         
-    }; 
+   
 
     echo ConsecutivoPedido();
 }
 
 
 function GuardarPedidoMaterial($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
-    $arreglo = json_decode($arreglo, true);
-    $tam = sizeof($arreglo);
+
     $bdDesechos = new MDesecho();
     
 
-    foreach($arreglo as $item){
-        $bdDesechos->RegistrarDesechoMaterial($item['codigo'], $item['tipo'],$item['cantidad'], $fecha,$ID_Usuario,$motivo, $consecutivo);
-        
-    }; 
+
+    $bdDesechos->RegistrarDesechoMaterial($arreglo, $fecha,$ID_Usuario,$motivo, $consecutivo);
+       
+
 
     echo ConsecutivoPedido();
 }
@@ -309,7 +297,7 @@ function ConsultarDesecho($id) {
                                     <th>Codigo</th>
                                     <th>Cantidad</th>
                                     <th>Decripcion</th>
-                                    <th>Fecha Desecho</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>";
@@ -321,7 +309,7 @@ function ConsultarDesecho($id) {
                                 "<td>" . $fila['Codigo'] . "</td>
                                 <td>" . $fila['Cantidad'] . "</td>
                                 <td>" . $fila['Descripcion'] . "</td>".
-                                "<td>" . $fila['FechaDesecho'] . "</td>".
+                               
                             "</tr>";
 
             }

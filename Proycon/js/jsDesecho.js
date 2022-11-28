@@ -550,13 +550,10 @@ function AgregarMaterialPedido() {
 
 function VerPedido(evento) {
     var boleta = $(evento).parents("tr").find("td").eq(0).html();
-    var descripcion = $(evento).parents("tr").find("td").eq(1).html();
-    var codigo = $(evento).parents("tr").find("td").eq(2).html();
-    var cantidad = $(evento).parents("tr").find("td").eq(3).html();
-    var motivo = $(evento).parents("tr").find("td").eq(4).html();
-    var fechaDesecho = $(evento).parents("tr").find("td").eq(5).html();
-    var usuarioDesecho = $(evento).parents("tr").find("td").eq(6).html();
-    var tipoDesecho = $(evento).parents("tr").find("td").eq(7).html();
+    var motivo = $(evento).parents("tr").find("td").eq(1).html();
+    var fechaDesecho = $(evento).parents("tr").find("td").eq(2).html();
+    var usuarioDesecho = $(evento).parents("tr").find("td").eq(3).html();
+    var tipoDesecho = $(evento).parents("tr").find("td").eq(4).html();
 
     var array = fechaDesecho.split("-");
     $("#dia").html(array[2]);

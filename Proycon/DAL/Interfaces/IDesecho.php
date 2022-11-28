@@ -8,8 +8,6 @@ interface IDesecho {
 
     public function listarDesechoMateriales();
 
-    public  function AgregarDesecho(Desecho $Desecho);
-
     public  function ActualizarDesecho(Desecho $Desecho);
 
     public  function ConsultarDesecho($id);
