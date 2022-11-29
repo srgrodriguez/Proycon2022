@@ -324,9 +324,10 @@ class MHerramientas implements IHerrramientas {
     public function RegistrarReparacion($consecutivo, $fecha, $ID_Usuario, $provedorReparacion) {
         $consecutivo = LimpiarCadenaCaracter($this->conn, $consecutivo);
         $provedorReparacion = LimpiarCadenaCaracter($this->conn, $provedorReparacion);
-        $sql = "Insert into tbl_boletareparacion(Numboleta,Fecha,ID_Usuario,ProveedorReparacion) values (?,?,?,?);";
+        $sql = "Insert into tbl_boletareparacion(Numboleta,Fecha,ID_Usuario,ProveedorReparacion,TipoEquipo) values (?,?,?,?,?);";
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("isis", $consecutivo, $fecha, $ID_Usuario, $provedorReparacion);
+            $tipoEquipo = "H";
+            $stmt->bind_param("isiss", $consecutivo, $fecha, $ID_Usuario, $provedorReparacion,$tipoEquipo);
             $stmt->execute();
         } else {
             echo "Error de sintaxis en consulta SQL ";

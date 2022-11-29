@@ -104,7 +104,9 @@ function RemoverEquipoBoleta(event){
 
 function TrasladarEquipo()
 {
-    const idMostrarMensajes = "mensajesResultadoTraslado";
+    const btnGuardar =$("#btnGuardarTraslado");
+    btnGuardar.prop('disabled',true);
+        const idMostrarMensajes = "mensajesResultadoTraslado";
     let destino = document.getElementById("cboProyectoDestino").value.trim()
     if(destino == "0")
      MostrarMensajeResultado("Debe seleccionar un destino",false,idMostrarMensajes)
@@ -138,6 +140,7 @@ function TrasladarEquipo()
             }
         })
         .then((data) => {
+            btnGuardar.prop('disabled',false);
            if(esJsonValido(data))
            {
             let resultado = JSON.parse(data);

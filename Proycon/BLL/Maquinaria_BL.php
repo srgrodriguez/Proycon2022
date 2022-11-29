@@ -215,10 +215,10 @@ function BuscarPorCodigoOuputHrml()
         echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
     }
 }
-function BuscarPorCodigoOuputJson()
+function BuscarPorCodigoOuputJson($codigo = "")
 {
     $bdMaquinaria = new MMaquinaria();
-    $codigo = $_GET['codigo'];
+    $codigo = $codigo == ""?$_GET['codigo']:$codigo;
     $resultado = $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
     $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
     echo json_encode($equipo);

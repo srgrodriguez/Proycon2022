@@ -32,9 +32,9 @@ function TrasdalarEquipo()
     $equipoTrasladar = [];
     $restultado =  new Resultado();
     try {
+        $consecutivoBoleta = ObternerCosecutivoBoleta();
         $bdTransladarEquipo = new MTrasladarEquipo();
         $request  = json_decode(file_get_contents('php://input'));
-        $consecutivoBoleta = ObternerCosecutivoBoleta();
         foreach ($request as &$equipo) {
             $trasladar = new TrasladarEquipo();
             $trasladar->NumBoleta=  $consecutivoBoleta;

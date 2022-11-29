@@ -19,6 +19,7 @@ ValidarIniciodeSession();
     <script src="../js/FuncionesGenerales.js" type="text/javascript"></script>
     <script src="../js/jsMaquinaria.js" type="text/javascript"></script>
     <script src="../js/jsTipoHerramienta.js" type="text/javascript"></script>
+    <script src="../js/jsReportesMaquinari.js" type="text/javascript"></script>    
     <script src="../js/jquery.table2excel.js" type="text/javascript"></script>
     <script src="../js/jsMenu.js" type="text/javascript"></script>
     <script src="../js/jsLogin.js" type="text/javascript"></script>
@@ -63,7 +64,7 @@ ValidarIniciodeSession();
 
                             <div class="panel-heading">
                                 <h4>Maquinaria en inventario</h4>
-                                <button id="btnImprimirHerramientas1" type="submit" class="btn btn-default"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
+                                <button id="btnImprimirHerramientas1" type="button" onclick="GenerarReporteTotalMaquinaria()" class="btn btn-default"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
                             </div>
                             <div class="panel-body">
                                 <div>
@@ -81,7 +82,7 @@ ValidarIniciodeSession();
                                                     <button type="button" class="btn-accion btn btn-info btn-sm" onclick="ListarTotalMaquinaria()">Listar total maquinaria</button>
                                                 </li>
                                                 <li>
-                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='TrasladarMaquinaria.php'">Historial y reparaciones</button>
+                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='Historial_Y_Reparaciones.php'">Historial y reparaciones</button>
                                                 </li>
                                                 <li>
                                                     <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='TrasladarMaquinaria.php'">Trasladar maquinaria</button>
@@ -483,6 +484,25 @@ ValidarIniciodeSession();
                         </div>
                     </div>
                 </div>
+
+
+                                <!-- MODAL Ficha técnica -->
+              <div id="ModalLoanding" class="modal fade" role="dialog">
+                    <div class="modal-dialog" style="width:15% ;">
+                        <div class="modal-content">
+                            <div  class="modal-header">
+                                <button id="btnCloseModalLoading" type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" style="text-align:center ;">
+                            <h3>Procesando...</h3>
+                            <img src="../resources/imagenes/loanding.gif" alt="" width="60px"/>                         
+                            <br>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>

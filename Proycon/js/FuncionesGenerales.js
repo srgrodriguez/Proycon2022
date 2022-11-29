@@ -43,6 +43,40 @@ function AceptarSoloNumerosMonto(evt) {
     arg1.value = argtemp;
   }
 
+  function FormatearMonto(value) {
+    var argtemp = "";
+    value= value.toString()
+    value = value.replace(new RegExp(",", "g"), "");
+    for (i = 0; i <= value.length; i++)
+      if (value.substr(i, 1) == ".") {
+        if ((i) == (value.length - 1))
+          value = value + "00";
+        if ((i + 1) == (value.length - 1))
+          value = value + "0";
+        if ((i + 2) != (value.length - 1) || (value[i + 1] == "." || value[i + 2] == ".")) {
+          value = "";
+          return alert("El Monto debe llevar dos decimales.");
+        }
+      }
+    if (value < 1 && value != "") {
+      value = "";
+      return alert("El monto no debe ser inferior a una unidad de la moneda utilizada.");
+    }
+    if (value.substr((value.length - 3), 1) != ".")
+      value = value + ".00";
+    argtemp = value.substr((value.length - 3), 3);
+    ii = 0;
+    for (i = (value.length - 4); i >= 0; i--) {
+      argtemp = value.substr(i, 1) + argtemp;
+      ii++;
+      if ((ii == 3) && (i != 0)) {
+        argtemp = "," + argtemp;
+        ii = 0;
+      }
+    }
+    return argtemp;
+  }
+
   function MostrarMensajeResultado(mensaje, esValido, idSeccionMostrarMensaje) {
     let resultadoHTML = "";
     if (esValido) {
@@ -72,7 +106,7 @@ function AceptarSoloNumerosMonto(evt) {
     }, 5000);
 }
 
-function esJsonValido(str) {
+function  esJsonValido(str) {
   try {
       return (JSON.parse(str) && !!str);
   } catch (e) {

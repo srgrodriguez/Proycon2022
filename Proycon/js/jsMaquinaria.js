@@ -280,6 +280,8 @@ function BuscarMaquinariaPorCodigoEnter(event) {
 }
 
 function BuscarMaquinariaPorCodigoGetHtml() {
+    $("#txtBuscaraquinariaTiempoReal").val("");
+    document.getElementById("cboFiltroHerramienta").value = "0";
     let codigo = $("#txtCodigoMaquinariaBuscar").val();
     if (!StringIsNullOrEmpty(codigo))
         fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetHtml',
@@ -342,6 +344,8 @@ function BuscarMaquinariaPorCodigoGetHtml() {
 
 $(BuscarMaquinariaEnTiempoReal())
 function BuscarMaquinariaEnTiempoReal() {
+    document.getElementById("cboFiltroHerramienta").value = "0";
+    $("#txtCodigoMaquinariaBuscar").val("");
     let valorConsulta = $("#txtBuscaraquinariaTiempoReal").val();
     if (!StringIsNullOrEmpty(valorConsulta)) {
         fetch('../BLL/Maquinaria_BL.php?opc=buscarTiempoReal',

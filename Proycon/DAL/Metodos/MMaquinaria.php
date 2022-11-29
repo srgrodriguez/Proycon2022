@@ -102,6 +102,25 @@ class MMaquinaria implements IMaquinaria
         $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
         $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
 
+        $errorArchivo="";
+        if ($maquinaria->nombreArchivo != "") {
+            $bdArchivos = new MArchivos();
+          if($maquinaria->idArchivo != 0)
+          {  $respuestaEditarArchivo =  $bdArchivos-> EditarArchivo($maquinaria->idArchivo,$maquinaria->archivoBinario,$maquinaria->nombreArchivo);
+             if (!$respuestaEditarArchivo) {
+                $errorArchivo ="Falló la actualización del archivo";
+             }  
+          }  
+          else{
+            $idArchivo =  $bdArchivos->AgregarArchivo($maquinaria->nombreArchivo,$maquinaria->archivoBinario);
+            if ($idArchivo == 0) {
+               $errorArchivo ="Falló el registro del archivo";
+            }
+            else{
+                $maquinaria->idArchivo = $idArchivo;
+            } 
+          }             
+        }
         $sql = "UPDATE tbl_herramientaelectrica SET 
         Codigo='" . $maquinaria->codigo . "',
         ID_Tipo=" . $maquinaria->tipo . ",
@@ -111,20 +130,13 @@ class MMaquinaria implements IMaquinaria
         Procedencia='" . $maquinaria->procedencia . "',
         Precio=" . $maquinaria->precio . ",
         MonedaCompra='".$maquinaria->monedaCompra."',
-        NumFactura='" . $maquinaria->numFactura . "'
+        NumFactura='" . $maquinaria->numFactura . "',
+        ID_Archivo = ".$maquinaria->idArchivo."
         WHERE ID_Herramienta = " . $maquinaria->idHerramienta . "";
         $resultado->esValido  = $this->conn->query($sql);
-        $errorEditarArchivo="";
-        if ($maquinaria->nombreArchivo != "") {
-            $bdArchivos = new MArchivos();
-            $respuestaEditarArchivo =  $bdArchivos-> EditarArchivo($maquinaria->idArchivo,$maquinaria->archivoBinario,$maquinaria->nombreArchivo);
-             if (!$respuestaEditarArchivo) {
-                $errorEditarArchivo ="Falló la actualización del archivo";
-             }                 
-        }
 
-        $resultado->mensaje =  $resultado->esValido ? "Se actualizó la maquinaria correctamente ".$errorEditarArchivo : 
-                                                      "Ocurrio un error al actualizar la maquinaria ".$errorEditarArchivo;
+        $resultado->mensaje =  $resultado->esValido ? "Se actualizó la maquinaria correctamente ".$errorArchivo : 
+                                                      "Ocurrio un error al actualizar la maquinaria ".$errorArchivo;
 
         $this->conn->close();
         return  $resultado;
@@ -232,7 +244,7 @@ class MMaquinaria implements IMaquinaria
             b.PrecioEquipo,
             b.CodigoMonedaCobro,
             b.CodigoFormaCobro,
-            a.MonedaCompra
+            a.MonedaCompra,
             a.ID_Archivo   
             from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c 
             where b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' 
