@@ -19,4 +19,10 @@ class Factura {
  public $DescripcionFactura;
  public $CostoFactura;
  public $NumBoleta;
+
+ public function set($data) {
+    $class = new Factura();
+    foreach ($data AS $key => $value) $class->{$key} = $value;
+    return $class;
+}
 }
