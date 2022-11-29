@@ -5,6 +5,8 @@ require_once '..//DAL/Metodos/MPedidos.php';
 require_once '..//DATA/PedidoProveeduria.php';
 require_once 'Autorizacion.php';
 require_once '../DAL/Log.php';
+require_once '../DAL/FuncionesGenerales.php';
+require_once '../DAL/Log.php';
 
 Autorizacion();
 if (isset($_GET['opc'])) {

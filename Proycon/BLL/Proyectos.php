@@ -24,7 +24,13 @@ if (isset($_GET['opc'])) {
         ListarProyectos();
     } elseif ($_GET['opc'] == 'listMyH') {
         ObternerHyMProyecto($_POST['idProyecto']);
-    } elseif ($_GET['opc'] == 'buscarM') {
+    }  elseif ($_GET['opc'] == 'listH') {
+        listarHerramientas($_POST['idProyecto']);
+    }elseif ($_GET['opc'] == 'listM') {
+        listarMaquinaria($_POST['idProyecto']);
+    }    
+    
+    elseif ($_GET['opc'] == 'buscarM') {
         BuscaAgregaMaterial($_GET['id'], $_GET['cant']);
     } elseif ($_GET['opc'] == 'registrarPedido') {
         if (!isset($_SESSION)) {
@@ -165,11 +171,9 @@ function ObternerHyMProyecto($idProyecto) {
 
     $materiales = $bdProyectos->ListaMaterialesProyecto($idProyecto);
 
-
-
     $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
     $inputOcultos = "<input type='hidden' name='txtID_ProyectoMateriales' value='$idProyecto' /> <input type='hidden' name='txtReporteMaterilesP' value='1' />";
-    $concatenar = '<section id="materiales" class="materiales">';
+    $concatenar = '';
     $combobox = '<div class="form-group">
            <label class="col-md-4 control-label" for="Empresa">Ordenar por</label>  
            
@@ -215,76 +219,172 @@ function ObternerHyMProyecto($idProyecto) {
         }
     }
     $concatenar .= "</tbody></table></div></div>";
-    $concatenar .= '</section>';
 
-    /* Seccion de Herramientas */
-    $bdProyectos = new MProyectos();
-
-    $herramientas = $bdProyectos->ListaHerramientaProyecto($idProyecto);
-
-    $btnImprimir = "<button class='btnImprimir btn btn-default' title='Exportar Excel' type='submit'><img src='../resources/imagenes/Excel.png' width='20px' alt=''/></button></form>";
-    ;
-    $combobox = '<div class="form-group">
-                            <label class="col-md-4 control-label" for="Empresa">Ordenar por</label>  
-                             <select name="cboFiltrarHerramientas" id="cboFiltrarHerramientas" onchange="FiltrarHerramientas()" class ="form-control" name="opciones" placeholder="Filtrar por...">
-                                 <option value = "Filtrar por...">Filtrar por...</option>
-                                 <option value = "Fecha">Fecha</option>
-                                 <option value ="Ver Totales">Ver Totales</option>
-                                 <option value ="Reparacion">Reparacion</option>
-                                 <option value ="Tipo">Tipo</option>
-                                 
-                             </select>
-                        </div>';
-    $buscarHerramientatxt = '<div class="input-group">
-					  
-                          <input id="txtCodigoHerraP" name="txtCodigoHerraP" type="text" class="form-control" placeholder="Código" onclick="" onchange="FiltroInicioHerramienta()">
-                          <span class="input-group-btn">
-                                <button id="btnBuscarCodigo" class="btn btn-default" type="button" onclick="BuscarHerramientasPorCodigoP()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
-			  </span>							
-                       </div>';
-
-    $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
-
-    $concatenar .= $form . '<section id="herramientas" class="materiales">';
-    $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
-            . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
-    $concatenar .= '<button class=" btn btn-default btnExpandir" type="button" value="" onclick="ExpandirMateriales(0)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . ' <div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
-            $btnImprimir . $combobox .
-            $buscarHerramientatxt;
-
-    $concatenar .= " <div id='tablaHerramientas'> <table class=' table table-bordered table-responsive tablasG' id='tbl_herramientasProyecto'>"
-            . "<thead>"
-            . " <tr>"
-            . " <th>Codigo</th>"
-            . " <th class='centrar'> Tipo </th>"
-            . "<th class='centrar'> Fecha </th>"
-            . "<th class='centrar'>NBoleta </th>"
-            . "<th class='centrar'>Estado</th>"
-            . "</tr>"
-            . "</thead>"
-            . "<tbody>"
-    ;
-    if ($herramientas != null) {
-        $imagen = '';
-
-        while ($fila = mysqli_fetch_array($herramientas, MYSQLI_ASSOC)) {
-
-            $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
-
-            if ($fila['Estado'] == 1) {
-                $imagen = "Bueno";
-                $concatenar .= "<tr><td>" . $fila['Codigo'] . "</td><td>" . $fila['Descripcion'] . "</td><td>" . $Fecha . "</td><td>" . $fila['NBoleta'] . "</td><td>" . $imagen . "</td></tr>";
-            } else {
-
-                $imagen = "En Reparacion";
-                $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $Fecha . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
-            }
-        }
-    }
-    $concatenar .= "</tbody></table> </div></section></form>";
 
     echo $concatenar;
+
+   
 }
+
+
+
+function listarHerramientas($idProyecto){
+
+    $concatenar = "";
+ /* Seccion de Herramientas */
+        $bdProyectos = new MProyectos();
+
+        $herramientas = $bdProyectos->ListaHerramientaProyecto($idProyecto);
+
+        $btnImprimir = "<button class='btnImprimir btn btn-default' title='Exportar Excel' type='submit'><img src='../resources/imagenes/Excel.png' width='20px' alt=''/></button></form>";
+        ;
+        $combobox = '<div class="form-group">
+                                <label class="col-md-4 control-label" for="Empresa">Ordenar por</label>  
+                                <select name="cboFiltrarHerramientas" id="cboFiltrarHerramientas" onchange="FiltrarHerramientas()" class ="form-control" name="opciones" placeholder="Filtrar por...">
+                                    <option value = "Filtrar por...">Filtrar por...</option>
+                                    <option value = "Fecha">Fecha</option>
+                                    <option value ="Ver Totales">Ver Totales</option>
+                                    <option value ="Reparacion">Reparacion</option>
+                                    <option value ="Tipo">Tipo</option>
+                                    
+                                </select>
+                            </div>';
+        $buscarHerramientatxt = '<div class="input-group">
+                        
+                            <input id="txtCodigoHerraP" name="txtCodigoHerraP" type="text" class="form-control" placeholder="Código" onclick="" onchange="FiltroInicioHerramienta()">
+                            <span class="input-group-btn">
+                                    <button id="btnBuscarCodigo" class="btn btn-default" type="button" onclick="BuscarHerramientasPorCodigoP()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                </span>							
+                            </div>';
+
+        $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
+
+       // $concatenar .= $form . '<section id="herramientas" class="materiales">';
+        $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
+                . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
+        $concatenar .= '<button class=" btn btn-default btnExpandir" type="button" value="" onclick="ExpandirMateriales(0)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . ' <div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
+                $btnImprimir . $combobox .
+                $buscarHerramientatxt;
+
+        $concatenar .= " <div id='tablaHerramientas'> <table class=' table table-bordered table-responsive tablasG' id='tbl_herramientasProyecto'>"
+                . "<thead>"
+                . " <tr>"
+                . " <th>Codigo</th>"
+                . " <th class='centrar'> Tipo </th>"
+                . "<th class='centrar'> Fecha </th>"
+                . "<th class='centrar'>NBoleta </th>"
+                . "<th class='centrar'>Estado</th>"
+                . "</tr>"
+                . "</thead>"
+                . "<tbody>"
+        ;
+        if ($herramientas != null) {
+            $imagen = '';
+
+            while ($fila = mysqli_fetch_array($herramientas, MYSQLI_ASSOC)) {
+
+                $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
+
+                if ($fila['Estado'] == 1) {
+                    $imagen = "Bueno";
+                    $concatenar .= "<tr><td>" . $fila['Codigo'] . "</td><td>" . $fila['Descripcion'] . "</td><td>" . $Fecha . "</td><td>" . $fila['NBoleta'] . "</td><td>" . $imagen . "</td></tr>";
+                } else {
+
+                    $imagen = "En Reparacion";
+                    $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $Fecha . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
+                }
+            }
+        }
+       // $concatenar .= "</tbody></table> </div></section></form>";
+        $concatenar .= "</tbody></table> </div></form>";
+
+        echo $concatenar;
+
+}
+
+
+function listarMaquinaria($idProyecto){
+
+    $concatenar = "";
+ /* Seccion de Herramientas */
+        $bdProyectos = new MProyectos();
+
+        $herramientas = $bdProyectos->ListaMaquinariaProyecto($idProyecto);
+
+        $btnImprimir = "<button class='btnImprimir btn btn-default' title='Exportar Excel' type='submit'><img src='../resources/imagenes/Excel.png' width='20px' alt=''/></button></form>";
+        ;
+        $combobox = '<div class="form-group">
+                                <label class="col-md-4 control-label" for="Empresa">Ordenar por</label>  
+                                <select name="cboFiltrarHerramientas" id="cboFiltrarHerramientas" onchange="FiltrarHerramientas()" class ="form-control" name="opciones" placeholder="Filtrar por...">
+                                    <option value = "Filtrar por...">Filtrar por...</option>
+                                    <option value = "Fecha">Fecha</option>
+                                    <option value ="Ver Totales">Ver Totales</option>
+                                    <option value ="Reparacion">Reparacion</option>
+                                    <option value ="Tipo">Tipo</option>
+                                    
+                                </select>
+                            </div>';
+        $buscarHerramientatxt = '<div class="input-group">
+                        
+                            <input id="txtCodigoHerraP" name="txtCodigoHerraP" type="text" class="form-control" placeholder="Código" onclick="" onchange="FiltroInicioHerramienta()">
+                            <span class="input-group-btn">
+                                    <button id="btnBuscarCodigo" class="btn btn-default" type="button" onclick="BuscarHerramientasPorCodigoP()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                </span>							
+                            </div>';
+
+        $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
+
+       // $concatenar .= $form . '<section id="herramientas" class="materiales">';
+        $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
+                . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
+        $concatenar .= '<button class=" btn btn-default btnExpandir" type="button" value="" onclick="ExpandirMateriales(0)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . ' <div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
+                $btnImprimir . $combobox .
+                $buscarHerramientatxt;
+
+        $concatenar .= " <div id='tablaHerramientas'> <table class=' table table-bordered table-responsive tablasG' id='tbl_herramientasProyecto'>"
+                . "<thead>"
+                . " <tr>"
+                . " <th>Codigo</th>"
+                . " <th class='centrar'> Tipo </th>"
+                . "<th class='centrar'> Fecha </th>"
+                . "<th class='centrar'>NBoleta </th>"
+                . "<th class='centrar'>Estado</th>"
+                . "</tr>"
+                . "</thead>"
+                . "<tbody>"
+        ;
+        if ($herramientas != null) {
+            $imagen = '';
+
+            while ($fila = mysqli_fetch_array($herramientas, MYSQLI_ASSOC)) {
+
+                $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
+
+                if ($fila['Estado'] == 1) {
+                    $imagen = "Bueno";
+                    $concatenar .= "<tr><td>" . $fila['Codigo'] . "</td><td>" . $fila['Descripcion'] . "</td><td>" . $Fecha . "</td><td>" . $fila['NBoleta'] . "</td><td>" . $imagen . "</td></tr>";
+                } else {
+
+                    $imagen = "En Reparacion";
+                    $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $Fecha . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
+                }
+            }
+        }
+       // $concatenar .= "</tbody></table> </div></section></form>";
+        $concatenar .= "</tbody></table> </div></form>";
+
+        echo $concatenar;
+
+}
+
+
+
+
+
+
+
+
+
 
 function ModificarProyecto() {
     $proyecto = new Proyectos();

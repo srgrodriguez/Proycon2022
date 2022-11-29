@@ -265,15 +265,22 @@ function ActualizarListaProyectos() {
     });
 }
 function ActualizarMaterialesHerramientaProyecto(ID_Proyecto) {
+
+    
+    $("#herramientas").hide();
+    $("#materiales").show();
+    $("#maquinaria").hide();
+
+
     $.ajax({
         data: {"idProyecto": ID_Proyecto},
         type: 'POST',
         url: '../BLL/Proyectos.php?opc=listMyH',
-         beforeSend: function () {
+         /*beforeSend: function () {
                 $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
-            },
+            },*/
         success: function (respuesta) {
-            $("#mhProyectos").html(respuesta);
+            $("#materiales").html(respuesta);
         }
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -292,7 +299,92 @@ function ActualizarMaterialesHerramientaProyecto(ID_Proyecto) {
         }
 
     });
+
 }
+
+function ActualizarMaterialesHerramientaProyectoDos() {
+
+    
+    $("#herramientas").hide();
+    $("#materiales").show();
+    $("#maquinaria").hide();
+
+
+    ID_Proyecto = $("#idProecto").text();
+
+    $.ajax({
+        data: {"idProyecto": ID_Proyecto},
+        type: 'POST',
+        url: '../BLL/Proyectos.php?opc=listMyH',
+         /*beforeSend: function () {
+                $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
+            },*/
+        success: function (respuesta) {
+            $("#materiales").html(respuesta);
+        }
+
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+
+}
+
+function listarMaquinariaTabla(){
+
+ 
+
+    $("#herramientas").show();
+    $("#materiales").hide();
+    $("#maquinaria").hide();
+    
+    ID_Proyecto = $("#idProecto").text();
+    
+
+
+    $.ajax({
+            data: {"idProyecto": ID_Proyecto},
+            type: 'POST',
+            url: '../BLL/Proyectos.php?opc=listM',
+        /*  beforeSend: function () {
+                    $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
+                },*/
+            success: function (respuesta) {
+                $("#herramientas").html(respuesta);
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 0) {
+
+                alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+            } else if (jqXHR.status == 404) {
+
+                alert('Error [404] No se encontro el Archivo');
+
+            } else if (jqXHR.status == 500) {
+
+                alert('Error de conexion con el servidor');
+
+            }
+
+        });
+
+}
+
+
 function BuscarProyecto() {
     var datos = {
         "Nombre": $('#txtNombreProyecto').val()};
@@ -1723,6 +1815,28 @@ function listarSoloHerramienta(idProyecto){
         }
     });   
     
+}
+
+
+function listarMaterial(){
+    console.log("ENTRE");
+
+    $("#materiales").show();
+    $("#herramientas").hide();
+    $("#maquinaria").hide();
+}
+
+function listarHerramienta(){
+    $("#herramientas").show();
+    $("#materiales").hide();
+    $("#maquinaria").hide();
+}
+
+function listarMaquinaria(){
+    $("#maquinaria").show();
+    $("#materiales").hide();
+    $("#maquinaria").hide();
+
 }
 
 
