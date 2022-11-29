@@ -57,15 +57,15 @@ class MHistoria_Y_ReparacionesMaquinaria
         $resultado->esValido = false;
         $fechaActual = date('d/m/y');
         $tipoEquipo = "M";
-        $CodigosProcesados=[];
-        mysqli_begin_transaction($this->conn);  
-        try {               
+        $CodigosProcesados = [];
+        mysqli_begin_transaction($this->conn);
+        try {
             $sqlInsertarBoleta = "Insert into tbl_boletareparacion(Numboleta,Fecha,ID_Usuario,ProveedorReparacion,TipoEquipo) values (?,Now(),?,?,?);";
             if ($stmt = $this->conn->prepare($sqlInsertarBoleta)) {
-                $stmt->bind_param("iiss", $NumBoleta, $idUsuario, $proveedorReparacion,$tipoEquipo);
+                $stmt->bind_param("iiss", $NumBoleta, $idUsuario, $proveedorReparacion, $tipoEquipo);
                 $tamLista = count($listadoMaquinaria);
                 if (mysqli_stmt_execute($stmt)) {
-                  
+
                     for ($i = 0; $i < $tamLista; $i++) {
                         $codigo = $listadoMaquinaria[$i];
                         array_push($CodigosProcesados, $codigo);
@@ -114,14 +114,12 @@ class MHistoria_Y_ReparacionesMaquinaria
             if ($resultado->esValido) {
                 mysqli_commit($this->conn);
                 $resultado->mensaje = "Se envió la maquinaria a reparación correctamente";
-            } else
-              {  
+            } else {
                 mysqli_rollback($this->conn);
                 $historial = new MHistoria_Y_ReparacionesMaquinaria();
-                $historial -> ReversarEnvioReparacion($CodigosProcesados,$NumBoleta);
+                $historial->ReversarEnvioReparacion($CodigosProcesados, $NumBoleta);
+            }
 
-              }
-            
             $this->conn->close();
             return $resultado;
         } catch (\Throwable $th) {
@@ -130,52 +128,62 @@ class MHistoria_Y_ReparacionesMaquinaria
             $resultado->mensaje = "Ocurrio un error al enviar la maquinaria a reparacion " . $th->getMessage();
             $this->conn->close();
             $historial = new MHistoria_Y_ReparacionesMaquinaria();
-            $historial -> ReversarEnvioReparacion($CodigosProcesados,$NumBoleta);
+            $historial->ReversarEnvioReparacion($CodigosProcesados, $NumBoleta);
             $this->conn->close();
             return $resultado;
         }
     }
 
-    public function ReversarEnvioReparacion(array $CodigosProcesados,$NumBoleta)
+    public function ReversarEnvioReparacion(array $CodigosProcesados, $NumBoleta)
     {
         $tamLista = count($CodigosProcesados);
         $conexion  = new Conexion();
         $conn = $conexion->CrearConexion();
         try {
 
-          $restulado1 =  $conn->query("DELETE FROM tbl_boletareparacion WHERE NumBoleta = $NumBoleta");
+            $resultado1 =  $conn->query("DELETE FROM tbl_boletareparacion WHERE NumBoleta = $NumBoleta");
             for ($i = 0; $i < $tamLista; $i++) {
                 $codigo = $CodigosProcesados[$i];
                 $sqlBorrarRepracionHerramienta = "DELETE FROM tbl_reparacionherramienta WHERE Codigo = '$codigo' AND NumBoleta = $NumBoleta";
                 $sqlReversarInsertarReparcionTem = "DELETE FROM tbl_tempoherramientareparacion  WHERE Codigo = '$codigo' AND Boleta = $NumBoleta";
                 $sqlReversarInsertarHistorial = "DELETE FROM tbl_historialherramientas WHERE Codigo = '$codigo' AND NumBoleta = $NumBoleta";
-                $restulado2 =    $conn->query($sqlBorrarRepracionHerramienta);
-                $restulado3 =  $conn->query($sqlReversarInsertarReparcionTem);
-                $restulado4 = $conn->query($sqlReversarInsertarHistorial);
+                $resultado2 =    $conn->query($sqlBorrarRepracionHerramienta);
+                $resultado3 =  $conn->query($sqlReversarInsertarReparcionTem);
+                $resultado4 = $conn->query($sqlReversarInsertarHistorial);
+                $sqlObtenerUbicacionMaquinaria = "SELECT  Destino FROM tbl_historialherramientas
+                WHERE  CODIGO = '$codigo'
+                order by ID_Historial desc limit 1;";
+                $resultadoObtenerUbicacion = $conn->query($sqlObtenerUbicacionMaquinaria);
+                $fila = mysqli_fetch_array($resultadoObtenerUbicacion, MYSQLI_ASSOC);
+                $ubicacion = $fila["Destino"];
+
+                $sqlActualizarHerramienta = "UPDATE tbl_herramientaelectrica SET Disposicion = " . ($ubicacion == Constantes::Bodega ? 1 : 0) . ", Estado = 1 WHERE Codigo='$codigo'";
             }
 
             $conn->close();
-
         } catch (\Throwable $th) {
             $conn->close();
         }
     }
-    
-    public function ObternerCosecutivoReparacion() {
+
+    public function ObternerCosecutivoReparacion()
+    {
         $sql = " select NumBoleta from tbl_boletareparacion order by NumBoleta desc limit 1;";
         $result = $this->conn->query($sql);
         $this->conn->close();
         return $result;
     }
 
-    public function EstaEnReparacion($codigo):bool{
-         $sql = "SELECT * FROM tbl_tempoherramientareparacion WHERE Codigo = '$codigo'";
-         $result = $this->conn->query($sql);
-         $this->conn->close();
-         return mysqli_num_rows($result) > 0;
+    public function EstaEnReparacion($codigo): bool
+    {
+        $sql = "SELECT * FROM tbl_tempoherramientareparacion WHERE Codigo = '$codigo'";
+        $result = $this->conn->query($sql);
+        $this->conn->close();
+        return mysqli_num_rows($result) > 0;
     }
 
-    public function ConsultarTodaMaquinariaReparacion() {
+    public function ConsultarTodaMaquinariaReparacion()
+    {
         $sql = "SELECT tr.ID,
         tr.Codigo,
         tt.Descripcion,
@@ -234,15 +242,14 @@ class MHistoria_Y_ReparacionesMaquinaria
                 if ($this->conn->query($sqlEliminarMaquinariaReparacion)) {
                     if ($this->conn->query($sqlActualizarMaquinaria) && $this->conn->query($sqlInsertarHistorial)) {
                         $resultado->esValido = true;
-                    }
-                    else{
-                        $resultado->mensaje ="Ocurrio un error al actualizar los datos de la maquinaria en reparación";
+                    } else {
+                        $resultado->mensaje = "Ocurrio un error al actualizar los datos de la maquinaria en reparación";
                     }
                 } else {
-                    $resultado->mensaje ="Ocurrio un error al actualizar los datos de la reparación";
+                    $resultado->mensaje = "Ocurrio un error al actualizar los datos de la reparación";
                 }
             } else {
-                $resultado->mensaje ="Ocurrio un error al actualizar los datos de la reparación";
+                $resultado->mensaje = "Ocurrio un error al actualizar los datos de la reparación";
             }
 
             if ($resultado->esValido) {
@@ -250,7 +257,7 @@ class MHistoria_Y_ReparacionesMaquinaria
                 $resultado->mensaje = "Se procesaron los datos correctamente";
             } else
                 mysqli_rollback($this->conn);
-            
+
             $this->conn->close();
             return $resultado;
         } catch (\Throwable $th) {
@@ -262,4 +269,158 @@ class MHistoria_Y_ReparacionesMaquinaria
         }
     }
 
+    public function ConsultarMaquinariaReparacionPorCodigo($codigo)
+    {
+        $sql = "SELECT tr.ID,
+        tr.Codigo,
+        tt.Descripcion,
+        tr.Fecha,
+        DATEDIFF(CURDATE(),tr.Fecha) as Dias,
+         tr.Boleta  ,
+         tb.ProveedorReparacion 
+         from tbl_tempoherramientareparacion tr,
+         tbl_tipoherramienta tt,
+        tbl_herramientaelectrica th ,
+        tbl_boletareparacion tb 
+        WHERE tr.Codigo = '$codigo' AND tr.Codigo = th.Codigo 
+        and tr.Boleta = tb.NumBoleta 
+        and  th.ID_Tipo = tt.ID_Tipo 
+        and tt.TipoEquipo = 'M';";
+        $resultado = $this->conn->query($sql);
+        $this->conn->close();
+        return $resultado;
+    }
+
+    public function ConsultarMaquinariaReparacionPorTipo($idTipo)
+    {
+        $sql = "SELECT tr.ID,
+        tr.Codigo,
+        tt.Descripcion,
+        tr.Fecha,
+        DATEDIFF(CURDATE(),tr.Fecha) as Dias,
+         tr.Boleta  ,
+         tb.ProveedorReparacion 
+         from tbl_tempoherramientareparacion tr,
+         tbl_tipoherramienta tt,
+        tbl_herramientaelectrica th ,
+        tbl_boletareparacion tb 
+        WHERE tt.ID_Tipo = $idTipo AND tr.Codigo = th.Codigo 
+        and tr.Boleta = tb.NumBoleta 
+        and  th.ID_Tipo = tt.ID_Tipo 
+        and tt.TipoEquipo = 'M'  ;";
+        $resultado = $this->conn->query($sql);
+        $this->conn->close();
+        return $resultado;
+    }
+
+    public function ConsultarTodasLasBoletasReparacionMaquinaria()
+    {
+        $sql = "SELECT NumBoleta,Fecha,u.Nombre FROM tbl_boletareparacion tb
+        INNER JOIN tbl_usuario u on tb.ID_Usuario = u.ID_Usuario
+        where tb.TipoEquipo = 'M'";
+        $resultado = $this->conn->query($sql);
+        $this->conn->close();
+        return $resultado;
+    }
+
+    public function ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta($numBoleta)
+    {
+        $numBoleta =  LimpiarCadenaCaracter($this->conn, $numBoleta);
+        $sql = "SELECT NumBoleta,Fecha,u.Nombre FROM tbl_boletareparacion tb
+        INNER JOIN tbl_usuario u on tb.ID_Usuario = u.ID_Usuario
+        where tb.NumBoleta = $numBoleta AND tb.TipoEquipo = 'M'";
+        $resultado = $this->conn->query($sql);
+        $this->conn->close();
+        return $resultado;
+    }
+
+    public function VerBoletaReparacion($NumBoleta)
+    {
+        $NumBoleta = LimpiarCadenaCaracter($this->conn, $NumBoleta);
+        $sql = "SELECT tr.Codigo,
+        tt.Descripcion,
+        th.Marca,
+        boleta.ProveedorReparacion as proveedor
+        from tbl_reparacionherramienta tr,
+         tbl_herramientaelectrica th,
+          tbl_tipoherramienta tt,
+           tbl_boletareparacion boleta 
+           WHERE tr.NumBoleta = ? AND tr.Codigo = th.Codigo 
+           and th.ID_Tipo = tt.ID_Tipo 
+           and tr.NumBoleta = boleta.NumBoleta";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $NumBoleta);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $this->conn->close();
+        $stmt->close();
+        return $resultado;
+    }
+
+    public function AnularBoletaReparacion($NumBoleta)
+    {
+        $resultado = new Resultado();
+        mysqli_begin_transaction($this->conn);
+        try {
+
+            $resultadoCodigosBoleta = $this->conn->query("SELECT Codigo from tbl_tempoherramientareparacion where Boleta = $NumBoleta");
+             if($resultadoCodigosBoleta != null && mysqli_num_rows($resultadoCodigosBoleta) > 0)
+           { while ($fila = mysqli_fetch_array($resultadoCodigosBoleta, MYSQLI_ASSOC)) {
+                $codigo = $fila["Codigo"];
+                $sqlBorrarRepracionHerramienta = "DELETE FROM tbl_reparacionherramienta WHERE Codigo = '$codigo' AND NumBoleta = $NumBoleta";
+                $sqlReversarInsertarReparcionTem = "DELETE FROM tbl_tempoherramientareparacion  WHERE Codigo = '$codigo' AND Boleta = $NumBoleta";
+                $sqlReversarInsertarHistorial = "DELETE FROM tbl_historialherramientas WHERE Codigo = '$codigo' AND NumBoleta = $NumBoleta";
+                if ($this->conn->query($sqlBorrarRepracionHerramienta)) {
+                    if ($this->conn->query($sqlReversarInsertarReparcionTem)) {
+                        if ($this->conn->query($sqlReversarInsertarHistorial)) {
+                            $sqlObtenerUbicacionMaquinaria = "SELECT  Destino FROM tbl_historialherramientas
+                        WHERE  CODIGO = '$codigo'
+                        order by ID_Historial desc limit 1;";
+                            $resultadoObtenerUbicacion = $this->conn->query($sqlObtenerUbicacionMaquinaria);
+                            $fila = mysqli_fetch_array($resultadoObtenerUbicacion, MYSQLI_ASSOC);
+                            $ubicacion = $fila["Destino"];
+                            $sqlActualizarHerramienta = "UPDATE tbl_herramientaelectrica SET Disposicion = " . ($ubicacion == Constantes::Bodega ? 1 : 0) . ", Estado = 1 WHERE Codigo='$codigo'";
+                            if($this->conn->query($sqlActualizarHerramienta)){
+                                $resultado->esValido = true;
+                            }
+                            else{
+                             $resultado->esValido = false;
+                            break; 
+                            }
+                        } else {
+                            $resultado->esValido = false;
+                            break;
+                        }
+                    } else {
+                        $resultado->esValido = false;
+                            break;
+                    }
+                } else {
+                    $resultado->esValido = false;
+                    break;
+                }
+            }
+            if($resultado->esValido)
+            {
+                $this->conn->query("DELETE FROM tbl_boletareparacion WHERE NumBoleta = $NumBoleta");
+                mysqli_commit($this->conn);
+                $resultado->mensaje="Se anuló la boleta correctamente";
+            }
+            else{
+                mysqli_rollback($this->conn);
+            }
+        }
+        else{
+            $resultado->esValido = false;
+            $resultado->mensaje="Esta boleta no puede ser eliminada debido a que ya se facturó el costo de la reparación";        
+        }
+
+            
+            $this->conn->close();
+            return $resultado;
+        } catch (\Throwable $th) {
+            mysqli_rollback($this->conn);
+            $this->conn->close();
+        }
+    }
 }

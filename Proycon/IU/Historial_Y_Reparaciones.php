@@ -37,13 +37,13 @@ ValidarIniciodeSession();
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h3>Hitorial y reparaciones</h3>
-                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="window.location.href='Maquinaria.php'">
+                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="Atras()">
                     <img src="../resources/imagenes/regresar.png" alt="" width="20px;" />
                 </button>
 
             </div>
             <div class="panel-body">
-                <div class="col-lg-12">
+                <div class="col-lg-12" id="equipoEnReparacion">
                     <div id="btnreparaciones">
                         <div class="col-lg-4">
                             <div class="input-group">
@@ -77,7 +77,7 @@ ValidarIniciodeSession();
                                                     <div class="input-group">
                                                         <input id="CodHerramientaReparacion" name="CodHerramientaReparacion" type="text" class="form-control" placeholder="Código" onclick="LimpiarBusquedaTipo()" onchange="FiltroInicio2()">
                                                         <span class="input-group-btn">
-                                                            <button id="btnBuscarCodigoT" class="btn btn-default" type="button" onclick="BuscarHerramientaTablaReparaciones()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
+                                                            <button id="btnBuscarCodigoT" class="btn btn-default" type="button" onclick="ConsultarMaquinariaReparacionPorCodigo()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" /></button>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -88,7 +88,7 @@ ValidarIniciodeSession();
                                         <td class="translado">
                                             <div style="width: 70%;" class="form-group ">
                                                 <div class="buscarHerramienta" style=" width: 100%;">
-                                                    <Select style="font-size: 15px" class="form-control" name="cbofiltrotipo" id="cbofiltrotipo" onclick="FiltroReparacionTipoc()" onchange="FiltroReparacionTipo()">
+                                                    <Select style="font-size: 15px" class="form-control" name="cbofiltrotipo" id="cbofiltrotipo" onchange="ConsultarMaquinariaReparacionPorTipo()">
                                                         <option value="0">Filtrar por Tipo</option>
                                                         <?php
                                                         $conexion = new Conexion();
@@ -137,8 +137,7 @@ ValidarIniciodeSession();
                     </div>
                 </div>
 
-
-                <div class="col-lg-12">
+                <div class="col-lg-12" id="historialGastos" style="display:none ;">
                     <div class="col-lg-12" id="">
                         <div class="panel panel-info" style=" width: auto">
                             <div class="panel-heading ">
@@ -161,7 +160,7 @@ ValidarIniciodeSession();
                                     <table>
                                         <tr>
                                             <td class="translado">
-                                                <h4>Herramienta:
+                                                <h4>Codigo Maquinaria:
                                                     <span id="NombreHerramienta"> </span>
                                                 </h4>
 
@@ -281,6 +280,49 @@ ValidarIniciodeSession();
                     </div>
 
                 </div>
+
+                <div class="col-lg-12" id="boletasReparacionMaquinaria" style="display:none ;">
+                    <div class="col-lg-12" id="">
+                        <div class="panel panel-info" style=" width: auto">
+                            <div class="panel-heading ">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <h4>Boletas de reparación</h4>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-lg-4">
+                                    <div class="input-group">
+                                        <input id="txtNumBoletaBuscar" name="txtNumBoletaBuscar" type="text" class="form-control" placeholder="Número de boleta">
+                                        <span class="input-group-btn">
+                                            <button id="btnBuscarCodigoT" class="btn btn-default" type="button" onclick="ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta()">
+                                            <img src="../resources/imagenes/icono_buscar.png" width="18px" alt="" />
+                                        </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <br>
+                            <div class="col-lg-12" style="margin-top:2rem">
+                                    <table class="table-bordered table-responsive tablasG">
+                                        <thead>
+                                            <th>Número</th>
+                                            <th>Fecha</th>
+                                            <th>Generada Por</th>
+                                            <th></th>
+                                        </thead>
+                                        <tbody id="mostrarBoletasReparacion">
+                                            <?php ConsultarTodasLasBoletasReparacionMaquinaria() ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
 
@@ -416,32 +458,32 @@ ValidarIniciodeSession();
                         </div>
                         <hr>
                         <div class="row">
-                        <div class="form-group">
-                            <label class="col-lg-12">Numero Factura</label>
-                            <div class="col-lg-12">
-                                <input type="text" name="txtNunFactura" id="txtNunFactura" class="form-control" placeholder="Numero" onkeypress="return soloNumeros(event)" />
+                            <div class="form-group">
+                                <label class="col-lg-12">Numero Factura</label>
+                                <div class="col-lg-12">
+                                    <input type="text" name="txtNunFactura" id="txtNunFactura" class="form-control" placeholder="Numero" onkeypress="return soloNumeros(event)" />
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-12"> Fecha de la Factura</label>
-                            <div class="col-lg-12">
-                                <input type="date" name="txtFechaFactura" id="txtFechaFactura" class="form-control " placeholder="Fecha" />
+                            <div class="form-group">
+                                <label class="col-lg-12"> Fecha de la Factura</label>
+                                <div class="col-lg-12">
+                                    <input type="date" name="txtFechaFactura" id="txtFechaFactura" class="form-control " placeholder="Fecha" />
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-12">Descripcion</label>
-                            <div class="col-lg-12">
-                                <textarea type="text" name="txtDescripcionFactura" id="txtDescripcionFactura" class="form-control " placeholder="Descripción Trabajo Efectuado"></textarea>
+                            <div class="form-group">
+                                <label class="col-lg-12">Descripcion</label>
+                                <div class="col-lg-12">
+                                    <textarea type="text" name="txtDescripcionFactura" id="txtDescripcionFactura" class="form-control " placeholder="Descripción Trabajo Efectuado"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-lg-12">Costo de la Reparación</label>
-                            <div class="col-lg-12">
-                                <input type="text" name="txtCantidadFactura" id="txtCantidadFactura" class="form-control" onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" placeholder="Costo" />
+                            <div class="form-group">
+                                <label class="col-lg-12">Costo de la Reparación</label>
+                                <div class="col-lg-12">
+                                    <input type="text" name="txtCantidadFactura" id="txtCantidadFactura" class="form-control" onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" placeholder="Costo" />
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <br>
@@ -454,7 +496,85 @@ ValidarIniciodeSession();
                 </div>
             </div>
         </div>
+  <!--MODAL PARA Ver las boletas de reparación    -->
+        <div id="ModalVerBoletaReparacion" class="modal fade" role="dialog">   
+                <div class="modal-dialog">
 
+                    <div class="modal-content">
+                        <div id="voletaVista" name ="voletaVista" class="modal-header headerModal">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id = "tituloBoletaV" name ="tituloBoletaV">Boleta de Reparación de la Herramienta</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <header style="overflow: hidden" id="" class="headerPedidoMaterial">
+                                <div class="col-xs-6" id="imgPedido">
+                                    <h1><a href=" "> <img src="../resources/imagenes/proycon-slider.png" width="100px;" alt=""/> </a></h1>
+                                </div>
+
+                                <div id="headerBoletaPedido">
+                                    <div class="col-xs-6 text-right">
+                                        <h2><small style="color: red">Boleta Nº <span id="consecutivoBoletaReparacionSeleccionado"></span></small></h2>
+                                    </div>
+
+                                    <div class="col-xs-6 text-right tableFechaPedido">
+                                        <table class="talaFecha" id="tblFechaBoletaReparacion">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dia</th>
+                                                    <th>Mes</th>
+                                                    <th>Año</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="dia"></td>
+                                                    <td id="mes"></td>
+                                                    <td id="anno"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                    <h4>Boleta: <strong id="TipoPedidoBoletaReparacion">Reparación Herramienta</strong></h4>
+                                    <h4>Generada Por: <strong id="generadaPorBoletaReparacion"></strong></h4>
+                                    <BR>
+                                </div>
+                            </header>
+
+                            <div class="bodyPedido" >
+                                <div class="tableCuerpoPedido" id="ContenidoBoletaReparacion_Selecionado">
+                                    <table class="tablasG" id="tblBoletaReparacion">
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Tipo</th>
+                                                <th>Marca</th>
+                                                <th>Proveedor reparación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="contenidoBoletaReparacion">
+
+                                        </tbody>
+                                    </table>	
+                                </div>
+                            </div><br>
+
+
+
+                            <div class="modal-footer">
+                                <button  type="button" class="btn btn-default btn-estilos" onclick="Exportar_Pdf('ContenidoBoletaReparacion_Selecionado', 'tblFechaBoletaReparacion', 'consecutivoBoletaReparacionSeleccionado', '', 'TipoPedidoBoletaReparacion', 'generadaPorBoletaReparacion')">
+                                    <img  src="../resources/imagenes/print.png" alt="" width="30px"/>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaReparacion()">Eliminar</button>
+
+                            </div>
+                        </div>
+                        <div id="mensajesResultadoBoletaReparacion"></div>
+                    </div>
+                </div>
+            </div>
     </main>
 </body>
 

@@ -39,6 +39,24 @@ if (isset($_GET['opc'])) {
         case "consultarReparacion":
             ConsultarTodaMaquinariaReparacion();
             break;
+        case "consultarReparacionPorCodigo":
+            ConsultarMaquinariaReparacionPorCodigo();
+            break;
+        case "filtrarPorTipoMaquinaria":
+            ConsultarMaquinariaReparacionPorTipo();
+            break;
+        case "consultarBoletasReparacion":
+            ConsultarTodasLasBoletasReparacionMaquinaria();
+            break;
+        case "consultarBoletasReparacionPorNumBoleta":
+            ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta();
+            break;
+        case "VerBoletaReparacion":
+             VerBoletaReparacion();
+            break;
+            case "AnularBoletaReparacion":
+                AnularBoletaReparacion();
+               break;
         default:
             break;
     }
@@ -181,6 +199,77 @@ function ConsultarTodaMaquinariaReparacion()
     }
 }
 
+function ConsultarMaquinariaReparacionPorCodigo()
+{
+
+    try {
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+        $codigo =   $_GET["codigo"];
+        $resultado = $bd->ConsultarMaquinariaReparacionPorCodigo($codigo);
+        if ($resultado != null) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+
+                $resultadoHTML .= "<tr>
+                            <td>" . $fila['ID'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td style='color:red'>" . $fila['Dias'] . "</td>
+                            <td>" . $fila['ProveedorReparacion'] . "</td>  
+                            <td>" . $fila['Boleta'] . "</td>
+                                
+                            <td style='text-align: center'>
+                            <button onclick=AbrirMondalDatosReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>
+                           
+                            </tr>";
+            }
+            echo $resultadoHTML;
+        }
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "ConsultarTodaMaquinariaReparacion"));
+    }
+}
+
+function ConsultarMaquinariaReparacionPorTipo()
+{
+    try {
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+        $idTipo =   $_GET["idTipo"];
+        $resultado = $bd->ConsultarMaquinariaReparacionPorTipo($idTipo);
+        if ($resultado != null) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+
+                $resultadoHTML .= "<tr>
+                            <td>" . $fila['ID'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td style='color:red'>" . $fila['Dias'] . "</td>
+                            <td>" . $fila['ProveedorReparacion'] . "</td>  
+                            <td>" . $fila['Boleta'] . "</td>
+                                
+                            <td style='text-align: center'>
+                            <button onclick=AbrirMondalDatosReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>
+                           
+                            </tr>";
+            }
+            echo $resultadoHTML;
+        }
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "ConsultarTodaMaquinariaReparacion"));
+    }
+}
+
 function FacturacionReparacionMaquinaria()
 {
     $class = new Factura();
@@ -214,5 +303,99 @@ function ConsecutivoReparacion()
         return $fila["NumBoleta"] + 1;
     } else {
         return 1;
+    }
+}
+
+function ConsultarTodasLasBoletasReparacionMaquinaria()
+{
+    try {
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+        $resultado = $bd->ConsultarTodasLasBoletasReparacionMaquinaria();
+        if ($resultado != null) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+
+                $resultadoHTML .= "<tr>
+                    <td>" . $fila['NumBoleta'] . "</td>
+                    <td>" . $Fecha . "</td>
+                    <td>" . $fila['Nombre'] . "</td>                        
+                    <td style='text-align: center'>
+                        <button class='btn btn-success' onclick=VerBoletaReparacion(this)>
+                         Abrir
+                        </button>
+                    </td>                   
+                    </tr>";
+            }
+            echo $resultadoHTML;
+        }
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "ConsultarTodasLasBoletasReparacionMaquinaria"));
+    }
+}
+
+function ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta($numBoleta = "")
+{
+    try {
+        $numBoleta =   $_GET["numBoleta"];
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+
+
+        $resultado = $bd->ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta($numBoleta);
+        if ($resultado != null) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+
+                $resultadoHTML .= "<tr>
+                     <td>" . $fila['NumBoleta'] . "</td>
+                     <td>" . $Fecha . "</td>
+                     <td>" . $fila['Nombre'] . "</td>                        
+                     <td style='text-align: center'>
+                     <button class='btn btn-success' onclick=VerBoletaReparacion(this)>
+                     Abrir
+                    </button>
+                     </td>                   
+                     </tr>";
+            }
+            echo $resultadoHTML;
+        }
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta"));
+    }
+}
+
+function VerBoletaReparacion($numBoleta = "")
+{
+    try {
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+        $numBoleta =   $_GET["numBoleta"];
+        $result = $bd->VerBoletaReparacion($numBoleta);
+        if ($result != null) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $resultadoHTML .= "<tr>
+                                    <td>" . $fila['Codigo'] . "</td>
+                                    <td>" . $fila['Descripcion'] . "</td>
+                                    <td>" . $fila['Marca'] . "</td>
+                                    <td>" . $fila['proveedor'] . "</td>
+                                </tr>";
+            }
+            echo $resultadoHTML;
+        }
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "VerBoletaReparacion"));
+    }
+}
+
+function AnularBoletaReparacion($numBoleta = "")
+{
+    try {
+        $bd = new MHistoria_Y_ReparacionesMaquinaria();
+        $numBoleta =   $_GET["numBoleta"];
+        $resultado = $bd->AnularBoletaReparacion($numBoleta);
+        echo json_encode($resultado);
+    } catch (\Throwable $th) {
+        echo  json_encode(Log::GuardarEvento($th, "AnularBoletaReparacion"));
     }
 }
