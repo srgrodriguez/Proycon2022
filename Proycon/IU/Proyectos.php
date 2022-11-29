@@ -54,19 +54,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                     
                 </div>
                 <div class="panel-body">
-                <!--    <div class="form-group codigoHerramienta">
 
-                        <div class="" style="width: 50%;margin: auto">
-                            <div class="input-group">
-                                <input id="txtCodigo" name="Codigo" type="text" class="form-control" placeholder="Codigo">
-                                <span class="input-group-btn">
-                                    <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarHerramientas()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
-                                </span>
-
-                            </div>
-                        </div>
-
-                    </div>-->
 
                     <div class="formularioMenuHerramientas">
                         <div class="formHerramientas">
@@ -126,13 +114,25 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                             <?php }?>
                         </article>
 
+
+
+                        <div class="col-12 p-3"> 
+                                <input type="button" class=" btn btn-info" onclick="ActualizarMaterialesHerramientaProyectoDos()" value="Listar Material" />
+                                <input type="button" class="btn btn-info" onclick="listarHerramientaTabla()" value="Listar Materiales" />
+                                <input type="button" class="btn btn-info" onclick="listarMaquinaria()" value="Listar Maquinaria">
+                        </div>            
+
+
                         <div id="mhProyectos">
                             <section id="materiales" class="materiales">
-
                             </section>
-                            <section id="herramientas" class="materiales">
 
+                            <section id="herramientas" class="materiales d-none" style='display: none;'>
                             </section> 
+
+                            <section id="maquinaria" class="materiales" style='display: none !important;'>
+                            </section> 
+
 
                         </div>
 
@@ -462,6 +462,9 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 
 
                         </section>
+
+
+                        
                     </div>
 
 
