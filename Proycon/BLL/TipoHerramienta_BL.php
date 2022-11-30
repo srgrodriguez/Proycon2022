@@ -73,12 +73,16 @@ function ActualizarTipoHerramienta()
     }
 }
 
-function ListarTipoHerramientas()
+function ListarTipoHerramientas($tipoEquipo = 'M')
 {
     try {
         $request  = json_decode(file_get_contents('php://input'));
         $dbHerramientas = new MTipoHerramienta();
-        $resultado = $dbHerramientas->listarTipoHerramientas($request->tipoEquipo);
+        if($request != null)
+        {
+            $tipoEquipo = $request->tipoEquipo;
+        }
+        $resultado = $dbHerramientas->listarTipoHerramientas($tipoEquipo);
         if ($resultado != null && mysqli_num_rows($resultado) > 0) {
             $resultadoHTML = '';
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {

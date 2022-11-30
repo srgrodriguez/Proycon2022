@@ -352,6 +352,7 @@ function ConsultarTodaMaquinariaReparacion() {
 
 function ConsultarMaquinariaReparacionPorCodigo() {
     let codigo = $("#CodHerramientaReparacion").val();
+    document.getElementById("cbofiltrotipo").value = "0";
     if (codigo != "")
         fetch('../BLL/Historia_Y_ReparacionesMaquinaria_BL.php?opc=consultarReparacionPorCodigo&codigo=' + codigo,
             {
@@ -379,6 +380,7 @@ function ConsultarMaquinariaReparacionPorCodigo() {
 }
 
 function ConsultarMaquinariaReparacionPorTipo() {
+    $("#CodHerramientaReparacion").val("");
     let idTipo = document.getElementById("cbofiltrotipo").value;
     if (idTipo != "0")
         fetch('../BLL/Historia_Y_ReparacionesMaquinaria_BL.php?opc=filtrarPorTipoMaquinaria&idTipo=' + idTipo,

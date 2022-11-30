@@ -15,7 +15,7 @@ function GenerarEncabezadoReporte(PHPExcel $objPHPExcel,$tituloReporte)
     $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('C2', 'Proycon S.A')
             ->setCellValue('C3', $tituloReporte);
-            $objPHPExcel->getActiveSheet()->getStyle('C2:F6')->applyFromArray(array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 18)));
+            $objPHPExcel->getActiveSheet()->getStyle('C2:F4')->applyFromArray(array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 18)));
 
             $objDrawing = new PHPExcel_Worksheet_Drawing();
             $objDrawing->setName('imgNotice');
@@ -30,22 +30,22 @@ function GenerarEncabezadoReporte(PHPExcel $objPHPExcel,$tituloReporte)
 
 }
 
-function GenerarEncabezadoTabla(PHPExcel $objPHPExcel,array $listadoColumnas)
+function GenerarEncabezadoTabla(PHPExcel $objPHPExcel,array $listadoColumnas,$numFilaInicioTabla= 8)
 {
   
-    $i= 8;
+    $i= $numFilaInicioTabla;
     $contadorObtenerPosicionLetra=2;
+    $ultimaLetra= "";
     foreach ($listadoColumnas as &$value) {
         $letra = GenerarArrayLetras($contadorObtenerPosicionLetra);
         $posicion = $letra.$i;
         $objPHPExcel->setActiveSheetIndex(0)
         ->setCellValue("$posicion", $value);
+        $ultimaLetra= $letra;
         $contadorObtenerPosicionLetra++;
     }
 
-    $posicionUltimaLetra = $contadorObtenerPosicionLetra--;
-     $ultimaLetra = GenerarArrayLetras($posicionUltimaLetra);
-    $rangoEncabezado = "C8:$ultimaLetra".$i;
+    $rangoEncabezado = "C$numFilaInicioTabla:$ultimaLetra".$i;
     $objPHPExcel->getActiveSheet()->getStyle($rangoEncabezado)->applyFromArray(
         array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 14, 'color' => array('rgb' => 'ffffff')),
             'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
