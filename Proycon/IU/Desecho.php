@@ -172,6 +172,10 @@ ValidarIniciodeSession();
                                 <h4>Boleta: <strong>Materiales</strong></h4>
                                 <input data-toggle='modal' data-target='#ModalBuscarMaterial' type="submit" class="btn btn-default" value="Buscar Material" />
                                 <BR>
+
+                                <img  data-toggle='modal' data-target='#ModalAdjuntarCorreo' onclick="ModalAdjuntarCorreo()" id="imgCorreo" src="../resources/imagenes/correo.png" alt="" width="45" />
+
+
                                 <table id="tbl_agregarMaterialPedido">
                                     <tbody>
                                         <tr>
@@ -321,33 +325,6 @@ ValidarIniciodeSession();
     </main>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 
 </html>
@@ -463,6 +440,7 @@ ValidarIniciodeSession();
 
 
 <div id="ModalVerPedido" class="modal fade" role="dialog">   
+    
                 <div class="modal-dialog">
 
                     <div class="modal-content">
@@ -526,9 +504,58 @@ ValidarIniciodeSession();
                                 <button  type="button" class="btn btn-default btn-estilos" onclick="Exportar_Pdf('ContenidoPedido_Selecionado')">
                                     <img  src="../resources/imagenes/print.png" alt="" width="30px"/>
                                 </button>
-                                <button id="btnAnularBoletaMaterial" style="display: none" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaMaterial()">Anular Boleta</button>
+                                <img  data-toggle='modal' data-target='#ModalAdjuntarCorreo' onclick="ModalAdjuntarCorreo()" id="imgCorreo" src="../resources/imagenes/correo.png" alt="" width="45" />
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+                    <!--Modal Correo Electronico-->  
+        <div  id="ModalAdjuntarCorreo" class="modal fade" role="dialog">   
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="headerModalCorreo"class="modal-header headerModal">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="textoEncabezadoCorreo">Enviar pedido por Email</h4>
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="input-group">
+
+                            <input id="txtBuscarCorreo" name="txtBuscarCorreo" type="text" class="form-control" placeholder="Buscar Correo...">
+                            <span class="input-group-btn">
+                                <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarMaterialNombreP()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                            </span>
+
+                        </div>
+                        <div id="mostrarTablaCorreosBuscados"></div>
+                        
+
+
+                        <br>
+                        <h3>Para</h3>
+                        <div id="destinariosCorreo" style="width: 60%">
+                        <table class="tablasG">
+                            <tbody id="listaCorreos">
+                                
+                                
+                            </tbody>
+                        </table>
+                        </div>  
+                        <br>
+                        <textarea id="mensajeCorreo" class="form-control" style="width: 100%;height: 89px" placeholder="Mensaje"></textarea>
+                        
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!--FIN Modal Correo Electronico-->  

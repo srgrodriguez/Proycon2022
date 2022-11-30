@@ -437,7 +437,7 @@ header #menu nav .ul .submenu li a:hover{
     display: none;
 }
 .materiales{
-    width: 49%;
+    width: 100%;
     height: auto;
     float: left;
      /*background:#b9c9fe;*/

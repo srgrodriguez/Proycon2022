@@ -254,7 +254,7 @@ function AgregarMaterialBuscadoPNombre(evento) {
         var nuevaFila = "<tr>" +
                 "<td class='codTabla'>" + cod + "</td>" +
                 "<td class='cantidadTabla'>" + cantidad + "</td>" +
-                "<td>" + nombre + "</td>" +
+                "<td class='descripcionTabla'>" + nombre + "</td>" +
                 "<td style='width: 25px;'>" +
                 "<button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>" +
                 "<img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>" +
@@ -344,7 +344,8 @@ function GuardarBoletaMateriales(){
         let fila = {
           codigo: e.querySelector('.codTabla').innerText,
           cantidad: e.querySelector('.cantidadTabla').innerText,  // Por defecto 1 ya que es una por registro
-          tipo: 0 // Correspondiete a Material  
+          tipo: 0, // Correspondiete a Material  
+          descripcion: e.querySelector('.descripcionTabla').innerText
         };
         ArregloTabla.push(fila);
       });
@@ -630,5 +631,33 @@ function Exportar_Pdf(idTabla) {
     //pdf.create()
 }
 
+
+
+function ModalAdjuntarCorreo(){
+        $.ajax({
+        url: "../BLL/Pedidos.php?opc=obtenerCorreos",
+       beforeSend: function () {
+               $("#listaCorreos").html("<center>Cargando correos... <img src='../resources/imagenes/loanding.gif'  width='70px'/></center>");
+                },
+        success: function (respuesta) {
+           $("#listaCorreos").html(respuesta);
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        if (jqXHR.status === 0) {
+
+    alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+  } else if (jqXHR.status == 404) {
+
+    alert('Error [404] No se encontro el Archivo');
+
+  } else if (jqXHR.status == 500) {
+
+    alert('Error de conexion con el servidor');
+
+  }
+        
+    }); 
+}
 
 

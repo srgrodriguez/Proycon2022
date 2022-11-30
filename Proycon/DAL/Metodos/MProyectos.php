@@ -76,6 +76,21 @@ class MProyectos implements IProyectos {
         return $resultado;
     }
 
+
+    public function ListaMaquinariaProyecto($idProyecto) {
+        $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
+        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
+ tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo;
+ ;";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $idProyecto);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;
+    }
+
     public function ListaMaterialesProyecto($idProyecto) {
         $sql = "SELECT m.Codigo, m.Nombre,m.Devolucion,pm.Cantidad,pm.Pendiente,bp.Fecha,bp.Consecutivo FROM tbl_boletaspedido bp, tbl_prestamomateriales pm,tbl_materiales m where bp.Consecutivo = pm.NBoleta and bp.ID_Proyecto = ? and pm.ID_Material = m.Codigo ORDER BY bp.Consecutivo DESC ;";
         $stmt = $this->conn->prepare($sql);

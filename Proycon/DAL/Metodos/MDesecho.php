@@ -330,4 +330,30 @@ public function RegistrarDesechoMaterial($arreglo,$fechaDesecho,$idUsuario,$moti
 
 
 }
+
+
+
+public function ObtenerCorreosAdjuntadosSiempre() {
+    $sql ="Select ID_Usuario,Usuario from tbl_usuario where Adjuntarcorreo = 1";
+    $result =  $this-> conn->query($sql);
+    $this-> conn->close();
+    return $result;    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
