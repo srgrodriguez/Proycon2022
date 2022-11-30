@@ -17,6 +17,7 @@ ValidarIniciodeSession();
     <link href="../css/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script src="../js/FuncionesGenerales.js" type="text/javascript"></script>
+    <script src="../js/jsReportesMaquinari.js" type="text/javascript"></script>
     <script src="../js/jquery.table2excel.js" type="text/javascript"></script>
     <script src="../js/jsMenu.js" type="text/javascript"></script>
     <script src="../js/jsHistorial_Y_Reparaciones.js" type="text/javascript"></script>
@@ -66,7 +67,7 @@ ValidarIniciodeSession();
                         <div class="panel panel-info" style=" width: auto">
                             <div class="panel-heading">
                                 <h4>Maquinaria en reparación</h4>
-                                <button id="btnImprimirHerramientas" style="float: right;position: relative;top: -35px" class="btn btn-default" onclick="Exportar_Excel('tablaReparaciones')"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
+                                <button id="btnExportarMaquinariaReparacion" style="float: right;position: relative;top: -35px" class="btn btn-default" onclick="GenerarReporteMaquinariaEnReparacion()"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
                             </div>
                             <div class="panel-body">
                                 <table class="tablatranslado">
@@ -146,7 +147,7 @@ ValidarIniciodeSession();
                                         <h4>Historial de Gastos</h4>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <button class="btn btn-default" id="btnExportarExcelHistorialGastos" style="float: right">
+                                        <button class="btn btn-default" id="btnExportarExcelHistorialGastos" onclick="GenerarReporteHistorial_Y_ReparacionesMaquinaria()" style="float: right">
                                             <img src="../resources/imagenes/Excel.png" width="20" />
                                         </button>
                                     </div>

@@ -1,6 +1,9 @@
 
 function listarTipoHerramientas(tipoEquipo) {
-
+    btnEditar = document.getElementById('btnEditar');
+    btnGuardar = document.getElementById('btnGuardarTipo');
+    btnEditar.disabled = true;
+    btnGuardar.disabled = false;
     fetch('../BLL/TipoHerramienta_BL.php?opc=listar',
         {
             method: 'POST',
@@ -104,7 +107,7 @@ function AgregarNuevoTipo(tipoEquipo) {
                 MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "respuestaTipoHerramienta");
                 $("#txtnombreTipoMaquinaria").val("");
                 $("#txtPrecioAlquiler").val("");
-                document.getElementById("cboMoneda").value = '0';
+                document.getElementById("cboMonedaTipo").value = '0';
                 document.getElementById("cboFormaCobro").value = '0';
                 listarTipoHerramientas(tipoEquipo);
 
@@ -118,24 +121,27 @@ function AgregarNuevoTipo(tipoEquipo) {
 }
 
 function EditarTipo(id) {
-    btnEditar = document.getElementById('btnEditar');
-    btnEditar.disabled = false;
+    $("#tituloModalAgregarTipo").html("Editar tipo de maquinaria");
+    $("#btnGuardarTipo").hide();
+    $("#btnEditar").show();
     ConsultarTipoHerramientaPorID(id);
+    $("#ModalAgregarTipoMaquinaria").modal()
 }
 
-function ActualizarTipo() {
+async function ActualizarTipo() {
     btnEditar = document.getElementById('btnEditar');
+    btnEditar.disabled = true;
     let nombreTipo = $("#txtnombreTipoMaquinaria").val();
     let precio = $("#txtPrecioAlquiler").val();
     let id = $("#IdTipoHerramienta").val();
     let tipoEquipo = $("#IdTipoEquipo").val();
-    let moneda = document.getElementById("cboMoneda").value;
+    let moneda = document.getElementById("cboMonedaTipo").value;
     let formaPago = document.getElementById("cboFormaCobro").value;
     if (StringIsNullOrEmpty(nombreTipo) || StringIsNullOrEmpty(precio) || moneda == "0" || formaPago == "0") {
         MostrarMensajeResultado("Todos los campos son requeridos", false, "respuestaTipoHerramienta")
     }
     else {
-        fetch('../BLL/TipoHerramienta_BL.php?opc=actualizar',
+      await  fetch('../BLL/TipoHerramienta_BL.php?opc=actualizar',
             {
                 method: 'POST',
                 headers: {
@@ -167,7 +173,7 @@ function ActualizarTipo() {
                     $("#txtPrecioAlquiler").val("");
                     $("#IdTipoHerramienta").val("");
                     $("#IdTipoEquipo").val("")
-                    document.getElementById("cboMoneda").value = '0';
+                    document.getElementById("cboMonedaTipo").value = '0';
                     document.getElementById("cboFormaCobro").value = '0';
                     listarTipoHerramientas(tipoEquipo);
                     btnEditar.disabled = true;
@@ -180,6 +186,8 @@ function ActualizarTipo() {
             .catch((result) => {
                 MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
             });
+
+            btnEditar.disabled = false;
 
     }
 
@@ -213,7 +221,7 @@ function ConsultarTipoHerramientaPorID(id) {
                 $("#txtnombreTipoMaquinaria").val(resultado.Descripcion);
                 $("#txtPrecioAlquiler").val(resultado.PrecioEquipo);
                 $("#IdTipoEquipo").val(resultado.TipoEquipo);
-                document.getElementById("cboMoneda").value = resultado.CodigoMonedaCobro;
+                document.getElementById("cboMonedaTipo").value = resultado.CodigoMonedaCobro;
                 document.getElementById("cboFormaCobro").value = resultado.CodigoFormaCobro;
             }
             else {
@@ -223,5 +231,12 @@ function ConsultarTipoHerramientaPorID(id) {
         .catch((result) => {
             MostrarMensajeResultado(data, false, "respuestaTipoHerramienta");
         });
+}
+
+function AbriModalAgregar()
+{
+   $("#tituloModalAgregarTipo").html("Agregar nuevo tipo de maquinaria");
+   $("#btnGuardarTipo").show();
+   $("#btnEditar").hide();
 }
 

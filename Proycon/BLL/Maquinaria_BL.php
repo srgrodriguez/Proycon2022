@@ -38,7 +38,7 @@ if (isset($_GET['opc'])) {
             break;
         case "bucarPorCodigoGetJson":
             BuscarPorCodigoOuputJson();
-             break;
+            break;
         case "fichaTecnica":
             ConultarFichaTecinica();
             break;
@@ -71,7 +71,7 @@ function AgregarMaquinaria()
         $maquinaria->disposicion = 1;
         $maquinaria->procedencia = $_POST["procedencia"];
         $maquinaria->ubicacion = Constantes::Bodega;
-        $maquinaria->precio =str_replace(",","",$_POST["precio"]);
+        $maquinaria->precio = str_replace(",", "", $_POST["precio"]);
         $maquinaria->numFactura = $_POST["numFactura"];
         $maquinaria->nombreArchivo =  $archivo_nombre;
         $maquinaria->archivoBinario =  $archivo_binario;
@@ -112,14 +112,14 @@ function ActualizarMaquinaria()
         $maquinaria->fechaIngreso = $_POST["fechaIngreso"];
         $maquinaria->procedencia = $_POST["procedencia"];
         $maquinaria->ubicacion = Constantes::Bodega;
-        $maquinaria->precio = str_replace(",","",$_POST["precio"]);;
+        $maquinaria->precio = str_replace(",", "", $_POST["precio"]);;
         $maquinaria->numFactura = $_POST["numFactura"];
         $maquinaria->nombreArchivo =  $archivo_nombre;
         $maquinaria->archivoBinario =  $archivo_binario;
         $maquinaria->monedaCompra = $_POST["monedaCompra"];
         $maquinaria->idHerramienta = $_POST["idHerramienta"];
-        $maquinaria->idArchivo =   ($_POST["idArchivo"] != null && $_POST["idArchivo"] != "")? $_POST["idArchivo"] : 0;
-        
+        $maquinaria->idArchivo =   ($_POST["idArchivo"] != null && $_POST["idArchivo"] != "") ? $_POST["idArchivo"] : 0;
+
         if ($_POST["codigoNuevo"] != $_POST["codigoActual"]) {
             $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($maquinaria->codigo);
             if (mysqli_num_rows($existeMaquinaria) > 0) {
@@ -218,11 +218,10 @@ function BuscarPorCodigoOuputHrml()
 function BuscarPorCodigoOuputJson($codigo = "")
 {
     $bdMaquinaria = new MMaquinaria();
-    $codigo = $codigo == ""?$_GET['codigo']:$codigo;
+    $codigo = $codigo == "" ? $_GET['codigo'] : $codigo;
     $resultado = $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
     $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
     echo json_encode($equipo);
-   
 }
 
 function ConultarFichaTecinica()
@@ -248,7 +247,7 @@ function GenerarHtmlListaMaquinaria($resultado)
 {
     $resultadoHTML = '';
     while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        $monedaCompra =$fila["MonedaCompra"] == "D" ? "$" : "¢";
+        $monedaCompra = $fila["MonedaCompra"] == "D" ? "$" : "¢";
         $Monto =  number_format($fila['Precio'], 2, ",", ".");
         $monedaCorbo = $fila['CodigoMonedaCobro'] == "C" ? "¢" : "$";
         $PrecioAlquiler =  number_format($fila['PrecioEquipo'], 2, ",", ".");
@@ -260,24 +259,25 @@ function GenerarHtmlListaMaquinaria($resultado)
         $btnEditar = " <button class='btn btn-default'  onclick='OpenModalEditarMaquinaria(\"" . $fila['Codigo'] . "\"," . $fila['ID_Archivo'] . ")'>
                          <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
                                  </button>";
+        $eliminarMaquinaria = "<button type='button' disabled class='btn btn-danger' onclick=\"AbrirModalEliminarMaquinaria('" . $fila['Codigo'] . "')\" >
+                                 <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
+                                 </button>";
 
         if ($fila['ID_Archivo'] != null || $fila['ID_Archivo'] != "")
             $btnVerFichaTecnica =  str_replace("disabled", "", $btnVerFichaTecnica);
 
+        if ($_SESSION['ID_ROL'] == Constantes::RolAdminBodega)
+            $eliminarMaquinaria =  str_replace("disabled", "", $eliminarMaquinaria);
+
         if ($fila['numEstado'] == Constantes::EstadoOK) {
-            if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) {
-                $eliminarMaquinaria =  "<td style='text-align: center'>
-             <button type='button' class='btn btn-danger' onclick=\"AbrirModalEliminarMaquinaria('" . $fila['Codigo'] . "')\" >
-             <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
-             </button>
-              </td>";
-            }
+
+
             $resultadoHTML .= "<tr>
                     <td>" . $fila['Codigo'] . "</td>
                     <td style='text-align: left'>" . $fila['Tipo'] . "</td>
                     <td style='text-align: right'>" .  $monedaCorbo . $PrecioAlquiler . "</td>    
                     <td>" . $Fecha . "</td>
-                    <td style='text-align: right'>" .$monedaCompra. $Monto . "</td>
+                    <td style='text-align: right'>" . $monedaCompra . $Monto . "</td>
                     <td>" . $fila['Disposicion'] . "</td>
                     <td>" . $fila['Ubicacion'] . "</td>
                     <td>" . $fila['Estado'] . "</td>
@@ -285,7 +285,8 @@ function GenerarHtmlListaMaquinaria($resultado)
                           " . $btnVerFichaTecnica . "
                     </td>
                     <td>$btnEditar</td>
-                    $eliminarMaquinaria
+                    <td style='text-align: center'>$eliminarMaquinaria</td>
+                    
                      
                    </tr>";
         } else {
@@ -294,13 +295,15 @@ function GenerarHtmlListaMaquinaria($resultado)
                     <td class='usuarioBolqueado' style='text-align: left'>" . $fila['Tipo'] . "</td>
                     <td class='usuarioBolqueado' style='text-align: right'>" .  $monedaCorbo . $PrecioAlquiler . "</td>
                     <td class='usuarioBolqueado'>" . $Fecha . "</td>
-                    <td class='usuarioBolqueado' style='text-align: right'>" .$monedaCompra. $Monto . "</td>
+                    <td class='usuarioBolqueado' style='text-align: right'>" . $monedaCompra . $Monto . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Disposicion'] . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Ubicacion'] . "</td>
                     <td class='usuarioBolqueado'>" . $fila['Estado'] . "</td>
                     <td class='usuarioBolqueado' style='text-align: center'>
-                      " . $btnVerFichaTecnica . "
-                     </td>
+                    " . $btnVerFichaTecnica . "
+              </td>
+              <td class='usuarioBolqueado' >$btnEditar</td>
+              <td class='usuarioBolqueado' style='text-align: center'>$eliminarMaquinaria</td>
                    </tr>";
         }
     }
