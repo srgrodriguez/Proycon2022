@@ -116,24 +116,25 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 
 
 
-                        <div class="col-12 p-3"> 
-                                <input type="button" class=" btn btn-info" onclick="ActualizarMaterialesHerramientaProyectoDos()" value="Listar Material" />
-                                <input type="button" class="btn btn-info" onclick="listarHerramientaTabla()" value="Listar Materiales" />
-                                <input type="button" class="btn btn-info" onclick="listarMaquinaria()" value="Listar Maquinaria">
+                        <div style="padding: 1%;"> 
+                                <input type="button" class=" btn btn-success" onclick="ActualizarMaterialesHerramientaProyectoDos()" value="Listar Material" />
+                                <input type="button" class="btn btn-success" onclick="listarHerramientaTabla()" value="Listar Herramienta" />
+                                <input type="button" class="btn btn-success" onclick="listarMaquinariaTabla()" value="Listar Maquinaria">
                         </div>            
 
 
                         <div id="mhProyectos">
+                            <div id="cargando">
+                            </div>
+
                             <section id="materiales" class="materiales">
                             </section>
 
                             <section id="herramientas" class="materiales d-none" style='display: none;'>
                             </section> 
 
-                            <section id="maquinaria" class="materiales" style='display: none !important;'>
+                            <section id="maquinaria" class="materiales  d-none" style='display: none !important;'>
                             </section> 
-
-
                         </div>
 
 
@@ -268,6 +269,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                             <select class="cboPedidos" id="cboPedidos" onchange="ActulizarSeccionPedidos()">
                                                 <option value="1">Materiales</option>
                                                 <option value="2">Herramientas</option>
+                                                <option value="3">Maquinaria</option>
                                             </select>
 
                                             <div id="buscarPedido">
@@ -300,8 +302,10 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                           <select class="cboPedidos" id="cboPedidos2" onchange="CambiarPeido()">
                                                 <option value="1">Materiales</option>
                                                 <option value="2">Herramientas</option>
+                                                <option value="3">Maquinaria</option>
                                            </select>
                                     <div class="nuevoPedido">
+
                                         <div id="PedidoMateriales">
                                             <header id="headerPedidoMaterial" class="headerPedidoMaterial">
                                                 <div class="col-xs-6">
@@ -381,6 +385,8 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                             </div>
                                         </div>
 
+
+
                                         <div id="PedidoHerramientas">
                                             <header id="headerPedidoMaterial" class="headerPedidoMaterial">
                                                 <div class="col-xs-6">
@@ -452,6 +458,100 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                                 </div>
                                             </div>
                                         </div>
+
+
+
+
+                                        <div id="PedidoMaquinaria">
+                                            <header id="headerPedidoMaterial" class="headerPedidoMaterial">
+                                                <div class="col-xs-6">
+                                                    <h1><a href=" "> <img src="../resources/imagenes/proycon-slider.png" width="100px;" alt=""/> </a></h1>
+
+                                                </div>
+                                                <div class="col-xs-6 text-right">
+
+                                                    <h2><small style="color: red">Boleta Nº<span id="consecutivoPedidoH"> <?php echo ConsecutivoPedido() ?></span></small></h2>
+                                                </div>
+
+                                                <div class="col-xs-6 text-right tableFechaPedido">
+                                                    <table class="fecha">
+                                                        <thead>
+                                                            <tr >
+                                                                <th>Dia</th>
+                                                                <th>Mes</th>
+                                                                <th>Año</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><?php echo date("d") ?></td>
+                                                                <td><?php echo date("m") ?></td>
+                                                                <td><?php echo date("Y") ?></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <h2 id='proyectoHerramientas'></h2>
+                                                <h4>Boleta: <strong>Maquinaria</strong></h4>
+                                                <input  data-toggle='modal' data-target='#ModalBuscarMaquinaria' type="submit" class="btn btn-default" value="Buscar Maquinaria" />
+                                                <BR>
+                                                <table style="width: 60%;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="text" id='txtCodigoMaquinaria' name="txtCodigoMaquinaria" class="form-control input-md" value="" placeholder="Codigo" /></td>
+                                                            <td><input type="submit" value="Agregar" class="btn btn-success" onclick="AgregarHerramientaPedido()" /></td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+
+                                            </header>
+                                            <div class="bodyPedido">
+                                                <div class="tableCuerpoPedido">
+                                                    <table id="tbl_P_Maquinaria" class="tablaPedidos">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th>Codigo</th>
+                                                                <th>Tipo</th>
+                                                                <th>Marca</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="cuerpoPedidoMaquinaria">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default btn-estilos" onclick="">
+                                                        <img src="../resources/imagenes/print.png" alt="" width="30px"/>
+                                                    </button>
+                                                    <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaPedido()">Guardar</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     </div> 
 
 
@@ -646,6 +746,47 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                 </div>
             </div>
 
+
+            <div  id="ModalBuscarMaquinaria" class="modal fade" role="dialog">   
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id="modal"class="modal-header headerModal">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Buscar Maquinaria</h4>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <input id="txtBuscarMaquinaria" name="txtBuscarMaquinaria" type="text" class="form-control" placeholder="Buscar Por Tipo De Maquinaria">
+                                <span class="input-group-btn">
+                                    <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarHerramientas()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                                </span>
+
+                            </div>
+                            <div id='ResultadoBusqudaMaquinaria'>
+
+                            </div>                         
+                            <div class="modal-footer">
+
+                                <button type="submit" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- Modal Agregar Proyecto -->
             <div id="ModalAgregarProyecto" class="modal fade" role="dialog">   
                 <div class="modal-dialog"  >
@@ -762,6 +903,10 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                 </button>
                                 <button id="btnAnularBoletaMaterial" style="display: none" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaMaterial()">Anular Boleta</button>
                                 <button id="btnAnularBoletaHerramientas" hidden="true" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaHerramientas()">Anular Boleta</button>
+                                <button id="btnAnularBoletaMaquinaria" style="display: none" type="button" class="btn btn-danger btn-estilos" onclick="AnularBoletaMaquinaria()">Anular Boleta</button>
+
+                            
+                            
                             </div>
                         </div>
                     </div>
