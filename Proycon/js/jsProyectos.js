@@ -9,11 +9,27 @@ $(document).on('keyup','#txtBuscarHerramienta',function(){
         $("#ResultadoBusqudaHerramienta table tr").remove();
     }
 });
+
+
+
+$(document).on('keyup','#txtBuscarMaquinaria',function(){
+    var valor = $(this).val();
+    if(valor.length>0){
+		
+        BuscarMaquinaria(valor);
+    }
+    else{
+        $("#ResultadoBusqudaHerramienta table tr").remove();
+    }
+});
+
+
+
 $(BuscaHerramientas());
 function BuscaHerramientas(consulta){
     $.ajax({
         type: "POST",
-        url: "../BLL/ProyectosBuscar.php",
+        url: "../BLL/ProyectosBuscar.php?opc=Herramienta",
         data: {"consulta": consulta},
         beforeSend: function () {
             $("#ResultadoBusqudaHerramienta").html("<div style='margin:auto;width:200px'><img src='../resources/imagenes/loanding.gif'  width='100px'/></div>");
@@ -38,6 +54,44 @@ function BuscaHerramientas(consulta){
 
     });
 }
+
+
+function BuscarMaquinaria(consulta){
+    $.ajax({
+        type: "POST",
+        url: "../BLL/ProyectosBuscar.php?opc=Maquinaria",
+        data: {"consulta": consulta},
+        beforeSend: function () {
+            $("#ResultadoBusqudaMaquinaria").html("<div style='margin:auto;width:200px'><img src='../resources/imagenes/loanding.gif'  width='100px'/></div>");
+        },
+        success: function (respuesta) {
+            $("#ResultadoBusqudaMaquinaria").html(respuesta);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+}
+
+
+
+
+
+
+
+
 function Atras(){
     if($("#materiales").is(":visible")){
         $("#pnlListarProyectos").show();
@@ -276,11 +330,13 @@ function ActualizarMaterialesHerramientaProyecto(ID_Proyecto) {
         data: {"idProyecto": ID_Proyecto},
         type: 'POST',
         url: '../BLL/Proyectos.php?opc=listMyH',
-         /*beforeSend: function () {
-                $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
-            },*/
+         beforeSend: function () {
+                $("#cargando").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
+            },
         success: function (respuesta) {
             $("#materiales").html(respuesta);
+
+            $("#cargando").hide();
         }
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -316,11 +372,13 @@ function ActualizarMaterialesHerramientaProyectoDos() {
         data: {"idProyecto": ID_Proyecto},
         type: 'POST',
         url: '../BLL/Proyectos.php?opc=listMyH',
-         /*beforeSend: function () {
-                $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
-            },*/
+         beforeSend: function () {
+                $("#cargando").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
+            },
         success: function (respuesta) {
             $("#materiales").html(respuesta);
+
+            $("#cargando").hide();
         }
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -344,7 +402,50 @@ function ActualizarMaterialesHerramientaProyectoDos() {
 
 function listarMaquinariaTabla(){
 
- 
+
+    $("#herramientas").hide();
+    $("#materiales").hide();
+    $("#maquinaria").show();
+    
+    ID_Proyecto = $("#idProecto").text();
+    
+
+
+    $.ajax({
+            data: {"idProyecto": ID_Proyecto},
+            type: 'POST',
+            url: '../BLL/Proyectos.php?opc=listM',
+            beforeSend: function () {
+                    $("#cargando").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
+                },
+            success: function (respuesta) {
+                $("#maquinaria").html(respuesta);
+
+                $("#cargando").hide();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 0) {
+
+                alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+            } else if (jqXHR.status == 404) {
+
+                alert('Error [404] No se encontro el Archivo');
+
+            } else if (jqXHR.status == 500) {
+
+                alert('Error de conexion con el servidor');
+
+            }
+
+        });
+
+}
+
+
+function listarHerramientaTabla(){
+
 
     $("#herramientas").show();
     $("#materiales").hide();
@@ -357,7 +458,7 @@ function listarMaquinariaTabla(){
     $.ajax({
             data: {"idProyecto": ID_Proyecto},
             type: 'POST',
-            url: '../BLL/Proyectos.php?opc=listM',
+            url: '../BLL/Proyectos.php?opc=listH',
         /*  beforeSend: function () {
                     $("#mhProyectos").html(" <div style='width:200px;margin:auto'> Cargando <img src='../resources/imagenes/loanding.gif' style='margin:auto'  width='100px'/></div>");
                 },*/
@@ -383,6 +484,9 @@ function listarMaquinariaTabla(){
         });
 
 }
+
+
+
 
 
 function BuscarProyecto() {
@@ -532,6 +636,7 @@ function MostrarPedidos() {
         ActulizarSeccionPedidos();
         $("#materiales").hide();
         $("#herramientas").hide();
+        $("#maquinaria").hide();        
         $(".nombreProyecto").hide();
        // $(".nombreProyecto").hide();
         $("#pedidos").show();
@@ -581,15 +686,25 @@ function MostrarFormPedidos() {
     $("#divCboBtnRegresar").show();
 
     if ($("#cboPedidos").val() == 1) {
+
         $("#cboPedidos2").val(1);
         $("#PedidoMateriales").show();
         $("#PedidoHerramientas").hide();
-    } else {
-         $("#cboPedidos2").val(2);
+        $("#PedidoMaquinaria").hide();
+    } else if ($("#cboPedidos").val() == 2) {
+
+        $("#cboPedidos2").val(2);
         $("#PedidoHerramientas").show();
         $("#PedidoMateriales").hide();
+        $("#PedidoMaquinaria").hide();
 
-    }
+    }else{
+       $("#cboPedidos2").val(3);
+       $("#PedidoMaquinaria").show();
+       $("#PedidoMaquinaria").hide();
+       $("#PedidoMateriales").hide();
+
+   }
 }
 function AgregarMaterialPedido() {
     var codigo = $("#txtCodigoMaterial").val();
@@ -708,6 +823,45 @@ function AgregarHerramientaPedido() {
 
     });
 }
+
+function AgregarMaquinariaPedido() {
+    var codigo = $("#txtCodigoMaquinaria").val();
+    $.ajax({
+        type: "POST",
+        url: "../BLL/Proyectos.php?opc=buscarherramientapedido&codigo=" + codigo,
+        success: function (respuesta) {
+            if (respuesta == 0) {
+                $("#ModalDefaul").modal("show");
+                $("#MensajeErrorMaterial").html("Codigo Incorrecto");
+                $("#CantMaterialExistente").html("");
+            } else if (respuesta == -1) {
+                $("#ModalDefaul").modal("show");
+                $("#MensajeErrorMaterial").html("<strong>Error de Conexion con el servidor de Base de datos</strong>");
+            } else {
+                $("#cuerpoPedidoMaquinaria").html($("#cuerpoPedidoMaquinaria").html() + respuesta);
+            }
+        }
+
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+}
+
+
+
 function BuscarMaterialNombre() {
     var nombre = $("#txtBuscarMaterialP").val();
     if (nombre != null) {
@@ -772,8 +926,16 @@ function CambiarPeido() {
     if (valor == "Materiales") {
         $("#PedidoMateriales").show();
         $("#PedidoHerramientas").hide();
-    } else {
+
+    } else if (valor == "Herramientas") {
         $("#PedidoHerramientas").show();
+        $("#PedidoMateriales").hide();
+
+    }
+    else if (valor == "Maquinaria") {
+        $("#PedidoMaquinaria").show();
+
+        $("#PedidoHerramientas").hide();
         $("#PedidoMateriales").hide();
     }
 }
@@ -840,95 +1002,173 @@ function AgregarHerramientaBuscadoPNombre(evento) {
 
 
 }
+
+
+
+
+function AgregarMaquinariaBuscadoPNombre(evento) {
+    var tipo = $(evento).parents("tr").find("td").eq(0).html();
+    var cod = $(evento).parents("tr").find("td").eq(1).html();
+    var Tipo = $(evento).parents("tr").find("td").eq(2).html();
+    var Marca = $(evento).parents("tr").find("td").eq(3).html();
+
+    $(evento).parents("tr").find("td").eq(3).children("input").css("border", "1px solid #cccccc");
+    var nuevaFila = "<tr>" +
+            "<td hidden='true'>" + tipo + "</td>" +
+            "<td>" + cod + "</td>" +
+            "<td>" + Tipo + "</td>" +
+            "<td>" + Marca + "</td>" +
+            "<td style='width: 25px;'>" +
+            "<button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>" +
+            "<img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>" +
+            "</button>" +
+            "</td>" +
+            "</tr>";
+
+    $("#tbl_P_Maquinaria").append(nuevaFila);
+
+
+}
+
+
+
+
+
 function GuardarBoletaPedido(opc) {
+
+
+
     var dt = new Date();
     var mes = dt.getMonth() + 1;
     var fecha = dt.getFullYear() + '-' + mes + '-' + dt.getDate(); 
-    if ($("#cboPedidos2").val() == 1) {
-        var numFilas = $("#tbl_P_Materiales tbody tr").length;
-       // alert(numFilas);
-        var consecutivo = $("#consecutivoPedidoM").html();
-        /*Estas variables son alimentadas con dos elementos ocultos que se encuentral
-         * al final de la pagina*/
-        var ID_Proyecto = $("#idProecto").html();
-       // var ID_Usuario = $("#idUsuario").html();
-        var matriz = new Array(numFilas);
-        var cont = 1;
-        var i;
-        var j;
-        if (numFilas > 0) {
-            for (i = 0; i < numFilas; i++) {
-                matriz[i] = new Array(numFilas);
-                for (j = 0; j < 2; j++) {
-                    matriz[i][j] = document.getElementById("tbl_P_Materiales").rows[cont].cells[j].innerHTML;
+        if ($("#cboPedidos2").val() == 1) {
+            var numFilas = $("#tbl_P_Materiales tbody tr").length;
+        // alert(numFilas);
+            var consecutivo = $("#consecutivoPedidoM").html();
+            /*Estas variables son alimentadas con dos elementos ocultos que se encuentral
+            * al final de la pagina*/
+            var ID_Proyecto = $("#idProecto").html();
+        // var ID_Usuario = $("#idUsuario").html();
+            var matriz = new Array(numFilas);
+            var cont = 1;
+            var i;
+            var j;
+            if (numFilas > 0) {
+                for (i = 0; i < numFilas; i++) {
+                    matriz[i] = new Array(numFilas);
+                    for (j = 0; j < 2; j++) {
+                        matriz[i][j] = document.getElementById("tbl_P_Materiales").rows[cont].cells[j].innerHTML;
+                    }
+                    cont++;
                 }
-                cont++;
-            }
-  
-            var arreglo = JSON.stringify(matriz);
-            var datos = {
-                "TipoPedido": $("#cboPedidos2").val(),
-                "ID_Proyecto": ID_Proyecto,
-                "consecutivo": consecutivo,
-                "fecha": fecha,
-                "arreglo": arreglo
-            };
-                AjaxRegistroBolestasPedidos(datos);
-                if (opc == 1) {
-                      var table = document.getElementById("tbl_P_Materiales");
-               // var  numFilas =  $("#tbl_P_Materiales tbody tr").length;
-            for (var i = 0; i <= numFilas; i++) {
-               var firstRow = table.rows[i];
-               firstRow.deleteCell (3);}
-           ExportarPdfBoletaMateriales();
-            }
-          
-           $("#tbl_P_Materiales tbody tr").remove();
-
-  
+    
+                var arreglo = JSON.stringify(matriz);
+                var datos = {
+                    "TipoPedido": $("#cboPedidos2").val(),
+                    "ID_Proyecto": ID_Proyecto,
+                    "consecutivo": consecutivo,
+                    "fecha": fecha,
+                    "arreglo": arreglo
+                };
+                    AjaxRegistroBolestasPedidos(datos);
+                    if (opc == 1) {
+                        var table = document.getElementById("tbl_P_Materiales");
+                // var  numFilas =  $("#tbl_P_Materiales tbody tr").length;
+                for (var i = 0; i <= numFilas; i++) {
+                var firstRow = table.rows[i];
+                firstRow.deleteCell (3);}
+            ExportarPdfBoletaMateriales();
+                }
             
+            $("#tbl_P_Materiales tbody tr").remove();
 
-        }
-    } else {
-        var numFilas = $("#tbl_P_Herramientas tbody tr").length;
-        var consecutivo = $("#consecutivoPedidoH").html();
-        var ID_Proyecto = $("#idProecto").html();
-        var matriz = new Array(numFilas);
-        var cont = 1;
-        var i;
-        var j;
-        if (numFilas > 0) {
-            //alert("numFilas " +numFilas);
-            for (i = 0; i < numFilas; i++) {
-                matriz[i] = new Array(numFilas);
-                for (j = 0; j < 2; j++) {
-                    matriz[i][j] = document.getElementById("tbl_P_Herramientas").rows[cont].cells[j].innerHTML;
-                //console.log( matriz[i][j]);
+    
+                
+
+            }
+        } else if ($("#cboPedidos2").val() == 1)  {
+            var numFilas = $("#tbl_P_Herramientas tbody tr").length;
+            var consecutivo = $("#consecutivoPedidoH").html();
+            var ID_Proyecto = $("#idProecto").html();
+            var matriz = new Array(numFilas);
+            var cont = 1;
+            var i;
+            var j;
+            if (numFilas > 0) {
+                //alert("numFilas " +numFilas);
+                for (i = 0; i < numFilas; i++) {
+                    matriz[i] = new Array(numFilas);
+                    for (j = 0; j < 2; j++) {
+                        matriz[i][j] = document.getElementById("tbl_P_Herramientas").rows[cont].cells[j].innerHTML;
+                    //console.log( matriz[i][j]);
+                    }
+                    cont++;
                 }
-                cont++;
+                var arreglo = JSON.stringify(matriz);
+                var datos = {
+                    "TipoPedido": $("#cboPedidos2").val(),/*Materiales o Herramientas*/
+                    "ID_Proyecto": ID_Proyecto,
+                    "consecutivo": consecutivo,
+                    "fecha": fecha,
+                    "arreglo": arreglo
+                };
+                AjaxRegistroBolestasPedidos(datos);
+                if (opc == 0) {
+                // alert("entro");
+            var table = document.getElementById("tbl_P_Herramientas");
+                for (var i = 0; i <= numFilas; i++) {
+                var firstRow = table.rows[i];
+                firstRow.deleteCell (3);}
+                ExportarPdfBoletaHerramientas(); 
+                }
+            
+            $("#tbl_P_Herramientas tbody tr").remove();
+            } 
+        } else {
+
+                    var numFilas = $("#tbl_P_Maquinaria tbody tr").length;
+                    var consecutivo = $("#consecutivoPedidoH").html();
+                    var ID_Proyecto = $("#idProecto").html();
+                    var matriz = new Array(numFilas);
+                    var cont = 1;
+                    var i;
+                    var j;
+                    if (numFilas > 0) {
+                        //alert("numFilas " +numFilas);
+                        for (i = 0; i < numFilas; i++) {
+                            matriz[i] = new Array(numFilas);
+                            for (j = 0; j < 2; j++) {
+                                matriz[i][j] = document.getElementById("tbl_P_Maquinaria").rows[cont].cells[j].innerHTML;
+                            //console.log( matriz[i][j]);
+                            }
+                            cont++;
+                        }
+                        var arreglo = JSON.stringify(matriz);
+                        var datos = {
+                            "TipoPedido": $("#cboPedidos2").val(),/*Materiales o Herramientas*/
+                            "ID_Proyecto": ID_Proyecto,
+                            "consecutivo": consecutivo,
+                            "fecha": fecha,
+                            "arreglo": arreglo
+                        };
+                        AjaxRegistroBolestasPedidos(datos);
+                        if (opc == 0) {
+                        // alert("entro");
+                        var table = document.getElementById("tbl_P_Maquinaria");
+                        for (var i = 0; i <= numFilas; i++) {
+                        var firstRow = table.rows[i];
+                        firstRow.deleteCell (3);}
+                        ExportarPdfBoletaHerramientas(); 
+                    }
+            
+            $("#tbl_P_Maquinaria tbody tr").remove();
+
             }
-            var arreglo = JSON.stringify(matriz);
-            var datos = {
-                "TipoPedido": $("#cboPedidos2").val(),/*Materiales o Herramientas*/
-                "ID_Proyecto": ID_Proyecto,
-                "consecutivo": consecutivo,
-                "fecha": fecha,
-                "arreglo": arreglo
-            };
-            AjaxRegistroBolestasPedidos(datos);
-            if (opc == 0) {
-               // alert("entro");
-           var table = document.getElementById("tbl_P_Herramientas");
-            for (var i = 0; i <= numFilas; i++) {
-               var firstRow = table.rows[i];
-               firstRow.deleteCell (3);}
-             ExportarPdfBoletaHerramientas(); 
-            }
-          
-           $("#tbl_P_Herramientas tbody tr").remove();
         }
     }
-}
+        
+    
+
 function ElimiarNotificacion(ID_Proyecto){ 
     if ($("#consecutivoPedidoProveeduria").html() != null )  {
         $.ajax({
@@ -943,6 +1183,25 @@ function ElimiarNotificacion(ID_Proyecto){
 function GuardarBoletaPedidoHerramienta() {
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function AjaxRegistroBolestasPedidos(datos) {
     var ID_Proyecto = $("#idProecto").html();
     $.ajax({
@@ -995,12 +1254,22 @@ function VerPedido(evento) {
     $("#generadaPor").html(nombre);
     if (TipoPedido == 1) {
         $("#TipoPedido").html("Materiales");
+
         $("#btnAnularBoletaMaterial").css("display","inline-block");
         $("#btnAnularBoletaHerramientas").css("display","none");
-    } else {
-        $("#TipoPedido").html("Herramientas");
-                $("#btnAnularBoletaMaterial").css("display","none");
+        $("#btnAnularBoletaMaquinaria").css("display","none");
+        
+    } else if (TipoPedido == 2) {
+
+        $("#TipoPedido").html("Herramienta");
+        $("#btnAnularBoletaMaterial").css("display","none");
         $("#btnAnularBoletaHerramientas").css("display","inline-block");
+        $("#btnAnularBoletaMaquinaria").css("display","none");
+    }else if (TipoPedido == 3) {
+        $("#TipoPedido").html("Maquinaria");
+        $("#btnAnularBoletaMaquinaria").css("display","inline-block");
+        $("#btnAnularBoletaMaterial").css("display","none");
+        $("#btnAnularBoletaHerramientas").css("display","none");
     }
 
     $.ajax({
@@ -1039,9 +1308,12 @@ function ActulizarSeccionPedidos() {
     if ($("#cboPedidos").val() == 1) {
        $("#tipolista").html("Lista de  pedidos Materiales " + "  <img src='../resources/imagenes/cemento.png' alt='' width='20px'/>"); 
     }
-    else{
+    else if ($("#cboPedidos").val() == 2) { 
        $("#tipolista").html("Lista de  pedidos Herramientas "+" <img src='../resources/imagenes/taladro.png' width='20px' alt=''/>");  
+    }else{
+        $("#tipolista").html("Lista de  pedidos Maquinaria "+" <img src='../resources/imagenes/maquinaria.png' width='20px' alt=''/>");  
     }
+
     $.ajax({
         type: "POST",
         url: '../BLL/Proyectos.php?opc=listarPedidos&ID_Proyecto=' + ID_Proyecto + '&tipo=' + $("#cboPedidos").val(),
@@ -1223,6 +1495,37 @@ function FiltrarHerramientas() {
 
 }
 
+function FiltrarMaquinaria() {
+    var ID_Proyecto = $("#idProecto").html();
+    var Fitro = $("#cboFiltrarMaquinaria").val();
+    
+    $.ajax({
+        type: "POST",
+        url: "../BLL/Proyectos.php?opc=Fitrar&tipo=maquinaria",
+        data: {"ID_Proyecto": ID_Proyecto,
+            "Filtro": Fitro},
+        success: function (respuesta) {
+            $("#tablaMaquinaria").html(respuesta);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 0) {
+
+            alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+        } else if (jqXHR.status == 404) {
+
+            alert('Error [404] No se encontro el Archivo');
+
+        } else if (jqXHR.status == 500) {
+
+            alert('Error de conexion con el servidor');
+
+        }
+
+    });
+
+}
+
 function AnularBoletaMaterial() {
 
     var NBoleta = $("#consecutivoPedidoSeleccionado").html();
@@ -1308,6 +1611,55 @@ El material solicitado sera devuelto al inventario General?");
     }  
     
 }
+
+function AnularBoletaMaquinaria(){
+    var NBoleta = $("#consecutivoPedidoSeleccionado").html();
+  var opcion = confirm("¿Esta apunto de Anular una boleta si la Anula\n\
+El material solicitado sera devuelto al inventario General?");
+  if (opcion) {
+      $.ajax({
+          type: "POST",
+          url: "../BLL/Proyectos.php?opc=anularboletaherramienta&NBoleta=" + NBoleta,
+          success: function (respuesta) {
+              $("#mostrarMesajeHeaderModalPedido").addClass("mensajeCorrecto");
+              $("#MensajeModalVerPedido").html("<strong>La Boleta se ha eliminado Correctamente</strong>")
+              setTimeout(function () {
+                  $("#mostrarMesajeHeaderModalPedido").removeClass("mensajeCorrecto");
+                  $("#MensajeModalVerPedido").html("");
+                  $("#ModalVerPedido").modal("hide");
+                  ActulizarSeccionPedidos();
+                  
+                  listarMaquinariaTabla();
+                  $("#mhProyectos").hide();
+              }, 2000);
+          }
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+          if (jqXHR.status === 0) {
+
+              alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+          } else if (jqXHR.status == 404) {
+
+              alert('Error [404] No se encontro el Archivo');
+
+          } else if (jqXHR.status == 500) {
+
+              alert('Error de conexion con el servidor');
+
+          }
+
+      });
+
+  } else {
+
+  }  
+  
+}
+
+
+
+
+
 /*js para la parde solicitud de pedido*/
 
 function procesarPeido(evento){
@@ -1817,38 +2169,3 @@ function listarSoloHerramienta(idProyecto){
     
 }
 
-
-function listarMaterial(){
-    console.log("ENTRE");
-
-    $("#materiales").show();
-    $("#herramientas").hide();
-    $("#maquinaria").hide();
-}
-
-function listarHerramienta(){
-    $("#herramientas").show();
-    $("#materiales").hide();
-    $("#maquinaria").hide();
-}
-
-function listarMaquinaria(){
-    $("#maquinaria").show();
-    $("#materiales").hide();
-    $("#maquinaria").hide();
-
-}
-
-
-
-
-
-
-
-/* $(document).on('keyup', '#txtCantidadMaterial', function () {
-    $(this).keypress(function(e){
-        if (e.keyCode==13) {
-            AgregarMaterialPedido();;
-        }
-    });
-});*/

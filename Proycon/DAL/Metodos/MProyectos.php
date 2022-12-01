@@ -65,8 +65,8 @@ class MProyectos implements IProyectos {
     public function ListaHerramientaProyecto($idProyecto) {
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
- tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo;
- ;";
+            tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'H';
+            ;";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idProyecto);
         $stmt->execute();
@@ -80,8 +80,9 @@ class MProyectos implements IProyectos {
     public function ListaMaquinariaProyecto($idProyecto) {
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
- tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo;
- ;";
+        tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'M'";
+
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idProyecto);
         $stmt->execute();
@@ -164,6 +165,19 @@ class MProyectos implements IProyectos {
     }
 
     public function RegistrarPedidoHerramientas($val) {
+        $conexion = new Conexion();
+        $conn = $conexion->CrearConexion();
+        $values = substr($val, 0, -1);
+        $values .= ";";
+        $sql = "Insert into tbl_prestamoherramientas(NBoleta,ID_Proyecto,Codigo,Estado,FechaSalida,ID_Tipo)"
+                . "values " . $values . "";
+        $result = $conn->query($sql);
+        $conn->close();
+        return $result;
+    }
+
+
+    public function RegistrarPedidoMaquinaria($val) {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $values = substr($val, 0, -1);

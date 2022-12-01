@@ -10,6 +10,7 @@ require_once '../DAL/Interfaces/IHerrramientas.php';
 require_once '../DAL/Metodos/MHerramientas.php';
 require_once '../DAL/Conexion.php';
 require_once 'Autorizacion.php';
+require_once '../DAL/Constantes.php';
 require_once '../DAL/FuncionesGenerales.php';
 require_once '../DAL/Log.php';
 
@@ -29,7 +30,6 @@ if (isset($_GET['opc'])) {
     }elseif ($_GET['opc'] == 'listM') {
         listarMaquinaria($_POST['idProyecto']);
     }    
-    
     elseif ($_GET['opc'] == 'buscarM') {
         BuscaAgregaMaterial($_GET['id'], $_GET['cant']);
     } elseif ($_GET['opc'] == 'registrarPedido') {
@@ -48,11 +48,17 @@ if (isset($_GET['opc'])) {
     } elseif ($_GET['opc'] == 'eliminarpedido') {
         EliminarBoletaPedido($_GET['NBoleta'], $_GET['Tipo']);
     } elseif ($_GET['opc'] == "Fitrar") {
+
         if ($_GET['tipo'] == "material") {
             FitrosMaterialesProyecto($_POST['ID_Proyecto'], $_POST['Filtro']);
-        } else {
+        } else if($_GET['tipo'] == "herramienta") {
             FitrosHerramientasProyecto($_POST['ID_Proyecto'], $_POST['Filtro']);
+        } else {
+            FitrosMaquinariaProyecto($_POST['ID_Proyecto'], $_POST['Filtro']);
         }
+
+        
+
     } elseif ($_GET['opc'] == "anularBoleta") {
         AnularBoletaMaterial($_GET['NBoleta']);
     } elseif ($_GET['opc'] == "procesarpedido") {
@@ -190,7 +196,7 @@ function ObternerHyMProyecto($idProyecto) {
 //$btnImprimir = "<a title ='Exportar Excel' class='btnImprimir' href='../BLL/Reportes/ReportesExcel.php?reporteMaterieles=1&ID_Proyecto=$idProyecto'><img src='../resources/imagenes/Excel.png' width='25px' alt=''/></a>";
     ;
     $concatenar .= '<div class="contenidoProyecto">';
-    $concatenar .= '<button class=" btn btn-default btnExpandir" type="submit" value="" onclick="ExpandirMateriales(1)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . '<div class="titulomaterialesherramienta"><h4>Materiales</h4> </div>' . $form . $inputOcultos . $btnImprimir . $combobox . "</form>";
+    $concatenar .= '<div class="titulomaterialesherramienta"><h4>Materiales</h4> </div>' . $form . $inputOcultos . $btnImprimir . $combobox . "</form>";
     ;
     $concatenar .= "<div id='tablaMateriales'> <table class=' table table-bordered table-responsive tablasG' id='tbl_MaterialesProyecto'>"
             . "<thead>"
@@ -262,7 +268,7 @@ function listarHerramientas($idProyecto){
        // $concatenar .= $form . '<section id="herramientas" class="materiales">';
         $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
                 . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
-        $concatenar .= '<button class=" btn btn-default btnExpandir" type="button" value="" onclick="ExpandirMateriales(0)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . ' <div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
+        $concatenar .= '<div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
                 $btnImprimir . $combobox .
                 $buscarHerramientatxt;
 
@@ -315,7 +321,7 @@ function listarMaquinaria($idProyecto){
         ;
         $combobox = '<div class="form-group">
                                 <label class="col-md-4 control-label" for="Empresa">Ordenar por</label>  
-                                <select name="cboFiltrarHerramientas" id="cboFiltrarHerramientas" onchange="FiltrarHerramientas()" class ="form-control" name="opciones" placeholder="Filtrar por...">
+                                <select name="cboFiltrarMaquinaria" id="cboFiltrarMaquinaria" onchange="FiltrarMaquinaria()" class ="form-control" name="opciones" placeholder="Filtrar por...">
                                     <option value = "Filtrar por...">Filtrar por...</option>
                                     <option value = "Fecha">Fecha</option>
                                     <option value ="Ver Totales">Ver Totales</option>
@@ -337,11 +343,11 @@ function listarMaquinaria($idProyecto){
        // $concatenar .= $form . '<section id="herramientas" class="materiales">';
         $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
                 . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
-        $concatenar .= '<button class=" btn btn-default btnExpandir" type="button" value="" onclick="ExpandirMateriales(0)" >Expandir  <img src="../resources/imagenes/Expandir.png" width="20px" alt=""/></button>' . ' <div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
+        $concatenar .= '<div class="titulomaterialesherramienta"><h4>Maquinaria</h4></div> ' .
                 $btnImprimir . $combobox .
                 $buscarHerramientatxt;
 
-        $concatenar .= " <div id='tablaHerramientas'> <table class=' table table-bordered table-responsive tablasG' id='tbl_herramientasProyecto'>"
+        $concatenar .= " <div id='tablaMaquinaria'> <table class=' table table-bordered table-responsive tablasG' id='tbl_MaquinariaProyecto'>"
                 . "<thead>"
                 . " <tr>"
                 . " <th>Codigo</th>"
@@ -422,7 +428,7 @@ function GuardarPedido($idProyecto, $idUsuario, $consecutivo, $fecha, $datos, $T
             }
         }
         $result = $bdProyectos->RegistrarPedidoMaterial($values);
-    } else {
+    } else if ($TipoPedido == 2) {
         // echo $tam;
         $values = "";
         for ($i = 0; $i < $tam; $i++) {
@@ -433,6 +439,18 @@ function GuardarPedido($idProyecto, $idUsuario, $consecutivo, $fecha, $datos, $T
         }
 
         $result = $bdProyectos->RegistrarPedidoHerramientas($values);
+
+    }else { // Maquinaria
+        // echo $tam;
+        $values = "";
+        for ($i = 0; $i < $tam; $i++) {
+            for ($j = 0; $j < 2; $j++) {
+                $values .= "(" . $consecutivo . "," . $idProyecto . ",'" . $arreglo[$i][$j + 1] . "',1,'" . $fecha . "'," . $arreglo[$i][$j] . "),";
+                $j = 2;
+            }
+        }
+
+        $result = $bdProyectos->RegistrarPedidoMaquinaria($values);
     }
 
     if ($result == 1) {
@@ -550,6 +568,31 @@ function BuscarHerramientaPedido($codigo) {
     }
 }
 
+function BuscarMaquinariaPedido($codigo) {
+    $bdHerramienta = new MHerramientas();
+    $restultado = $bdHerramienta->BuscarMaquinariaPorCodigo($codigo);
+    $concatenar = "";
+    $filasAfectadas = mysqli_num_rows($restultado);
+    if ($filasAfectadas > 0) {
+        $fila = mysqli_fetch_array($restultado, MYSQLI_ASSOC);
+        $concatenar = "
+                         <tr>
+                             <td hidden='true' >" . $fila['ID_Tipo'] . "</td>
+                             <td>" . $fila['Codigo'] . "</td>
+                             <td>" . $fila['Descripcion'] . "</td>
+                             <td>" . $fila['Marca'] . "</td>
+                             <td style='width: 25px;'>
+                             <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
+                                    <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
+                                </button>
+                          </td>
+                         </tr>";
+        echo $concatenar;
+    } else {
+        echo 0;
+    }
+}
+
 function EliminarBoletaPedido($NBoleta, $Tipo) {
     $bdProyectos = new MProyectos();
     $result = $bdProyectos->EliminarBoletaPedido($NBoleta, $Tipo);
@@ -639,7 +682,7 @@ function FitrosHerramientasProyecto($ID_Proyecto, $Filtro) {
     $bdProyectos = new MProyectos();
     if ($Filtro == "Fecha") {
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
- tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo ORDER by tp.FechaSalida ASC;";
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and  tt.TipoEquipo = 'H' ORDER by tp.FechaSalida ASC;";
         /* $sql ="sELECT th.Codigo,tt.Descripcion,th.FechaSalida,th.Estado,th.NBoleta from tbl_prestamoherramientas th, tbl_tipoherramienta tt
           where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo ORDER by th.FechaSalida ASC;"; */
         $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
@@ -675,7 +718,7 @@ function FitrosHerramientasProyecto($ID_Proyecto, $Filtro) {
         }
     }
     if ($Filtro == "Ver Totales") {
-        $sql = "SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_prestamoherramientas th, tbl_tipoherramienta tt where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo GROUP by tt.Descripcion;";
+        $sql = "SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_prestamoherramientas th, tbl_tipoherramienta tt where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'H' GROUP by tt.Descripcion;";
         $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
         if ($result != null) {
             $concatenar = "<table class='tablasG' id = 'tbl_herramientasProyecto'>
@@ -701,7 +744,7 @@ function FitrosHerramientasProyecto($ID_Proyecto, $Filtro) {
 
     if ($Filtro == "Reparacion") {
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
- tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and th.Estado = 0 ORDER by tp.FechaSalida ASC;";
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and th.Estado = 0 and  tt.TipoEquipo = 'H' ORDER by tp.FechaSalida ASC;";
         /* $sql ="sELECT th.Codigo,tt.Descripcion,th.FechaSalida,th.Estado,th.NBoleta from tbl_prestamoherramientas th, tbl_tipoherramienta tt
           where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo ORDER by th.FechaSalida ASC;"; */
         $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
@@ -732,7 +775,141 @@ function FitrosHerramientasProyecto($ID_Proyecto, $Filtro) {
     }
     if ($Filtro == "Tipo") {
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
- tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo ORDER BY tt.Descripcion;";
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and  tt.TipoEquipo = 'H' ORDER BY tt.Descripcion;";
+
+        $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
+        if ($result != null) {
+            $concatenar = " <table class='tablasG' id='tbl_herramientasProyecto'>"
+                    . "<thead>"
+                    . " <tr>"
+                    . " <th>Codigo</th>"
+                    . " <th class='centrar'> Tipo </th>"
+                    . "<th class='centrar'> Fecha </th>"
+                    . "<th class='centrar'>NBoleta </th>"
+                    . "<th class='centrar'>Estado</th>"
+                    . "</tr>"
+                    . "</thead>"
+                    . "<tbody>";
+            $imagen = '';
+
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
+                if ($fila['Estado'] == 1) {
+                    $imagen = "Bueno";
+                    $concatenar .= "<tr><td>" . $fila['Codigo'] . "</td><td>" . $fila['Descripcion'] . "</td><td>" . $Fecha . "</td><td>" . $fila['NBoleta'] . "</td><td>" . $imagen . "</td></tr>";
+                } else {
+                    $imagen = "En reparacion";
+                    $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $fila['FechaSalida'] . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
+                }
+            }
+
+            $concatenar .= "</tbody></table></section>";
+
+            echo $concatenar;
+        }
+    }
+}
+
+
+
+function FitrosMaquinariaProyecto($ID_Proyecto, $Filtro) {
+    $bdProyectos = new MProyectos();
+    if ($Filtro == "Fecha") {
+        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and  tt.TipoEquipo = 'M' ORDER by tp.FechaSalida ASC;";
+        /* $sql ="sELECT th.Codigo,tt.Descripcion,th.FechaSalida,th.Estado,th.NBoleta from tbl_prestamoherramientas th, tbl_tipoherramienta tt
+          where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo ORDER by th.FechaSalida ASC;"; */
+        $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
+        if ($result != null) {
+            $concatenar = " <table class='tablasG' id='tbl_herramientasProyecto'>"
+                    . "<thead>"
+                    . " <tr>"
+                    . " <th>Codigo</th>"
+                    . " <th class='centrar'> Tipo </th>"
+                    . "<th class='centrar'> Fecha </th>"
+                    . "<th class='centrar'>NBoleta </th>"
+                    . "<th class='centrar'>Estado</th>"
+                    . "</tr>"
+                    . "</thead>"
+                    . "<tbody>";
+            $imagen = '';
+
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
+
+                if ($fila['Estado'] == 1) {
+                    $imagen = "Bueno";
+                    $concatenar .= "<tr><td>" . $fila['Codigo'] . "</td><td>" . $fila['Descripcion'] . "</td><td>" . $Fecha . "</td><td>" . $fila['NBoleta'] . "</td><td>" . $imagen . "</td></tr>";
+                } else {
+                    $imagen = "En reparacion";
+                    $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $Fecha . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
+                }
+            }
+
+            $concatenar .= "</tbody></table></section>";
+
+            echo $concatenar;
+        }
+    }
+    if ($Filtro == "Ver Totales") {
+        $sql = "SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_prestamoherramientas th, tbl_tipoherramienta tt where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'M' GROUP by tt.Descripcion;";
+        $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
+        if ($result != null) {
+            $concatenar = "<table class='tablasG' id = 'tbl_herramientasProyecto'>
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>";
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= " <tr>
+                                        <td>" . $fila['Descripcion'] . "</td>
+                                        <td>" . $fila['Cantidad'] . "</td>
+                                    </tr>";
+            }
+            $concatenar .= "    </tbody>
+                                </table>";
+            echo $concatenar;
+        }
+    }
+
+    if ($Filtro == "Reparacion") {
+        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and th.Estado = 0 and  tt.TipoEquipo = 'M' ORDER by tp.FechaSalida ASC;";
+        /* $sql ="sELECT th.Codigo,tt.Descripcion,th.FechaSalida,th.Estado,th.NBoleta from tbl_prestamoherramientas th, tbl_tipoherramienta tt
+          where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo ORDER by th.FechaSalida ASC;"; */
+        $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
+        if ($result != null) {
+            $concatenar = " <table class='tablasG' id='tbl_herramientasProyecto'>"
+                    . "<thead>"
+                    . " <tr>"
+                    . " <th>Codigo</th>"
+                    . " <th class='centrar'> Tipo </th>"
+                    . "<th class='centrar'> Fecha </th>"
+                    . "<th class='centrar'>NBoleta </th>"
+                    . "<th class='centrar'>Estado</th>"
+                    . "</tr>"
+                    . "</thead>"
+                    . "<tbody>";
+            $imagen = '';
+
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaSalida']));
+                $imagen = "En reparacion";
+                $concatenar .= "<tr><td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td><td class='usuarioBolqueado' >" . $fila['Descripcion'] . "</td><td class='usuarioBolqueado' >" . $Fecha . "</td><td class='usuarioBolqueado' >" . $fila['NBoleta'] . "</td><td class='usuarioBolqueado' >" . $imagen . "</td></tr>";
+            }
+
+            $concatenar .= "</tbody></table></section>";
+
+            echo $concatenar;
+        }
+    }
+    if ($Filtro == "Tipo") {
+        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and  tt.TipoEquipo = 'M' ORDER BY tt.Descripcion;";
 
         $result = $bdProyectos->FiltrosHerramientasProyecto($sql);
         if ($result != null) {

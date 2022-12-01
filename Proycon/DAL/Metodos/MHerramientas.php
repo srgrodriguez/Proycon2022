@@ -70,7 +70,15 @@ class MHerramientas implements IHerrramientas
     public function BuscarHerramientaPorCodigo($codigo)
     {
         $sql = "SELECT tt.ID_Tipo,Codigo, tt.Descripcion,th.Descripcion AS DesH,Marca,th.Precio,th.Procedencia,th.FechaIngreso from tbl_herramientaelectrica th, tbl_tipoherramienta tt
-                where th.Codigo= '" . $codigo . "' AND th.ID_Tipo = tt.ID_Tipo;";
+                where th.Codigo= '" . $codigo . "' AND th.ID_Tipo = tt.ID_Tipo AND tt.TipoEquipo = 'H'";
+        $result = $this->conn->query($sql);
+        $this->conn->close();
+        return $result;
+    }
+
+    public function BuscarMaquinariaPorCodigo($codigo) {
+        $sql = "SELECT tt.ID_Tipo,Codigo, tt.Descripcion,th.Descripcion AS DesH,Marca,th.Precio,th.Procedencia,th.FechaIngreso from tbl_herramientaelectrica th, tbl_tipoherramienta tt
+                where th.Codigo= '" . $codigo . "' AND th.ID_Tipo = tt.ID_Tipo AND tt.TipoEquipo = 'M'";
         $result = $this->conn->query($sql);
         $this->conn->close();
         return $result;
