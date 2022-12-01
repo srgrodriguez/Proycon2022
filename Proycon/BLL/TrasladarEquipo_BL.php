@@ -58,7 +58,7 @@ function ConsultarEquipoTrasladar()
     try {
        $bdTransladarEquipo = new MTrasladarEquipo();
        $request  = json_decode(file_get_contents('php://input'));
-      $resultado =  $bdTransladarEquipo->ConsultarMaquinariaTrasladar($request->codigo,$request->idTipo,$request->ubicacion);
+      $resultado =  $bdTransladarEquipo->ConsultarMaquinariaTrasladar($request->codigo,$request->idTipo,$request->ubicacion,$request->tipoEquipo);
       if ( $resultado != null && mysqli_num_rows($resultado) > 0){
         $resultadoHTML = '';
         while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {

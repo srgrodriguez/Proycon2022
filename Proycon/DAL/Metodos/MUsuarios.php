@@ -183,8 +183,7 @@ class MUsuarios implements IUsuarios {
             }         
 
         } catch (Exception $e) {
-            Log::GuardarEvento('ValidarLogin',$e);
-            //echo $e->getTraceAsString();
+            Log::GuardarEvento($e,'ValidarLogin');
         }
     }   
 

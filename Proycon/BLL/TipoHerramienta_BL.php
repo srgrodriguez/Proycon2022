@@ -27,8 +27,11 @@ if (isset($_GET['opc'])) {
             EliminarTipoHerramienta();
             break;
         case "consultar":
-                ConsultarTipoHerramientaPorID();
-                break;
+            ConsultarTipoHerramientaPorID();
+            break;
+        case "buscarPorNombre":
+            ObtenerTipoHerramientaPorNombre();
+            break;
         default:
             break;
     }
@@ -42,10 +45,10 @@ function AgregarTipoHerramienta()
         $bdMaquinaria = new MTipoHerramienta();
         $request  = json_decode(file_get_contents('php://input'));
         $tipoMaquinaria->Descripcion = $request->descripcion;
-        $tipoMaquinaria->Precio = str_replace(",","",$request->precio);
-        $tipoMaquinaria->TipoEquipo =$request->tipoEquipo; //M= maquinaria; H= HERRAMIENTA
-        $tipoMaquinaria->CodigoFormadeCobro =$request->codigoFormadeCobro;
-        $tipoMaquinaria->MonedaCobro =$request->monedaCobro;
+        $tipoMaquinaria->Precio = str_replace(",", "", $request->precio);
+        $tipoMaquinaria->TipoEquipo = $request->tipoEquipo; //M= maquinaria; H= HERRAMIENTA
+        $tipoMaquinaria->CodigoFormadeCobro = $request->codigoFormadeCobro;
+        $tipoMaquinaria->MonedaCobro = $request->monedaCobro;
 
         $resultado =  $bdMaquinaria->AgregarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
@@ -62,10 +65,10 @@ function ActualizarTipoHerramienta()
         $request  = json_decode(file_get_contents('php://input'));
         $tipoMaquinaria->IDTipo = $request->id;
         $tipoMaquinaria->Descripcion = $request->descripcion;
-        $tipoMaquinaria->Precio = str_replace(",","",$request->precio);
+        $tipoMaquinaria->Precio = str_replace(",", "", $request->precio);
         $tipoMaquinaria->TipoEquipo = $request->tipoEquipo; //M= maquinaria; H= HERRAMIENTA
-        $tipoMaquinaria->CodigoFormadeCobro=$request->codigoFormadeCobro;
-        $tipoMaquinaria->MonedaCobro= $request->monedaCobro;
+        $tipoMaquinaria->CodigoFormadeCobro = $request->codigoFormadeCobro;
+        $tipoMaquinaria->MonedaCobro = $request->monedaCobro;
         $resultado =  $bdMaquinaria->ActualizarTipoHerramienta($tipoMaquinaria);
         echo json_encode($resultado);
     } catch (\Throwable $ex) {
@@ -78,23 +81,66 @@ function ListarTipoHerramientas($tipoEquipo = 'M')
     try {
         $request  = json_decode(file_get_contents('php://input'));
         $dbHerramientas = new MTipoHerramienta();
-        if($request != null)
-        {
+        if ($request != null) {
             $tipoEquipo = $request->tipoEquipo;
         }
         $resultado = $dbHerramientas->listarTipoHerramientas($tipoEquipo);
         if ($resultado != null && mysqli_num_rows($resultado) > 0) {
             $resultadoHTML = '';
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-                  $tipoEquipo = $fila['TipoEquipo'];
-                  $idTipo = $fila['ID_Tipo'];
+                $tipoEquipo = $fila['TipoEquipo'];
+                $idTipo = $fila['ID_Tipo'];
 
                 $resultadoHTML .= "<tr>
                             <td style='display:none'>" . $idTipo . "</td>
                             <td>" . $fila['Descripcion'] . "</td>
-                            <td>".number_format($fila['PrecioEquipo'], 2, ",", ".")."</td>
-                            <td>" .ObtenerDescripcionMoneda($fila['CodigoMonedaCobro'] )  . "</td>
-                            <td>" . $fila['DescripcionFormaDeCobro']. "</td>
+                            <td>" . number_format($fila['PrecioEquipo'], 2, ",", ".") . "</td>
+                            <td>" . ObtenerDescripcionMoneda($fila['CodigoMonedaCobro'])  . "</td>
+                            <td>" . $fila['DescripcionFormaDeCobro'] . "</td>
+                            <td style='display:none'>" . $tipoEquipo . "</td>                           
+                            <td style='display:none'>" . $fila['CodigoMonedaCobro'] . "</td>
+                            <td style='text-align: center'>
+                                    <button class='btn btn-default' onclick=\"EditarTipo($idTipo)\">
+                                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                                    </button>
+                                    </td>
+                                    <td style='text-align: center'>
+                                    <button type='button' class='btn btn-danger' onclick=\"EliminarTipoHerramienta($idTipo,'$tipoEquipo')\" >
+                                    <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
+                                    </button>
+                                    </td>
+                            </tr>";
+            }
+            echo $resultadoHTML;
+        } else
+            echo "No hay datos para mostrar";
+    } catch (\Throwable $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "BuscarHerramientasPedido"));
+    }
+}
+
+function ObtenerTipoHerramientaPorNombre($tipoEquipo = 'M')
+{
+    try {
+        if (isset($_GET["tipoEquipo"])) {
+            $tipoEquipo = $_GET["tipoEquipo"];
+        }
+
+        $dbHerramientas = new MTipoHerramienta();
+        $consulta = $_GET["consulta"];
+        $resultado = $dbHerramientas->ObtenerTipoHerramientaPorNombre($tipoEquipo, $consulta);
+        if ($resultado != null && mysqli_num_rows($resultado) > 0) {
+            $resultadoHTML = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $tipoEquipo = $fila['TipoEquipo'];
+                $idTipo = $fila['ID_Tipo'];
+
+                $resultadoHTML .= "<tr>
+                            <td style='display:none'>" . $idTipo . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . number_format($fila['PrecioEquipo'], 2, ",", ".") . "</td>
+                            <td>" . ObtenerDescripcionMoneda($fila['CodigoMonedaCobro'])  . "</td>
+                            <td>" . $fila['DescripcionFormaDeCobro'] . "</td>
                             <td style='display:none'>" . $tipoEquipo . "</td>                           
                             <td style='display:none'>" . $fila['CodigoMonedaCobro'] . "</td>
                             <td style='text-align: center'>
@@ -130,8 +176,9 @@ function EliminarTipoHerramienta()
     }
 }
 
-function ConsultarTipoHerramientaPorID(){
-    
+function ConsultarTipoHerramientaPorID()
+{
+
     try {
         $bdMaquinaria = new MTipoHerramienta();
         $request  = json_decode(file_get_contents('php://input'));
@@ -143,56 +190,53 @@ function ConsultarTipoHerramientaPorID(){
     }
 }
 
- function CargarComboBoxTipoHerramienta($tipoEquipo,$id,$onchage="")
- {
+function CargarComboBoxTipoHerramienta($tipoEquipo, $id, $onchage = "")
+{
 
     $bdMaquinaria = new MTipoHerramienta();
-    $eventoOnchange= "";
-    if($onchage!= "")
-    {
-        $eventoOnchange ="onchange='$onchage'";
+    $eventoOnchange = "";
+    if ($onchage != "") {
+        $eventoOnchange = "onchange='$onchage'";
     }
-    
-   $resultado =  $bdMaquinaria->CargarComboBoxTipoHerramienta($tipoEquipo);
-   $resultadoHTML = "<select id='$id' name='$id' class='form-control ' $eventoOnchange > 
+
+    $resultado =  $bdMaquinaria->CargarComboBoxTipoHerramienta($tipoEquipo);
+    $resultadoHTML = "<select id='$id' name='$id' class='form-control ' $eventoOnchange > 
                        <option value='0' selected='true'>Seleccione el tipo de herramienta</option>";
-   if ($resultado != null && mysqli_num_rows($resultado) > 0) {
-    while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        $resultadoHTML.= "<option value='".$fila["ID_Tipo"]."' >".$fila['Descripcion']."</option>";
+    if ($resultado != null && mysqli_num_rows($resultado) > 0) {
+        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+            $resultadoHTML .= "<option value='" . $fila["ID_Tipo"] . "' >" . $fila['Descripcion'] . "</option>";
+        }
     }
-   }
-   $resultadoHTML.= "</select>";
+    $resultadoHTML .= "</select>";
 
-   echo $resultadoHTML;
+    echo $resultadoHTML;
+}
 
- }
-
- function CargarComboBoxFormaCobroHerramienta()
- {
+function CargarComboBoxFormaCobroHerramienta()
+{
 
     $bdMaquinaria = new MTipoHerramienta();
-   $resultado =  $bdMaquinaria->CargarComboBoxFormaCobroHerramienta();
-   $resultadoHTML = "<select id='cboFormaCobro' name='cboFormaCobro' class='form-control ' > 
+    $resultado =  $bdMaquinaria->CargarComboBoxFormaCobroHerramienta();
+    $resultadoHTML = "<select id='cboFormaCobro' name='cboFormaCobro' class='form-control ' > 
                        <option value='0' selected='true'>Seleccione la forma de cobro</option>";
-   if ($resultado != null && mysqli_num_rows($resultado) > 0) {
-    while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        $resultadoHTML.= "<option value='".$fila["CodigoFormaCobro"]."' >".$fila['DescripcionFormaDeCobro']."</option>";
+    if ($resultado != null && mysqli_num_rows($resultado) > 0) {
+        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+            $resultadoHTML .= "<option value='" . $fila["CodigoFormaCobro"] . "' >" . $fila['DescripcionFormaDeCobro'] . "</option>";
+        }
     }
-   }
-   $resultadoHTML.= "</select>";
+    $resultadoHTML .= "</select>";
 
-   echo $resultadoHTML;
+    echo $resultadoHTML;
+}
 
- }
+function ObtenerDescripcionMoneda($codigoMoneda)
+{
 
-function ObtenerDescripcionMoneda($codigoMoneda){
-
-    if($codigoMoneda != null && $codigoMoneda != "")
-    {
-      if($codigoMoneda == "C")
-        return "Colones";
-      else
-        return "Dólares";
+    if ($codigoMoneda != null && $codigoMoneda != "") {
+        if ($codigoMoneda == "C")
+            return "Colones";
+        else
+            return "Dólares";
     }
     return "";
 }

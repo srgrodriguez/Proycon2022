@@ -15,7 +15,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
         $resultado = new Resultado();
         $resultado->esValido = true;
         $resultado->mensaje = "Se traslado el equipo correctamente";
-        $fechaActual = date('d/m/y');
+       // $fechaActual = date('d/m/y');
         $CodigosProcesados = [];
         $CodigoEquipoQueFallo = "";
         try {
@@ -43,21 +43,21 @@ class MTrasladarEquipo implements ITrasladarEquipo
                         if ($insertarBoleta) {
                             $tipoPedido = $equipo->TipoEquipo == Constantes::TipoEquipoHerramientaElectrica ? "2" : "3";
                             $sqlInsertarBoleta = "Insert into tbl_boletaspedido(Consecutivo,ID_Proyecto,TipoPedido,ID_Usuario,Fecha) 
-                                              values (" . $equipo->NumBoleta . "," . $equipo->IdProyectoDestino . ",' $tipoPedido','$equipo->IdUsuario','$fechaActual')";
+                                              values (" . $equipo->NumBoleta . "," . $equipo->IdProyectoDestino . ",' $tipoPedido','$equipo->IdUsuario',Now())";
                             $resultadoInsertarBoleta =  $this->conn->query($sqlInsertarBoleta);
                             $insertarBoleta = false;
                         }
                         
                         if ($resultadoInsertarBoleta) {
                             $sqlInsertarPrestamo = "Insert into tbl_prestamoherramientas(NBoleta,ID_Proyecto,Codigo,Estado,FechaSalida,ID_Tipo) values
-                          (" . $equipo->NumBoleta . "," . $equipo->IdProyectoDestino . ",'" . $equipo->CodigoEquipo . "',1,'$fechaActual'," . $equipo->IdTipoEquipo . ")";
+                          (" . $equipo->NumBoleta . "," . $equipo->IdProyectoDestino . ",'" . $equipo->CodigoEquipo . "',1,Now()," . $equipo->IdTipoEquipo . ")";
 
                             $resultadoInsertarPrestamo = $this->conn->query($sqlInsertarPrestamo);
 
                             if ($resultadoInsertarPrestamo) {
 
                                 $sqlInsertarHistorial =  "Insert into tbl_historialherramientas(Codigo,Ubicacion,Destino,NumBoleta,Fecha) 
-                                                      values('" . $equipo->CodigoEquipo . "'," . $equipo->IdUbicacionActual . "," . $equipo->IdProyectoDestino . ",'" . $equipo->NumBoleta . "','$fechaActual')";
+                                                      values('" . $equipo->CodigoEquipo . "'," . $equipo->IdUbicacionActual . "," . $equipo->IdProyectoDestino . ",'" . $equipo->NumBoleta . "',Now())";
                                 $resultadoInsertarHistorial = $this->conn->query($sqlInsertarHistorial);
 
                                 if ($resultadoInsertarHistorial) {
@@ -138,27 +138,27 @@ class MTrasladarEquipo implements ITrasladarEquipo
         }
     }
 
-    public function ConsultarMaquinariaTrasladar($codigo,$id_tipo,$ubicacion)
+    public function ConsultarMaquinariaTrasladar($codigo,$id_tipo,$ubicacion,$tipoEquipo)
     {
        $where="";
         if($codigo != ""){
             $where = "where a.Codigo = '$codigo' and a.ID_Tipo = b.ID_Tipo and
             a.Ubicacion = c.ID_Proyecto and
-            b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' and
-            a.Estado = 1";
+            b.TipoEquipo = '" . $tipoEquipo . "' and
+            a.Estado = 1 and c.ID_Proyecto != 13";
         }
         else if($id_tipo != ""){
             $where = "where a.ID_Tipo = $id_tipo and a.ID_Tipo = b.ID_Tipo and
             a.Ubicacion = c.ID_Proyecto and
-            b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' and
-            a.Estado = 1";
+            b.TipoEquipo = '" . $tipoEquipo . "' and
+            a.Estado = 1 and c.ID_Proyecto != 13";
         }
         else if($ubicacion != "")
         {
             $where = "where a.Ubicacion = $ubicacion and a.ID_Tipo = b.ID_Tipo and
             a.Ubicacion = c.ID_Proyecto and
-            b.TipoEquipo = '" . Constantes::TipoEquipoMaquinaria . "' and
-            a.Estado = 1";
+            b.TipoEquipo = '" . $tipoEquipo . "' and
+            a.Estado = 1 and c.ID_Proyecto != 13";
         }
         else{
             $where = "where a.ID_Tipo = b.ID_Tipo and

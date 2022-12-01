@@ -1,6 +1,6 @@
 let listaEquipoTrasladar =[];
 
-function ConsultarEquipoTrasladar(tipoFiltro)
+function ConsultarEquipoTrasladar(tipoFiltro,tipoEquipo="M")
 {
     let codigo= "";
     let idTipo = "";
@@ -21,7 +21,8 @@ function ConsultarEquipoTrasladar(tipoFiltro)
          body: JSON.stringify({//Estos son los parametros que recibe el método
              "codigo": codigo,
              "idTipo": idTipo,
-             "ubicacion": ubicacion
+             "ubicacion": ubicacion,
+             "tipoEquipo":tipoEquipo
          })
      })
      .then((response) => {
@@ -102,7 +103,7 @@ function RemoverEquipoBoleta(event){
     $(event).parents("tr").remove();
 }
 
-function TrasladarEquipo()
+async function TrasladarEquipo()
 {
     const btnGuardar =$("#btnGuardarTraslado");
     btnGuardar.prop('disabled',true);
@@ -122,7 +123,7 @@ function TrasladarEquipo()
         }
         listaEquipoTrasladar = [];
 
-        fetch('../BLL/TrasladarEquipo_BL.php?opc=trasladar',
+     await  fetch('../BLL/TrasladarEquipo_BL.php?opc=trasladar',
         {
             method: 'POST',
             headers: {
@@ -140,7 +141,6 @@ function TrasladarEquipo()
             }
         })
         .then((data) => {
-            btnGuardar.prop('disabled',false);
            if(esJsonValido(data))
            {
             let resultado = JSON.parse(data);
@@ -152,6 +152,8 @@ function TrasladarEquipo()
         .catch((result) => {
             MostrarMensajeResultado(result, false, idMostrarMensajes);
         })
+
+        btnGuardar.prop('disabled',false);
 
     }
 
