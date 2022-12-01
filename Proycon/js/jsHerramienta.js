@@ -8,7 +8,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas0',
                 success: function (result) {
                     $('#listadoHerramientas').html(result);
-                    $('#tbl_total_herramientas').css("display", "block");
+                    $('#tbl_total_herramientas').css("display", "inline-table");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -36,7 +36,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas1',
                 success: function (result) {
                     $('#listadoHerramientas').html(result);
-                    $('#tbl_total_herramientas').css("display", "block");
+                    $('#tbl_total_herramientas').css("display", "inline-table");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -64,7 +64,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas2',
                 success: function (result) {
                     $('#listadoHerramientas').html(result);
-                    $('#tbl_total_herramientas').css("display", "block");
+                    $('#tbl_total_herramientas').css("display", "inline-table");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -92,7 +92,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas3',
                 success: function (result) {
                     $('#listadoHerramientas').html(result);
-                    $('#tbl_total_herramientas').css("display", "block");
+                    $('#tbl_total_herramientas').css("display", "inline-table");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -120,7 +120,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas4',
                 success: function (result) {
                     $('#listadoHerramientas').html(result);
-                    $('#tbl_total_herramientas').css("display", "block");
+                    $('#tbl_total_herramientas').css("display", "inline-table");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -148,7 +148,7 @@ function FiltrosHerramientas() {
                 url: '../BLL/Herramientas.php?opc=FiltrosHerramientas5',
                 success: function (result) {
                     $('#tbl_total_herramientas').css("display", "none");
-                    $('#tbl_total__tipo_herramientas').css("display", "block");
+                    $('#tbl_total__tipo_herramientas').css("display", "inline-table");
                     $('#listadoTotalTipoHerramientas').html(result);
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
@@ -180,7 +180,7 @@ function AtrasH() {
         return;
     }
     if ($("#reparaciones").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").show();
+        $("#MostrarBusquedaHerramienta").show();
         $("#reparaciones").hide();
         return;
 
@@ -192,7 +192,7 @@ function AtrasH() {
         return;
     }
     if ($(".MostrarTransladoHerramienta").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").show();
+        $("#MostrarBusquedaHerramienta").show();
         $(".MostrarTransladoHerramienta").hide();
         return;
     }
@@ -206,7 +206,7 @@ function Atras() {
         return;
     }
     if ($("#reparaciones").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").show();
+        $("#MostrarBusquedaHerramienta").show();
         $("#reparaciones").hide();
         return;
 
@@ -218,7 +218,7 @@ function Atras() {
         return;
     }
     if ($(".MostrarTransladoHerramienta").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").show();
+        $("#MostrarBusquedaHerramienta").show();
         $(".MostrarTransladoHerramienta").hide();
         return;
     }
@@ -605,8 +605,7 @@ function listarTotalHerramientas() {
     $(".MostrarTransladoHerramienta").hide();
     $(".formHerramientas").hide();
     $(".historialreparaciones").hide();
-    $(".MostrarBusquedaHerramienta").show();
-    $(".MostrarBusquedaHerramienta").css("top", "-50px");
+    $("#MostrarBusquedaHerramienta").show();
     if ($("#reparaciones").is(":visible")) {
         $("#reparaciones").hide();
     }
@@ -620,7 +619,7 @@ function listarTotalHerramientas() {
                 alert("error");
             } else {
                 $('#listadoHerramientas').html(respuesta);
-                $('#tbl_total_herramientas').css("display", "block");
+                $('#tbl_total_herramientas').css("display", "inline-table");
 
             }
         },
@@ -1047,7 +1046,7 @@ function MostrarTransladoHerramienta() {
     $("#BoletaReparacionHerramienta").hide();
     $(".formHerramientas").hide();
     $(".historialreparaciones").hide();
-    $(".MostrarBusquedaHerramienta").hide();
+    $("#MostrarBusquedaHerramienta").hide();
     $(".MostrarTransladoHerramienta").show("slow");
     $(".MostrarTransladoHerramienta").css("top", "-50px");
     if ($("#reparaciones").is(":visible")) {
@@ -1115,8 +1114,8 @@ function MostrarHistorial()
     $("#BoletaReparacionHerramienta").hide();
     $("#mostrarTablaReparaciones").hide();
     $("#reparaciones").hide();
-    if ($(".MostrarBusquedaHerramienta").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").hide();
+    if ($("#MostrarBusquedaHerramienta").is(":visible")) {
+        $("#MostrarBusquedaHerramienta").hide();
     }
 
     // ME LLENA LOS CAMPOS DEL TOTAL DE REPARACIONES DE LA HERRAMIENTA
@@ -1302,8 +1301,8 @@ function MostrarListaReparaciones() {
     $("#mostrarTablaReparaciones").show("slow");
 
 
-    if ($(".MostrarBusquedaHerramienta").is(":visible")) {
-        $(".MostrarBusquedaHerramienta").hide();
+    if ($("#MostrarBusquedaHerramienta").is(":visible")) {
+        $("#MostrarBusquedaHerramienta").hide();
     }
 
     $.ajax({
@@ -2210,7 +2209,7 @@ function BuscarHerramientasPorCodigo() {
         url: "../BLL/Herramientas.php?opc=buscarherramienCodigo&codigo=" + codigo,
         success: function (respuesta) {
             $("#listadoHerramientas").html(respuesta);
-            $('#tbl_total_herramientas').css("display", "block");
+            $('#tbl_total_herramientas').css("display", "inline-table");
         },
         error: function (jqXhr, textStatus, errorMessage) {
             alert("En este momento no podemos procesar la transaccion intente de nuevo");
@@ -2234,7 +2233,7 @@ function BuscarHerramientasPorCodigo() {
     });
 }
 
-$(BuscarTiempoRealHerramienta());
+//$(BuscarTiempoRealHerramienta());
 function  BuscarTiempoRealHerramienta(consulta) {
 
 
@@ -2253,9 +2252,9 @@ function  BuscarTiempoRealHerramienta(consulta) {
             $("#ResultadoBusqudaHerramienta").html("<div style='margin:auto;width:200px'><img src='../resources/imagenes/loanding.gif'  width='100px'/></div>");
         },
         success: function (respuesta) {
-            $(".MostrarBusquedaHerramienta").show();
+            $("#MostrarBusquedaHerramienta").show();
             $("#listadoHerramientas").html(respuesta);
-            $('#tbl_total_herramientas').css("display", "block");
+            $('#tbl_total_herramientas').css("display", "inline-table");
         },
         error: function (jqXhr, textStatus, errorMessage) {
             alert("En este momento no podemos procesar la transaccion intente de nuevo");

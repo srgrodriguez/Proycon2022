@@ -218,9 +218,7 @@ body #headerLogin #tituloResponsive {
 #contenedor #reparaciones{
      width: 100%;
     margin: auto;
-    position:relative;
     z-index: 0;
- top:-200px;
 
 }
 #contenedor #reparaciones #btnreparaciones{

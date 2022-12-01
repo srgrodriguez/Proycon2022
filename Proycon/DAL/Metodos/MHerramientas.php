@@ -1,16 +1,19 @@
 <?php
 
-class MHerramientas implements IHerrramientas {
+class MHerramientas implements IHerrramientas
+{
 
     var $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
 
         $conexion = new Conexion();
         $this->conn = $conexion->CrearConexion();
     }
 
-    public function FacturacionReparacion(Factura $Facturacion) {
+    public function FacturacionReparacion(Factura $Facturacion)
+    {
         $Facturacion->Codigo = LimpiarCadenaCaracter($this->conn, $Facturacion->Codigo);
         $Facturacion->NumFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->NumFactura);
         $Facturacion->DescripcionFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->DescripcionFactura);
@@ -56,14 +59,16 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function listaEnviadas($codigo) {
+    public function listaEnviadas($codigo)
+    {
         $sql = "select a.ID_FacturaReparacion from tbl_reparacionherramienta a, tbl_herramientaelectrica b where a.Codigo = b.Codigo and a.Codigo = '$codigo';";
         $resultado = $this->conn->query($sql);
         $this->conn->close();
         return $resultado;
     }
 
-    public function BuscarHerramientaPorCodigo($codigo) {
+    public function BuscarHerramientaPorCodigo($codigo)
+    {
         $sql = "SELECT tt.ID_Tipo,Codigo, tt.Descripcion,th.Descripcion AS DesH,Marca,th.Precio,th.Procedencia,th.FechaIngreso from tbl_herramientaelectrica th, tbl_tipoherramienta tt
                 where th.Codigo= '" . $codigo . "' AND th.ID_Tipo = tt.ID_Tipo;";
         $result = $this->conn->query($sql);
@@ -71,7 +76,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function RegistrarTipoHerramienta(Herramientas $Tipo) {
+    public function RegistrarTipoHerramienta(Herramientas $Tipo)
+    {
 
         if ($this->conn->connect_errno) {
             return -1;
@@ -91,7 +97,8 @@ class MHerramientas implements IHerrramientas {
 
     // LISTADO DEL TIPO DE HERRAMIENTAS
 
-    public function listarTipoHerramientas() {
+    public function listarTipoHerramientas()
+    {
         if ($this->conn->connect_errno) {
             return -1;
         }
@@ -109,7 +116,8 @@ class MHerramientas implements IHerrramientas {
 
     // OBTENER EL CONSECUTIVO EN EL TIPO DE HERRAMIENTA
 
-    public function ObtenerConsecutivoTipo() {
+    public function ObtenerConsecutivoTipo()
+    {
         $sql = "Select ID_Tipo from tbl_tipoherramienta order by ID_Tipo desc limit 1";
 
         if ($stmt = $this->conn->prepare($sql)) {
@@ -126,8 +134,21 @@ class MHerramientas implements IHerrramientas {
 
     // JALA TODOS LOS VALORES DE LAS HERRAMIENTAS
 
-    public function listarTotalHerramientas() {
-        $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto";
+    public function listarTotalHerramientas()
+    {
+        $sql = "select Codigo,
+         b.Descripcion as Tipo,
+         a.Descripcion,
+         FechaIngreso, 
+         IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, 
+         c.Nombre,
+         IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+         a.Estado as numEstado,
+         Precio,
+         b.PrecioEquipo as PrecioAlquiler,
+         b.CodigoMonedaCobro,
+         b.CodigoFormaCobro 
+        from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto";
         $sql2 = "Delete from tbl_trasladotemporal where idTrasladoT = '1'";
         $this->conn->query($sql2);
         if ($stmt = $this->conn->prepare($sql)) {
@@ -143,7 +164,8 @@ class MHerramientas implements IHerrramientas {
 
     // JALA TODOS LOS VALORES DE LAS HERRAMIENTAS MENOS LOS QUE ESTAN DAÑADOS
 
-    public function listarTotalHerramientasTranslado() {
+    public function listarTotalHerramientasTranslado()
+    {
 
         $sql = "Select Codigo, b.Descripcion as Tipo, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Estado = 1 and Codigo = '0' ";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -161,7 +183,8 @@ class MHerramientas implements IHerrramientas {
 
     //  FILTRO DE TRASLADO DE HERRAMIENTAS POR TIPO
 
-    public function FiltroTrasladoTipo($tipo) {
+    public function FiltroTrasladoTipo($tipo)
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = "Select Codigo, b.Descripcion as Tipo, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,c.ID_Proyecto,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Estado = 1 
@@ -173,7 +196,8 @@ class MHerramientas implements IHerrramientas {
 
     //  FILTRO DE TRASLADO DE HERRAMIENTAS POR UBICACION
 
-    public function FiltrosHerramientasU($ubicacion) {
+    public function FiltrosHerramientasU($ubicacion)
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = "Select Codigo, b.Descripcion as Tipo, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,c.ID_Proyecto,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Estado = 1 
@@ -183,7 +207,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function totalReparaciones() {
+    public function totalReparaciones()
+    {
         if ($this->conn->connect_errno) {
             return -1;
         }
@@ -195,7 +220,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function cambiarTipo($ID_Tipo, $DescripcionTipo) {
+    public function cambiarTipo($ID_Tipo, $DescripcionTipo)
+    {
 
         if ($this->conn->connect_errno) {
             return -1;
@@ -214,7 +240,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FacturaReparacion($idReparacion) {
+    public function FacturaReparacion($idReparacion)
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         if ($conn->connect_errno) {
@@ -228,7 +255,8 @@ class MHerramientas implements IHerrramientas {
 
     // <!--Agregar una Nueva Herramienta -->
 
-    public function RegistrarHerramientas(Herramientas $Herramientas) {
+    public function RegistrarHerramientas(Herramientas $Herramientas)
+    {
 
         if ($this->conn->connect_errno) {
             return -1;
@@ -275,7 +303,8 @@ class MHerramientas implements IHerrramientas {
     // <!--Agregar el consecutivo de la Nueva Herramienta -->
 
 
-    public function ObtenerConsecutivoHerramienta() {
+    public function ObtenerConsecutivoHerramienta()
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = "SELECT MAX(SUBSTRING(Codigo, 2,6) + 0) AS mayor from tbl_herramientaelectrica;";
@@ -284,7 +313,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function ObternerCosecutivoReparacion() {
+    public function ObternerCosecutivoReparacion()
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = " select NumBoleta from tbl_boletareparacion order by NumBoleta desc limit 1;";
@@ -293,7 +323,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function ObternerCosecutivoPedido() {
+    public function ObternerCosecutivoPedido()
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = " select Consecutivo from tbl_boletaspedido order by Consecutivo desc limit 1;";
@@ -302,7 +333,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function BuscarHerramientaNombre($descripcion) {
+    public function BuscarHerramientaNombre($descripcion)
+    {
         if ($this->conn->connect_errno) {
             return -1;
         } else {
@@ -321,13 +353,14 @@ class MHerramientas implements IHerrramientas {
         }
     }
 
-    public function RegistrarReparacion($consecutivo, $fecha, $ID_Usuario, $provedorReparacion) {
+    public function RegistrarReparacion($consecutivo, $fecha, $ID_Usuario, $provedorReparacion)
+    {
         $consecutivo = LimpiarCadenaCaracter($this->conn, $consecutivo);
         $provedorReparacion = LimpiarCadenaCaracter($this->conn, $provedorReparacion);
         $sql = "Insert into tbl_boletareparacion(Numboleta,Fecha,ID_Usuario,ProveedorReparacion,TipoEquipo) values (?,?,?,?,?);";
         if ($stmt = $this->conn->prepare($sql)) {
             $tipoEquipo = "H";
-            $stmt->bind_param("isiss", $consecutivo, $fecha, $ID_Usuario, $provedorReparacion,$tipoEquipo);
+            $stmt->bind_param("isiss", $consecutivo, $fecha, $ID_Usuario, $provedorReparacion, $tipoEquipo);
             $stmt->execute();
         } else {
             echo "Error de sintaxis en consulta SQL ";
@@ -338,7 +371,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function RegistrarReparacionHerramienta($consecutivo, $codigoHerramienta, $fecha) {
+    public function RegistrarReparacionHerramienta($consecutivo, $codigoHerramienta, $fecha)
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = "Insert into tbl_reparacionherramienta (Codigo,FechaSalida,NumBoleta) values ('" . $codigoHerramienta . "','" . $fecha . "',$consecutivo);";
@@ -371,7 +405,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function listarBoletasReparacion() {
+    public function listarBoletasReparacion()
+    {
         $sql = "SELECT a.NumBoleta,a.Fecha,b.Nombre FROM tbl_boletareparacion a, tbl_usuario b where b.ID_Usuario = a.ID_Usuario order by NumBoleta DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -380,7 +415,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function eliminarBoletaR($eliboleta) {
+    public function eliminarBoletaR($eliboleta)
+    {
         $eliboleta = LimpiarCadenaCaracter($this->conn, $eliboleta);
         $sql = "delete from tbl_boletareparacion where NumBoleta = '$eliboleta';";
         $result = $this->conn->query($sql);
@@ -401,7 +437,8 @@ class MHerramientas implements IHerrramientas {
         return $result;
     }
 
-    public function EliminarTraslado($CodigoTH) {
+    public function EliminarTraslado($CodigoTH)
+    {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
         $sql = "Delete from tbl_trasladotemporal where Codigo = ?";
@@ -417,7 +454,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function ListarTrasladoMo() {
+    public function ListarTrasladoMo()
+    {
         $sql = "SELECT a.Codigo,c.Nombre as Ubicacion,a.FechaIngreso,a.Marca,a.Descripcion FROM tbl_herramientaelectrica a, tbl_trasladotemporal b,tbl_proyectos c WHERE a.Codigo = b.Codigo and a.Ubicacion = c.ID_Proyecto;";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
@@ -430,7 +468,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function GuardarTrasladoT($CodigoT) {
+    public function GuardarTrasladoT($CodigoT)
+    {
         try {
 
             $sql1 = "SELECT Codigo FROM tbl_trasladotemporal WHERE Codigo = ? ";
@@ -463,7 +502,8 @@ class MHerramientas implements IHerrramientas {
         }
     }
 
-    public function VerBoletaReparacion($NumBoleta) {
+    public function VerBoletaReparacion($NumBoleta)
+    {
         $NumBoleta = LimpiarCadenaCaracter($this->conn, $NumBoleta);
         $sql = "SELECT tr.Codigo,tt.Descripcion,th.Marca, boleta.ProveedorReparacion as proveedor from tbl_reparacionherramienta tr, tbl_herramientaelectrica th, tbl_tipoherramienta tt, tbl_boletareparacion boleta WHERE tr.Codigo = th.Codigo and th.ID_Tipo = tt.ID_Tipo and tr.NumBoleta = boleta.NumBoleta and tr.NumBoleta = ? ;";
         $stmt = $this->conn->prepare($sql);
@@ -477,10 +517,25 @@ class MHerramientas implements IHerrramientas {
 
     // FILTROS QUE ORDENAN EL TOTAL DE HERRAMIENTAS
 
-    public function FiltrosHerramientas0() {
+    public function FiltrosHerramientas0()
+    {
 
-        $sql = "SELECT a.Codigo,b.Descripcion,a.Descripcion as descr,a.FechaIngreso,IF(a.Disposicion  = '1','Disponible','No Disponible') as Disposicion,c.Nombre,IF(a.Estado  = '1','Buena','En Reparación') as Estado,a.Estado as numEstado,Precio
-		from tbl_herramientaelectrica a, tbl_tipoherramienta b,tbl_proyectos c WHERE a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto;";
+        $sql = "select Codigo,
+         b.Descripcion as Tipo,
+         a.Descripcion,
+         FechaIngreso,
+         IF(Disposicion = '1','Disponible','No Disponible')as Disposicion,
+         c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+         a.Estado as numEstado,
+         Precio,
+         b.PrecioEquipo as PrecioAlquiler,
+         b.CodigoMonedaCobro,
+         b.CodigoFormaCobro 
+         from tbl_herramientaelectrica a,
+         tbl_tipoherramienta b,
+         tbl_proyectos c 
+         where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -489,10 +544,49 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrosHerramientas1() {
+    public function FiltrosHerramientas1()
+    {
+        $sql = "select Codigo,
+         b.Descripcion as Tipo,
+         a.Descripcion,
+         FechaIngreso,
+         IF(Disposicion = '1','Disponible','No Disponible')as Disposicion,
+         c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+         a.Estado as numEstado,
+         Precio,
+         b.PrecioEquipo as PrecioAlquiler,
+         b.CodigoMonedaCobro,
+         b.CodigoFormaCobro  
+         from tbl_herramientaelectrica a,
+         tbl_tipoherramienta b,
+         tbl_proyectos c 
+         where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY b.ID_Tipo";
+         $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $this->conn->close();
+        $stmt->close();
+        return $resultado;
+    }
 
-        $sql = "SELECT a.Codigo,b.Descripcion,a.Descripcion as descr,a.FechaIngreso,IF(a.Disposicion  = '1','Disponible','No Disponible') as Disposicion,c.Nombre,IF(a.Estado  = '1','Buena','En Reparación') as Estado,a.Estado as numEstado,Precio
-	    from tbl_herramientaelectrica a, tbl_tipoherramienta b,tbl_proyectos c WHERE a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY b.ID_Tipo;";
+    public function FiltrosHerramientas2()
+    {
+        $sql = "select Codigo,
+        b.Descripcion as Tipo,
+        a.Descripcion,
+        FechaIngreso,
+        IF(Disposicion = '1','Disponible','No Disponible')as Disposicion,
+        c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+        a.Estado as numEstado,
+        Precio,
+        b.PrecioEquipo as PrecioAlquiler,
+        b.CodigoMonedaCobro,
+        b.CodigoFormaCobro  
+        from tbl_herramientaelectrica a,
+        tbl_tipoherramienta b,
+        tbl_proyectos c 
+        where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY Disposicion;";
+        
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -501,9 +595,23 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrosHerramientas2() {
-        $sql = "SELECT a.Codigo,b.Descripcion,a.Descripcion as descr,a.FechaIngreso,IF(a.Disposicion  = '1','Disponible','No Disponible') as Disposicion,c.Nombre,IF(a.Estado  = '1','Buena','En Reparación') as Estado,a.Estado as numEstado,Precio
-		from tbl_herramientaelectrica a, tbl_tipoherramienta b,tbl_proyectos c WHERE a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY Disposicion;";
+    public function FiltrosHerramientas3()
+    {
+        $sql = "select Codigo,
+        b.Descripcion as Tipo,
+        a.Descripcion,
+        FechaIngreso,
+        IF(Disposicion = '1','Disponible','No Disponible')as Disposicion,
+        c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+        a.Estado as numEstado,
+        Precio,
+        b.PrecioEquipo as PrecioAlquiler,
+        b.CodigoMonedaCobro,
+        b.CodigoFormaCobro  
+        from tbl_herramientaelectrica a,
+        tbl_tipoherramienta b,
+        tbl_proyectos c 
+        where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY a.Ubicacion,b.Descripcion;";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -512,8 +620,24 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrosHerramientas3() {
-        $sql = "SELECT a.Codigo,b.Descripcion,a.Descripcion as descr,a.FechaIngreso,IF(a.Disposicion = '1','Disponible','No Disponible') as Disposicion,c.Nombre,IF(a.Estado = '1','Buena','En Reparación') as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b,tbl_proyectos c WHERE a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY a.Ubicacion,b.Descripcion ;";
+    public function FiltrosHerramientas4()
+    {
+        $sql = "select Codigo,
+        b.Descripcion as Tipo,
+        a.Descripcion,
+        FechaIngreso,
+        IF(Disposicion = '1','Disponible','No Disponible')as Disposicion,
+        c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,
+        a.Estado as numEstado,
+        Precio,
+        b.PrecioEquipo as PrecioAlquiler,
+        b.CodigoMonedaCobro,
+        b.CodigoFormaCobro  
+        from tbl_herramientaelectrica a,
+        tbl_tipoherramienta b,
+        tbl_proyectos c 
+        where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY a.Estado;";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -522,19 +646,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrosHerramientas4() {
-
-        $sql = "SELECT a.Codigo,b.Descripcion,a.Descripcion as descr,a.FechaIngreso,IF(a.Disposicion  = '1','Disponible','No Disponible') as Disposicion,c.Nombre,IF(a.Estado  = '1','Buena','En Reparación') as Estado,a.Estado as numEstado,Precio
-		from tbl_herramientaelectrica a, tbl_tipoherramienta b,tbl_proyectos c WHERE a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY a.Estado;";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        $this->conn->close();
-        $stmt->close();
-        return $resultado;
-    }
-
-    public function FiltroReparacionfecha($fecha) {
+    public function FiltroReparacionfecha($fecha)
+    {
         $fecha = LimpiarCadenaCaracter($this->conn, $fecha);
         $sql = "select ID_Reparacion,a.Codigo,b.Descripcion ,FechaSalida,FechaEntrada,NumBoleta from tbl_reparacionherramienta a, tbl_tipoherramienta b,  tbl_herramientaelectrica c where c.Codigo = a.Codigo and c.ID_Tipo = b.ID_Tipo and a.FechaSalida = ?;";
         $stmt = $this->conn->prepare($sql);
@@ -545,7 +658,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltroReparacionTipo($tipo) {
+    public function FiltroReparacionTipo($tipo)
+    {
         $tipo = LimpiarCadenaCaracter($this->conn, $tipo);
         $sql = "SELECT tr.ID,tr.Codigo,tt.Descripcion,tr.Fecha,DATEDIFF(CURDATE(),tr.Fecha) as Dias,r.ProveedorReparacion ,tr.Boleta from tbl_tempoherramientareparacion tr,tbl_tipoherramienta tt, tbl_herramientaelectrica th, tbl_boletareparacion r WHERE tr.Codigo = th.Codigo and th.ID_Tipo = tt.ID_Tipo and tr.Boleta=r.NumBoleta and tt.ID_Tipo = ? ";
         $stmt = $this->conn->prepare($sql);
@@ -557,7 +671,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltroReparacionCodigo($codigo) {
+    public function FiltroReparacionCodigo($codigo)
+    {
         $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
         $sql = "SELECT tr.ID,tr.Codigo,tt.Descripcion,tr.Fecha,DATEDIFF(CURDATE(),tr.Fecha) as Dias, tr.Boleta,re.ProveedorReparacion from tbl_tempoherramientareparacion tr,tbl_tipoherramienta tt, tbl_herramientaelectrica th,tbl_boletareparacion re WHERE tr.Codigo = th.Codigo and th.ID_Tipo = tt.ID_Tipo and tr.Boleta= re.NumBoleta and th.Codigo = ? ";
         $stmt = $this->conn->prepare($sql);
@@ -569,7 +684,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltroReparacionboleta($boleta) {
+    public function FiltroReparacionboleta($boleta)
+    {
         $boleta = LimpiarCadenaCaracter($this->conn, $boleta);
         $sql = "select ID_Reparacion,a.Codigo,b.Descripcion ,FechaSalida,FechaEntrada,NumBoleta from tbl_reparacionherramienta a, tbl_tipoherramienta b,  tbl_herramientaelectrica c where c.Codigo = a.Codigo and c.ID_Tipo = b.ID_Tipo and a.NumBoleta = ?";
         $stmt = $this->conn->prepare($sql);
@@ -581,9 +697,12 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function buscarherramienCodigo($Cod) {
+    public function buscarherramienCodigo($Cod)
+    {
         $$Cod = LimpiarCadenaCaracter($this->conn, $Cod);
-        $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
+        $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
+        b.CodigoMonedaCobro,
+        b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $Cod);
         $stmt->execute();
@@ -594,7 +713,8 @@ class MHerramientas implements IHerrramientas {
     }
 
     // FILTRO POR CODIGO PARA TRASLADO
-    public function buscarTraslado($Cod) {
+    public function buscarTraslado($Cod)
+    {
         $$Cod = LimpiarCadenaCaracter($this->conn, $Cod);
         $sql = "Select Codigo, b.Descripcion as Tipo, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,c.ID_Proyecto,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Estado = 1 
 		and  a.Codigo = ? ";
@@ -608,7 +728,8 @@ class MHerramientas implements IHerrramientas {
     }
 
     // FILTRO PARA EL TOTAL DE REPARACIONES DE LA HERRAMIENTA HISTORIAL
-    public function reparacionesTotales($codigo) {
+    public function reparacionesTotales($codigo)
+    {
         try {
             $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
             $herramienas = new MHerramientas();
@@ -630,7 +751,8 @@ class MHerramientas implements IHerrramientas {
     }
 
     // FILTRO PARA EL TOTAL DE TRASLADOS DE LA HERRAMIENTA HISTORIAL
-    public function trasladosTotales($codigo) {
+    public function trasladosTotales($codigo)
+    {
         $sql = "SELECT x.NumBoleta, x.Fecha,(SELECT b.Nombre from tbl_proyectos b where x.Ubicacion = b.ID_Proyecto) as Ubicacion,(SELECT b.Nombre from tbl_proyectos b where x.Destino = b.ID_Proyecto) as Destino FROM tbl_historialherramientas x where x.Codigo = ? ";
         if ($stmt = $this->conn->prepare($sql)) {
             $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
@@ -645,7 +767,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function InfoHerramienta($codigo) {
+    public function InfoHerramienta($codigo)
+    {
         $sql = "select Codigo, Marca,Descripcion, FechaIngreso, Procedencia, Precio, NumFactura from tbl_herramientaelectrica where Codigo = ? ";
         if ($stmt = $this->conn->prepare($sql)) {
             $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
@@ -660,13 +783,17 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function BuscarTiempoRealHerramienta($consulta) {
+    public function BuscarTiempoRealHerramienta($consulta)
+    {
         $consulta = LimpiarCadenaCaracter($this->conn, $consulta);
-        session_start();
         if ($_SESSION['ID_ROL'] == '4') {
-            $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
+            $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
+            b.CodigoMonedaCobro,
+            b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
         } else {
-            $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Disposicion = 1 and a.Estado = 1 and b.Descripcion LIKE '%" . $consulta . "%'";
+            $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
+            b.CodigoMonedaCobro,
+            b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Disposicion = 1 and a.Estado = 1 and b.Descripcion LIKE '%" . $consulta . "%'";
         }
         if ($stmt = $this->conn->prepare($sql)) {
             $like = "%" . $consulta . "%";
@@ -684,11 +811,12 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrosHerramientas($Tipo, $Disposicion, $Estado, $Ubicacion) {
-        
+    public function FiltrosHerramientas($Tipo, $Disposicion, $Estado, $Ubicacion)
+    {
     }
 
-    public function ActualizarHerramienta(\Herramientas $herramienta) {
+    public function ActualizarHerramienta(\Herramientas $herramienta)
+    {
         $sql = "UPDATE tbl_herramientaelectrica set Codigo =?, Descripcion=?,Marca=?,FechaIngreso=?,Procedencia=?,Precio=?,ID_Tipo=? where Codigo=?";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("s", $this->conn->real_escape_string($herramienta->codigo));
@@ -709,7 +837,8 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
-    public function FiltrarTipoTotalHerramienta() {
+    public function FiltrarTipoTotalHerramienta()
+    {
         $sql = "SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_herramientaelectrica th, tbl_tipoherramienta tt where th.ID_Tipo = tt.ID_Tipo GROUP by th.ID_Tipo order by tt.Descripcion ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -719,4 +848,76 @@ class MHerramientas implements IHerrramientas {
         return $resultado;
     }
 
+    public function EliminarHerramienta(string $codigo, string $motivo)
+    {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $idUsuario = $_SESSION['ID_Usuario'];
+        $resultado = new Resultado();
+        $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
+        $sql = "SELECT Codigo FROM tbl_historialherramientas WHERE Codigo = ?";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $codigo);
+            $stmt->execute();
+            $existenRegistros = $stmt->get_result();
+
+            if (mysqli_num_rows($existenRegistros) > 0) {
+                $resultado->esValido = false;
+                $resultado->mensaje = "Esta maquinaria  ya presenta un historial, por lo tanto no puede ser eliminada.";
+            } else {
+
+
+                $sqlDelete = "DELETE FROM tbl_herramientaelectrica WHERE Codigo =?";
+                if ($stmt2 = $this->conn->prepare($sqlDelete)) {
+                    $stmt2->bind_param("s", $codigo);
+                    $stmt2->execute();
+                    $resultado->esValido = $stmt2->affected_rows > 0;
+                    $stmt2->close();
+                }
+                $resultado->mensaje =  $resultado->esValido ? "Datos eliminados correctamente" : "Ocurrio un error al eliminar los datos";
+                $motivo .= " codigo equipo eliminado " . $codigo;
+                MBitacora::InsertarBitacora($motivo, $idUsuario, "Eliminar maquinaria");
+            }
+            $stmt->close();
+        } else {
+            $resultado->esValido = false;
+            $resultado->mensaje = "Ocurrio un error al eliminar los datos";
+        }
+        $this->conn->close();
+        return $resultado;
+    }
+
+    public function ActualizarHerramientaElectrica(Herramientas $maquinaria)
+    {
+        $resultado = new Resultado();
+
+        $maquinaria->codigo = LimpiarCadenaCaracter($this->conn, $maquinaria->codigo);
+        $maquinaria->tipo = LimpiarCadenaCaracter($this->conn, $maquinaria->tipo);
+        $maquinaria->marca = LimpiarCadenaCaracter($this->conn, $maquinaria->marca);
+        $maquinaria->descripcion = LimpiarCadenaCaracter($this->conn, $maquinaria->descripcion);
+        $maquinaria->fechaIngreso = LimpiarCadenaCaracter($this->conn, $maquinaria->fechaIngreso);
+        $maquinaria->procedencia = LimpiarCadenaCaracter($this->conn, $maquinaria->procedencia);
+        $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
+        $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
+
+        $sql = "UPDATE tbl_herramientaelectrica SET 
+        Codigo='" . $maquinaria->codigo . "',
+        ID_Tipo=" . $maquinaria->tipo . ",
+        Marca='" . $maquinaria->marca . "',
+        Descripcion='" . $maquinaria->descripcion . "',
+        FechaIngreso='" . $maquinaria->fechaIngreso . "',
+        Procedencia='" . $maquinaria->procedencia . "',
+        Precio=" . $maquinaria->precio . ",
+        MonedaCompra='" . $maquinaria->monedaCompra . "',
+        NumFactura='" . $maquinaria->numFactura . "'
+        WHERE ID_Herramienta = " . $maquinaria->idHerramienta . "";
+        $resultado->esValido  = $this->conn->query($sql);
+
+        $resultado->mensaje =  $resultado->esValido ? "Se actualizó la maquinaria correctamente " :
+            "Ocurrio un error al actualizar la maquinaria ";
+
+        $this->conn->close();
+        return  $resultado;
+    }
 }

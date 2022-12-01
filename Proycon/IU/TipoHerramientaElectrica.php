@@ -38,8 +38,8 @@ ValidarIniciodeSession();
     <main id="contenedor">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3>Mantenimiento tipos de maquinaria</h3>
-                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="window.location.href='Maquinaria.php'">
+                <h3>Mantenimiento tipos de herramienta eléctrica</h3>
+                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="window.location.href='Herramientas.php'">
                     <img src="../resources/imagenes/regresar.png" alt="" width="20px;">
                 </button>
             </div>
@@ -67,9 +67,9 @@ ValidarIniciodeSession();
                             <div class="col-lg-4 col-sm-12">
                                             <div class="form-group ">
                                                 <div class="input-group">
-                                                    <input id="txtBuscarNombreTipo" name="txtBuscarNombreTipo" type="text" onkeyup="ObtenerTipoHerramientaPorNombre('M')" class="form-control" placeholder="Nombre">
+                                                    <input id="txtBuscarNombreTipo" name="txtBuscarNombreTipo" type="text" onkeyup="ObtenerTipoHerramientaPorNombre('H')" class="form-control" placeholder="Nombre">
                                                     <span class="input-group-btn">
-                                                        <button id="btnBuscarPorNombreTipo" class="btn btn-default" type="button" onclick="ObtenerTipoHerramientaPorNombre('M')"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""></button>
+                                                        <button id="btnBuscarPorNombreTipo" class="btn btn-default" type="button" onclick="ObtenerTipoHerramientaPorNombre('H')"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""></button>
                                                     </span>
                                                 </div>
 
@@ -89,7 +89,7 @@ ValidarIniciodeSession();
                                             </tr>
                                         </thead>
                                         <tbody id="listadoTipoHerramientas">
-                                            <?php  ListarTipoHerramientas('M')?>
+                                            <?php  ListarTipoHerramientas('H')?>
                                         </tbody>
                                     </table>
                             </div>
@@ -144,7 +144,7 @@ ValidarIniciodeSession();
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button"  id="btnEditar" class="btn btn-primary" onclick="ActualizarTipo()">Editar</button>                                 
-                                <button type="button" id="btnGuardarTipo" class="btn btn-success" onclick="AgregarNuevoTipo('M')">Guardar</button>
+                                <button type="button" id="btnGuardarTipo" class="btn btn-success" onclick="AgregarNuevoTipo('H')">Guardar</button>
                                     <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="LimpiarColorTipoHerramienta()">Cerrar</button>
                                 </div>
                             </div>

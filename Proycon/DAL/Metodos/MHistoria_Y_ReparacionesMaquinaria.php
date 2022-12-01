@@ -18,8 +18,8 @@ class MHistoria_Y_ReparacionesMaquinaria
         b.Nombre AS Ubicacion,
         c.Nombre AS Destino
         FROM tbl_historialherramientas a 
-        INNER JOIN tbl_proyectos b ON b.ID_Proyecto = a.Ubicacion
-        INNER JOIN tbl_proyectos c ON A.Destino = c.ID_Proyecto
+        LEFT JOIN tbl_proyectos b ON b.ID_Proyecto = a.Ubicacion
+        LEFT JOIN tbl_proyectos c ON A.Destino = c.ID_Proyecto
         where a.Codigo = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
@@ -37,7 +37,8 @@ class MHistoria_Y_ReparacionesMaquinaria
     public function ConsultarReparacionesMaquinaria($codigo)
     {
         $codigo = LimpiarCadenaCaracter($this->conn, $codigo);
-        $sql = "SELECT DISTINCT FechaEntrada,ID_FacturaReparacion,Descripcion,MontoReparacion from tbl_reparacionherramienta where Codigo = ? ";
+        $sql = "SELECT DISTINCT FechaEntrada,ID_FacturaReparacion,Descripcion,MontoReparacion 
+        from tbl_reparacionherramienta where Codigo = ? and  ID_FacturaReparacion != ''";
         if ($stmt = $this->conn->prepare($sql)) {
 
             $stmt->bind_param("s", $codigo);
@@ -262,8 +263,8 @@ class MHistoria_Y_ReparacionesMaquinaria
             return $resultado;
         } catch (\Throwable $th) {
             mysqli_rollback($this->conn);
-            Log::GuardarEvento($th, "EnviarMaquinariaReparacion");
-            $resultado->mensaje = "Ocurrio un error al enviar la maquinaria a reparacion " . $th->getMessage();
+            Log::GuardarEvento($th, "FacturacionReparacionMaquinaria");
+            $resultado->mensaje = "Ocurrio un error al facturar la reparación del equipo" . $th->getMessage();
             $this->conn->close();
             return $resultado;
         }

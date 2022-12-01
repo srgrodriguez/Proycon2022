@@ -277,8 +277,8 @@ function FacturacionReparacionMaquinaria()
     try {
         $bd = new MHistoria_Y_ReparacionesMaquinaria();
         $request  = json_decode(file_get_contents('php://input'));
-        $datosProcesar =  $class->set($request);
         $request->CostoFactura = str_replace(",", "", $request->CostoFactura);
+        $datosProcesar =  $class->set($request);
         $resultado =  $bd->FacturacionReparacionMaquinaria($datosProcesar);
         echo json_encode($resultado);
     } catch (\Throwable $th) {

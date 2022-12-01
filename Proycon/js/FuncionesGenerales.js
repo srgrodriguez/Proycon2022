@@ -24,10 +24,10 @@ function AceptarSoloNumerosMonto(evt) {
           return alert("El Monto debe llevar dos decimales.");
         }
       }
-    if (arg1.value < 1 && arg1.value != "") {
-      arg1.value = "";
-      return alert("El monto no debe ser inferior a una unidad de la moneda utilizada.");
-    }
+    // if (arg1.value < 1 && arg1.value != "") {
+    //   arg1.value = "";
+    //   return alert("El monto no debe ser inferior a una unidad de la moneda utilizada.");
+    // }
     if (arg1.value.substr((arg1.value.length - 3), 1) != ".")
       arg1.value = arg1.value + ".00";
     argtemp = arg1.value.substr((arg1.value.length - 3), 3);

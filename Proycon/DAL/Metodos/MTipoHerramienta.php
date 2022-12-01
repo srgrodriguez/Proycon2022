@@ -115,6 +115,33 @@ class MTipoHerramienta implements ITipoHerramienta
         return $resultado;
     }
 
+    public function ObtenerTipoHerramientaPorNombre($tipo,$nombre)
+    {
+        $datoLimpio = LimpiarCadenaCaracter($this->conn, $tipo);
+        $strDescripcion = LimpiarCadenaCaracter($this->conn, $nombre);
+        $sql = "select 
+        ID_Tipo,
+        Descripcion,
+        PrecioEquipo,
+        TipoEquipo,
+        fc.DescripcionFormaDeCobro,
+        fc.CodigoFormaCobro,
+        CodigoMonedaCobro
+        from tbl_tipoherramienta th
+        LEFT JOIN tbl_FormasCobroEquipo fc
+        on th.CodigoFormaCobro = fc.CodigoFormaCobro  where TipoEquipo = ? and th.Descripcion like ?
+        ORDER BY ID_Tipo DESC
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $like = "%" . $strDescripcion . "%";
+        $stmt->bind_param("ss", $datoLimpio,$like);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;
+    }
+
     public function EliminarTipoHerramienta($ID)
     {
         $resultado = new Resultado();
