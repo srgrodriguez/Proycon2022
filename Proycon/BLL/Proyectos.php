@@ -45,6 +45,9 @@ if (isset($_GET['opc'])) {
         VerPedido($_GET['NBoleta'], $_GET['TipoPedido']);
     } elseif ($_GET['opc'] == 'buscarherramientapedido') {
         BuscarHerramientaPedido($_GET['codigo']);
+    } elseif ($_GET['opc'] == 'buscarmaquinariapedido') {
+        BuscarMaquinariaPedido($_GET['codigo']);
+    
     } elseif ($_GET['opc'] == 'eliminarpedido') {
         EliminarBoletaPedido($_GET['NBoleta'], $_GET['Tipo']);
     } elseif ($_GET['opc'] == "Fitrar") {

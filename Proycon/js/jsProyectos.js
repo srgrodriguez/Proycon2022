@@ -828,7 +828,7 @@ function AgregarMaquinariaPedido() {
     var codigo = $("#txtCodigoMaquinaria").val();
     $.ajax({
         type: "POST",
-        url: "../BLL/Proyectos.php?opc=buscarherramientapedido&codigo=" + codigo,
+        url: "../BLL/Proyectos.php?opc=buscarmaquinariapedido&codigo=" + codigo,
         success: function (respuesta) {
             if (respuesta == 0) {
                 $("#ModalDefaul").modal("show");
@@ -1937,6 +1937,13 @@ $(document).ready(function(){
         AgregarHerramientaPedido();      
        }
     });
+
+    $("#txtCodigoMaquinaria").keypress(function(event) {
+        if(event.keyCode == 13) {
+            AgregarMaquinariaPedido();      
+        }
+     });
+
         $("#txtEncargadoProyecto").keypress(function(event) {
        if(event.keyCode == 13) {
         InsertarProyecto();      
