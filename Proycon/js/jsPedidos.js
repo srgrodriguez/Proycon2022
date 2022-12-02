@@ -177,6 +177,44 @@ function BuscaHerramientas(consulta){
         
     });
 }
+
+
+
+//$(BuscaHerramientas());
+function BuscarMaquinaria(consulta){
+  $.ajax({
+      data :{"consulta" : consulta},
+      type : "POST",
+       url: "../BLL/Pedidos.php?opc=bMaquinariapedido",
+       data :{"consulta":consulta},
+        beforeSend: function () {
+             $("#resultadoBusquedaMaquinariaPedidos").html("<center><img src='../resources/imagenes/loanding.gif'  width='80px'/></center>");
+              },
+       success : function (respuesta){
+         $("#resultadoBusquedaMaquinariaPedidos").html(respuesta); 
+       }
+  }).fail(function(jqXHR, textStatus, errorThrown){
+      if (jqXHR.status === 0) {
+
+  alert('No nos pudimos Conectar con el sevidor Verifique su conexion a Internet ');
+
+} else if (jqXHR.status == 404) {
+
+  alert('Error [404] No se encontro el Archivo');
+
+} else if (jqXHR.status == 500) {
+
+  alert('Error de conexion con el servidor');
+
+}
+      
+  });
+}
+
+
+
+
+
 $(document).on('keyup','#txtBuscarHerramientasPedido',function(){
     var valor = $(this).val();
     if(valor.length > 0){
@@ -186,6 +224,32 @@ $(document).on('keyup','#txtBuscarHerramientasPedido',function(){
        $("#resultadoBusquedaHerramientasPedidos tr").remove(); 
     }
 });
+
+
+
+
+$(document).on('keyup','#txtBuscarMaquinariaPedido',function(){
+  var valor = $(this).val();
+  if(valor.length > 0){
+    BuscarMaquinaria(valor);
+  }
+  else{
+     $("#resultadoBusquedaHerramientasPedidos tr").remove(); 
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 function AgregarHerramientaBuscadoPTipo(evento){
     var ID= $(evento).parents("tr").find("td").eq(0).html()
     var Tipo = $(evento).parents("tr").find("td").eq(1).html();

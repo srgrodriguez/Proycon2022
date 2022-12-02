@@ -110,24 +110,32 @@ function ListarProyectos() {
         $onclick = "onclick='HerramientasMateriales($IdProyecto)'";
         $onclick2 = "onclick='BuscarProyectoID($IdProyecto)'";
 
-        if ($IdProyecto == 1) {
-            $concatenar .= '<section style = "display:none" class="proyecto"> ' .
-                    '<h3><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . '>' . $nombre . ' </a> </h3>' .
-                    '</section>';
-        } else {
-            if ($fila['ID_Proyecto'] == $fila['noti']) {
-                $concatenar .= '<section class="proyecto"> ' .
-                        '<h4><strong><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . ' style="color:red">' . $nombre . ' </a></strong> </h4>' .
-                        '<img src="../resources/imagenes/Editar.png" ' . $onclick2 . ' class="imgEditarProyecto" width="20" title="Editar Proyecto"/>' .
-                        '</section>';
-            } else {
-                $concatenar .= '<section class="proyecto"> ' .
-                        '<h4><strong><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . '>' . $nombre . ' </a></strong> </h4>' .
-                        '<img src="../resources/imagenes/Editar.png" ' . $onclick2 . ' class="imgEditarProyecto" width="20" title="Editar Proyecto"/>' .
-                        '</section>';
-            }
+
+
+        if ($IdProyecto <> 13) { // No listar el proyecto desecho
+           
+            if ($IdProyecto == 1) {
+                        $concatenar .= '<section style = "display:none" class="proyecto"> ' .
+                                '<h3><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . '>' . $nombre . ' </a> </h3>' .
+                                '</section>';
+                    } else {
+                        if ($fila['ID_Proyecto'] == $fila['noti']) {
+                            $concatenar .= '<section class="proyecto"> ' .
+                                    '<h4><strong><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . ' style="color:red">' . $nombre . ' </a></strong> </h4>' .
+                                    '<img src="../resources/imagenes/Editar.png" ' . $onclick2 . ' class="imgEditarProyecto" width="20" title="Editar Proyecto"/>' .
+                                    '</section>';
+                        } else {
+                            $concatenar .= '<section class="proyecto"> ' .
+                                    '<h4><strong><a id="' . $IdProyecto . '" href="javascript:void(0);"' . $onclick . '>' . $nombre . ' </a></strong> </h4>' .
+                                    '<img src="../resources/imagenes/Editar.png" ' . $onclick2 . ' class="imgEditarProyecto" width="20" title="Editar Proyecto"/>' .
+                                    '</section>';
+                        }
+                    }
+                }
+
         }
-    }
+
+       
     echo $concatenar;
 }
 

@@ -26,7 +26,7 @@ function buscarHerramienta(){
     if(isset($_POST['consulta'])){
         $q=$_POST['consulta'];
         $sql ="Select th.ID_Tipo, th.Codigo,tt.Descripcion,th.Marca from tbl_herramientaelectrica th, tbl_tipoherramienta tt "
-                . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1 and th.EstadoDesecho = 1 and tt.TipoEquipo = 'H'";  
+                . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1 and th.EstadoDesecho = 0 and tt.TipoEquipo = 'H'";  
     
         $resultado =$conexion->query($sql);
         $conexion->close();
@@ -74,7 +74,7 @@ function buscarMaquinaria(){
     if(isset($_POST['consulta'])){
         $q=$_POST['consulta'];
         $sql ="Select th.ID_Tipo, th.Codigo,tt.Descripcion,th.Marca from tbl_herramientaelectrica th, tbl_tipoherramienta tt "
-                . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1 and th.EstadoDesecho = 1 and tt.TipoEquipo = 'M'";  
+                . "where tt.Descripcion LIKE '%".$q."%'  and th.ID_Tipo = tt.ID_Tipo  and th.Estado = 1 and th.Disposicion = 1 and th.Ubicacion = 1 and th.EstadoDesecho = 0 and tt.TipoEquipo = 'M'";  
     
         $resultado =$conexion->query($sql);
         $conexion->close();

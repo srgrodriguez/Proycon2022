@@ -204,9 +204,9 @@ class MDesecho implements IDesecho {
                         }
 
 
-                // 4- Actualizar el estadoDesecho de la herramienta a 0
+                // 4- Actualizar el estadoDesecho de la herramienta a 1
 
-                        $sql3 = "UPDATE tbl_herramientaelectrica SET EstadoDesecho = 0 WHERE Codigo = '" . $item['codigo'] . "'";
+                        $sql3 = "UPDATE tbl_herramientaelectrica SET EstadoDesecho = 1 WHERE Codigo = '" . $item['codigo'] . "'";
                         $this->conn->query($sql3);
 
         }; 
@@ -338,6 +338,16 @@ public function ObtenerCorreosAdjuntadosSiempre() {
     $result =  $this-> conn->query($sql);
     $this-> conn->close();
     return $result;    
+}
+
+
+public function BuscarHerramientaPorCodigo($codigo)
+{
+    $sql = "SELECT tt.ID_Tipo,Codigo, tt.Descripcion,th.Descripcion AS DesH,Marca,th.Precio,th.Procedencia,th.FechaIngreso from tbl_herramientaelectrica th, tbl_tipoherramienta tt
+            where th.Codigo= '" . $codigo . "' and th.ID_Tipo = tt.ID_Tipo  and  th.EstadoDesecho = 0 and tt.TipoEquipo = 'H'";
+    $result = $this->conn->query($sql);
+    $this->conn->close();
+    return $result;
 }
 
 

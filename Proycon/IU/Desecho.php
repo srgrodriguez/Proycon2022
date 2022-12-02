@@ -173,7 +173,6 @@ ValidarIniciodeSession();
                                 <input data-toggle='modal' data-target='#ModalBuscarMaterial' type="submit" class="btn btn-default" value="Buscar Material" />
                                 <BR>
 
-                                <img  data-toggle='modal' data-target='#ModalAdjuntarCorreo' onclick="ModalAdjuntarCorreo()" id="imgCorreo" src="../resources/imagenes/correo.png" alt="" width="45" />
 
 
                                 <table id="tbl_agregarMaterialPedido">
@@ -440,6 +439,7 @@ ValidarIniciodeSession();
 
 
 <div id="ModalVerPedido" class="modal fade" role="dialog">   
+
     
                 <div class="modal-dialog">
 
@@ -484,6 +484,11 @@ ValidarIniciodeSession();
                                             <h4><strong  id="nomProyectoPedidoSelecionado"></strong></h4>
                                             <h4>Boleta: <strong id="TipoPedido">Materiales</strong></h4>
                                             <h4>Generada Por: <strong id="generadaPor">Steven</strong></h4>
+
+                                            <h4>Motivo: <strong id="MotivoModal"></strong></h4>
+
+                                           
+
                                             <BR>
                                         </div>
                                     </header>
@@ -495,6 +500,8 @@ ValidarIniciodeSession();
                                         </div>
 
                                     </div>
+
+                                    
 
                                 </div>
                             </section>
@@ -559,3 +566,4 @@ ValidarIniciodeSession();
             </div>
         </div>
         <!--FIN Modal Correo Electronico-->  
+
