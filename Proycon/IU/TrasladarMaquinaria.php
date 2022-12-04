@@ -146,8 +146,7 @@ ValidarIniciodeSession();
                                         </div>
 
                                         <div class="col-xs-6 text-right">
-                                            <h2><small style="color: red">Boleta Nº<span id="ConsecutivoPedidoHerramientaF"></span>
-                                            <?php echo ObternerCosecutivoBoleta(); ?>
+                                            <h2><small style="color: red">Boleta Nº<span id="ConsecutivoPedidoHerramientaF"> <?php echo ObternerCosecutivoBoleta(); ?></span>            
                                         </small></h2>
                                         </div>
 

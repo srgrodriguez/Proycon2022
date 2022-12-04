@@ -137,7 +137,6 @@ ValidarIniciodeSession();
                                 <h4 id="mensajeTranslado" class="modal-title">Traslado de maquinaria</h4>
                             </div>
                             <div class="modal-body">
-
                                 <div id="PedidoHerramientastt">
                                     <header class="headerPedidoMaterial">
                                         <div class="col-xs-6">
@@ -146,8 +145,7 @@ ValidarIniciodeSession();
                                         </div>
 
                                         <div class="col-xs-6 text-right">
-                                            <h2><small style="color: red">Boleta Nº<span id="ConsecutivoPedidoHerramientaF"></span>
-                                            <?php echo ObternerCosecutivoBoleta(); ?>
+                                        <h2><small style="color: red">Boleta Nº<span id="ConsecutivoPedidoHerramientaF"> <?php echo ObternerCosecutivoBoleta(); ?></span>            
                                         </small></h2>
                                         </div>
 

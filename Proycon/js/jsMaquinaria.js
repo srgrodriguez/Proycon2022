@@ -27,7 +27,7 @@ function AgregarMaquinaria() {
     formData.append("monedaCompra", moneda)
 
     if (StringIsNullOrEmpty(txtCodigoMaquinaria.val()) || StringIsNullOrEmpty(txtDescripcionMaquinaria.val()) ||
-        comboHerramientaTipo.value == "0" || moneda.value== "0") {
+        comboHerramientaTipo.value == "0" || moneda.value == "0") {
         MostrarMensajeResultado("Debe completar los campos del fromulario", false, IdDivRespuesta)
     }
     else {
@@ -74,53 +74,51 @@ function AgregarMaquinaria() {
 
 }
 
-function OpenModalEditarMaquinaria(codigo,idArchivo)
-{
-    fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetJson&codigo='+codigo,
-    {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then((response) => {
-        if (response.ok) {
-            return response.text();
-        }
-        else {
-            MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
-            console.log(response);
-        }
-    })
-    .then((data) => {
-        if(esJsonValido(data))
-         {   
-            let equipo = JSON.parse(data);
-            console.log(data)
-            $("#txtIdHerramientaEditar").val(equipo.ID_Herramienta)
-            $("#txtIdArchivoEditar").val(equipo.ID_Archivo);
-           $("#txtCodigoEditarMaquinaria").val(equipo.Codigo);
-             $("#txtCodigoActualEditarMaquinaria").val(equipo.Codigo);
-           $("#txtDescripcionEditarMaquinaria").val(equipo.Descripcion);
-            $("#txtMarcaEditar").val(equipo.Marca);
-            $("#txtPrecioEditar").val(equipo.Precio);
-             $("#txtFechaRegistroEditar").val(equipo.FechaIngreso);
-           // $("#txtProcedenciaEditar").val();
-             document.getElementById("comboHerramientaTipoEditar").value = equipo.ID_Tipo;
-            $("#txtNumFacturaEditar").val(equipo.NumFactura)
-            document.getElementById("txtFileFichaTecnicaEditar");
-            document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra ==null || equipo.MonedaCompra ==""?"0":equipo.MonedaCompra;
-            $("#ModalEditarMaquinaria").modal()
-         }
-      
-    })
-    .catch((result) => {
-        MostrarMensajeResultado(result, false, "listadoHerramientas");
-    });
+function OpenModalEditarMaquinaria(codigo, idArchivo) {
+    fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetJson&codigo=' + codigo,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            else {
+                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
+                console.log(response);
+            }
+        })
+        .then((data) => {
+            if (esJsonValido(data)) {
+                let equipo = JSON.parse(data);
+                console.log(data)
+                $("#txtIdHerramientaEditar").val(equipo.ID_Herramienta)
+                $("#txtIdArchivoEditar").val(equipo.ID_Archivo);
+                $("#txtCodigoEditarMaquinaria").val(equipo.Codigo);
+                $("#txtCodigoActualEditarMaquinaria").val(equipo.Codigo);
+                $("#txtDescripcionEditarMaquinaria").val(equipo.Descripcion);
+                $("#txtMarcaEditar").val(equipo.Marca);
+                $("#txtPrecioEditar").val(equipo.Precio);
+                $("#txtFechaRegistroEditar").val(equipo.FechaIngreso);
+                // $("#txtProcedenciaEditar").val();
+                document.getElementById("comboHerramientaTipoEditar").value = equipo.ID_Tipo;
+                $("#txtNumFacturaEditar").val(equipo.NumFactura)
+                document.getElementById("txtFileFichaTecnicaEditar");
+                document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra == null || equipo.MonedaCompra == "" ? "0" : equipo.MonedaCompra;
+                $("#ModalEditarMaquinaria").modal()
+            }
+
+        })
+        .catch((result) => {
+            MostrarMensajeResultado(result, false, "listadoHerramientas");
+        });
 
 }
 
-function OnclickEditarMaquinaria(){
+function OnclickEditarMaquinaria() {
     const IdDivRespuesta = "respuestaEditarMaquinaria";
     let txtCodigoMaquinaria = $("#txtCodigoEditarMaquinaria");
     let txtCodigoActual = $("#txtCodigoActualEditarMaquinaria");
@@ -151,50 +149,53 @@ function OnclickEditarMaquinaria(){
     formData.append("idHerramienta", txtIDHerramienta.val())
     formData.append("idArchivo", $("#txtIdArchivoEditar").val())
     if (StringIsNullOrEmpty(txtCodigoMaquinaria.val()) || StringIsNullOrEmpty(txtDescripcionMaquinaria.val()) ||
-    comboHerramientaTipo.value == "0" || moneda.value== "0") {
-    MostrarMensajeResultado("Debe completar los campos del fromulario", false,IdDivRespuesta)
-}
-else {
-    fetch('../BLL/Maquinaria_BL.php?opc=actualizar',
-        {
-            method: 'POST',
-            body: formData
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
-            else {
-                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, IdDivRespuesta);
-                console.log(response);
-            }
-        })
-        .then((data) => {
-            if (esJsonValido(data)) {
-                let resultado = JSON.parse(data);
-                MostrarMensajeResultado(resultado.mensaje, resultado.esValido, IdDivRespuesta);
-                txtCodigoMaquinaria.val("");
-                txtDescripcionMaquinaria.val("");
-                txtFechaRegistro.val("");
-                txtMarca.val("");
-                txtNumFactura.val("");
-                txtPrecio.val("");
-                txtProcedencia.val("");
-                comboHerramientaTipo.value = '0';
-                moneda.value = '0'
-                txtFile.value = null;
-                ListarTotalMaquinaria();
-            }
-            else {
-                MostrarMensajeResultado(data, false, IdDivRespuesta);
-            }
+        comboHerramientaTipo.value == "0" || moneda.value == "0") {
+        MostrarMensajeResultado("Debe completar los campos del fromulario", false, IdDivRespuesta)
+    }
+    else {
+        fetch('../BLL/Maquinaria_BL.php?opc=actualizar',
+            {
+                method: 'POST',
+                body: formData
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else {
+                    MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, IdDivRespuesta);
+                    console.log(response);
+                }
+            })
+            .then((data) => {
+                if (esJsonValido(data)) {
+                    let resultado = JSON.parse(data);
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, IdDivRespuesta);
+                    if (resultado.esValido) {
+                        ListarTotalMaquinaria();
+                        txtCodigoMaquinaria.val("");
+                        txtDescripcionMaquinaria.val("");
+                        txtFechaRegistro.val("");
+                        txtMarca.val("");
+                        txtNumFactura.val("");
+                        txtPrecio.val("");
+                        txtProcedencia.val("");
+                        comboHerramientaTipo.value = '0';
+                        moneda.value = '0'
+                        txtFile.value = null;
 
-        })
-        .catch((result) => {
-            MostrarMensajeResultado(result, false, IdDivRespuesta);
-        });
+                    }
+                }
+                else {
+                    MostrarMensajeResultado(data, false, IdDivRespuesta);
+                }
 
-}
+            })
+            .catch((result) => {
+                MostrarMensajeResultado(result, false, IdDivRespuesta);
+            });
+
+    }
 }
 
 function AbrirModalEliminarMaquinaria(codigo) {
@@ -313,10 +314,10 @@ function BuscarMaquinariaPorCodigoGetHtml() {
             });
 }
 
- function  BuscarMaquinariaPorCodigoGetJson(codigo) {
+function BuscarMaquinariaPorCodigoGetJson(codigo) {
     let resultado;
     if (!StringIsNullOrEmpty(codigo))
-      fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetJson&codigo='+codigo,
+        fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetJson&codigo=' + codigo,
             {
                 method: 'GET',
                 headers: {
@@ -333,16 +334,15 @@ function BuscarMaquinariaPorCodigoGetHtml() {
                 }
             })
             .then((data) => {
-                resultado =  data;
+                resultado = data;
             })
             .catch((result) => {
                 MostrarMensajeResultado(result, false, "listadoHerramientas");
             });
 
-            return resultado;
+    return resultado;
 }
 
-$(BuscarMaquinariaEnTiempoReal())
 function BuscarMaquinariaEnTiempoReal() {
     document.getElementById("cboFiltroHerramienta").value = "0";
     $("#txtCodigoMaquinariaBuscar").val("");
@@ -402,8 +402,51 @@ function VerFichaTecnica(codigo, idArchivo) {
         });
 }
 
-function MostrarTraslado()
-{
- $("#idInventarioMaquinaria").hide();
- $("#idTrasladarMaquinaria").show();
+function MostrarTraslado() {
+    $("#idInventarioMaquinaria").hide();
+    $("#idTrasladarMaquinaria").show();
+}
+
+function OrdenarConsusltaMaquinaria(){
+    $("#txtCodigoMaquinariaBuscar").val("");
+    $("#txtBuscaraquinariaTiempoReal").val("");
+ let opc = document.getElementById("cboFiltroHerramienta").value;
+ if(opc!= "0")
+ {
+    fetch('../BLL/Maquinaria_BL.php?opc=filtrarMaquinaria&filtro='+opc,
+    {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.text();
+        }
+        else {
+            MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
+            console.log(response);
+        }
+    })
+    .then((data) => {
+        if(opc=="VerTotales")
+        {
+            $("#tbl_total__tipo_herramientas").css("display","inline-table")
+            $("#tbl_total_maquinaria").css("display","none")
+            document.getElementById("listadoTotalTipoHerramientas").innerHTML = data
+        }
+        else
+         { 
+            $("#tbl_total__tipo_herramientas").css("display","none")
+            $("#tbl_total_maquinaria").css("display","inline-table")
+            document.getElementById("listadoHerramientas").innerHTML = data
+
+        }
+
+    })
+    .catch((result) => {
+        MostrarMensajeResultado(result, false, "listadoHerramientas");
+    });
+ }
 }

@@ -109,14 +109,14 @@ ValidarIniciodeSession();
                                         <div class="col-lg-3  col-sm-12"></div>
                                         <div class="col-lg-4  col-sm-12">
                                             <div class="form-group ">
-                                                <Select style="font-size: 15px" class="form-control" name="cboFiltroHerramienta" id="cboFiltroHerramienta" onchange="FiltrosHerramientas()" onclick="LimpiarCampoCodigo()">
-                                                    <option value="0">Ordenar por...</option>
-                                                    <option value="1">Tipo</option>
-                                                    <option value="2">Disposición</option>
-                                                    <option value="3">Ubicacion</option>
-                                                    <option value="4">Estado</option>
-                                                    <option value="5">Ver totales</option>
-                                                </select>
+                                                       <Select style="font-size: 15px" class="form-control" name="cboFiltroHerramienta" id="cboFiltroHerramienta" onchange="OrdenarConsusltaMaquinaria()">
+                                                            <option value="0">Ordenar por...</option>
+                                                            <option value="ID_Tipo">Tipo</option>
+                                                            <option value="Disposicion">Disposición</option>
+                                                            <option value="Ubicacion">Ubicacion</option>
+                                                            <option value="Estado">Estado</option>
+                                                            <option value="VerTotales">Ver totales</option>
+                                                        </select>
                                             </div>
                                         </div>
                                     </div>

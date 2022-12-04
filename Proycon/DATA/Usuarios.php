@@ -4,7 +4,7 @@ class Usuarios {
     public $ID_Usuarios;
     public $ID_Rol;
     public $Nombre;
-    public $Usuario;
+    public  $Usuario;
     public $Password;
     public $Estado;
     

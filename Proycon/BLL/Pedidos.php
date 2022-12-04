@@ -7,6 +7,11 @@ require_once 'Autorizacion.php';
 require_once '../DAL/Log.php';
 require_once '../DAL/FuncionesGenerales.php';
 require_once '../DAL/Log.php';
+require_once '../DAL/FuncionesGenerales.php';
+
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 Autorizacion();
 if (isset($_GET['opc'])) {
@@ -147,7 +152,7 @@ function ListarPedidosProyecto($ID_Proyecto){
 
 function GenerarPedido(){
     try {
-        session_start();
+
         $arreglo = json_decode($_POST['arreglo'], true);
         $headerPedido = new HeaderPedido();
         $contenido = new CuerpoPedido();
@@ -176,8 +181,10 @@ function GenerarPedido(){
                 $result2 = $bdPedidos->ContenidoPedido($contenido);
             }
           //Descomentariar esta funcion cuando se suba al hosting;
-           EnviarCorreoElectronico($_POST['consecutivo'],$_POST['nombreProyecto'],$_SESSION['Nombre'],$contenidoPedido,$_POST['mensajeCorreo'],$_SESSION['Usuario']);
-           if ($result1 == 1 && $result2== 1) {
+          if(EsProduccion())
+              EnviarCorreoElectronico($_POST['consecutivo'],$_POST['nombreProyecto'],$_SESSION['Nombre'],$contenidoPedido,$_POST['mensajeCorreo'],$_SESSION['Usuario']);
+           
+          if ($result1 == 1 && $result2== 1) {
                 ECHO 1;
             }
            else {
