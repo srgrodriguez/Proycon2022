@@ -209,20 +209,17 @@ function GuardarPedido($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
 
 function GuardarPedidoMaterial($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
 
-    $bdDesechos = new MDesecho();
-    
-
-
+    $bdDesechos = new MDesecho();   
     $bdDesechos->RegistrarDesechoMaterial($arreglo, $fecha,$ID_Usuario,$motivo, $consecutivo);
        
-    EnviarCorreoElectronico($consecutivo,$ID_Usuario,$arreglo,$motivo, "ajcg1995@hotmail.com");
+    //EnviarCorreoElectronico($consecutivo,$ID_Usuario,$arreglo,$motivo, "ajcg1995@hotmail.com");
 
     echo ConsecutivoPedido();
 }
    
 
 function BuscarHerramientaCodigo($codigo) {
-    $bdHerramienta = new MHerramientas();
+    $bdHerramienta = new MDesecho();
     $restultado = $bdHerramienta->BuscarHerramientaPorCodigo($codigo);
     $concatenar = "";
     $filasAfectadas = mysqli_num_rows($restultado);
@@ -231,7 +228,7 @@ function BuscarHerramientaCodigo($codigo) {
         $concatenar = "
                          <tr>
                              <td hidden='true' >" . $fila['ID_Tipo'] . "</td>
-                             <td>" . $fila['Codigo'] . "</td>
+                             <td class='codTablaHD'>" . $fila['Codigo'] . "</td>
                              <td>" . $fila['Descripcion'] . "</td>
                              <td>" . $fila['Marca'] . "</td>
                              <td style='width: 25px;'>
@@ -266,7 +263,7 @@ function BuscaAgregaMaterial($idMaterial, $cant) {
             } else {
                 $concatenar = "
                              <tr>
-                                <td class='codTabla'>$material->Codigo</td>
+                                <td class='codTablaHD'>$material->Codigo</td>
                                 <td class='cantidadTabla'>$cant</td>
                                 <td>$material->Nombre</td>
                                <td style='width: 25px;'>

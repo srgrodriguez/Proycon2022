@@ -9,11 +9,19 @@ class MPedidos implements IPedidos {
     }
     
     public function ContarHerramientaDisponible($consulta) {
-       $sql ="SELECT tt.ID_Tipo,tt.Descripcion,COUNT(*) as Total from tbl_herramientaelectrica th,tbl_tipoherramienta tt where tt.Descripcion LIKE'%".$consulta."%' and th.Disposicion = 1 and th.ID_Tipo = tt.ID_Tipo GROUP by tt.Descripcion,tt.ID_Tipo";
+       $sql ="SELECT tt.ID_Tipo,tt.Descripcion,COUNT(*) as Total from tbl_herramientaelectrica th,tbl_tipoherramienta tt where tt.Descripcion LIKE'%".$consulta."%' and th.Disposicion = 1 and th.ID_Tipo = tt.ID_Tipo  and tt.TipoEquipo = 'H' GROUP by tt.Descripcion,tt.ID_Tipo";
        $result =  $this->conn->query($sql);
        $this->conn->close();
        return $result;    
     }
+
+
+    public function ContarMaquinariaDisponible($consulta) {
+        $sql ="SELECT tt.ID_Tipo,tt.Descripcion,COUNT(*) as Total from tbl_herramientaelectrica th,tbl_tipoherramienta tt where tt.Descripcion LIKE'%".$consulta."%' and th.Disposicion = 1 and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'M' GROUP by tt.Descripcion,tt.ID_Tipo";
+        $result =  $this->conn->query($sql);
+        $this->conn->close();
+        return $result;    
+     }
     
     public function ObternerCosecutivoPedido() {
        $sql ="select Consecutivo from tbl_pedidoproveeduria order by Consecutivo desc limit 1;"; 

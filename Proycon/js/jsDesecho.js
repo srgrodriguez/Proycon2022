@@ -13,7 +13,7 @@ $(document).on('keyup','#txtBuscarHerramienta',function(){
 function BuscaHerramientas(consulta){
     $.ajax({
         type: "POST",
-        url: "../BLL/ProyectosBuscar.php",
+        url: "../BLL/ProyectosBuscar.php?opc=Herramienta",
         data: {"consulta": consulta},
         beforeSend: function () {
             $("#ResultadoBusqudaHerramienta").html("<div style='margin:auto;width:200px'><img src='../resources/imagenes/loanding.gif'  width='100px'/></div>");
@@ -280,7 +280,7 @@ function AgregarHerramientaBuscadoPNombre(evento) {
     $(evento).parents("tr").find("td").eq(3).children("input").css("border", "1px solid #cccccc");
     var nuevaFila = "<tr>" +
             "<td hidden='true' >" + tipo + "</td>" +
-            "<td id='codTabla'>" + cod + "</td>" +
+            "<td class='codTablaHD'>" + cod + "</td>" +
             "<td id='tipoTabla'>" + Tipo + "</td>" +
             "<td id='marcaTabla'>" + Marca + "</td>" +
             "<td style='width: 25px;'>" +
@@ -311,7 +311,7 @@ function GuardarBoletaHerramientas(){
 
     document.querySelectorAll('#tbl_P_Herramientas tbody tr').forEach(function(e){
         let fila = {
-          codigo: e.querySelector('#codTabla').innerText,
+          codigo: e.querySelector('.codTablaHD').innerText,
           cantidad: 1,  // Por defecto 1 ya que es una por registro
           tipo: 1 // Correspondiete a Herramientas  
         };
@@ -322,7 +322,16 @@ function GuardarBoletaHerramientas(){
 
 
 
-      AjaxAgregarHerramientas(arreglo,fecha,motivo,consecutivo);
+      //verificar que la tabla tenga datos
+      
+      if(ArregloTabla.length > 0){
+        AjaxAgregarHerramientas(arreglo,fecha,motivo,consecutivo);
+
+      }else {
+        alert("No hay material/herramienta agregados")
+      }
+
+      
     
 }
 
@@ -352,7 +361,16 @@ function GuardarBoletaMateriales(){
 
       var arreglo = JSON.stringify(ArregloTabla);
 
-      AjaxAgregarMateriales(arreglo,fecha,motivo,consecutivo);
+
+      if(ArregloTabla.length > 0){
+
+        AjaxAgregarMateriales(arreglo,fecha,motivo,consecutivo);
+      }else {
+        alert("No hay material/herramienta agregados")
+      }
+
+
+     
     
 }
 
@@ -564,6 +582,8 @@ function VerPedido(evento) {
     $("#nomProyectoPedidoSelecionado").html($("#nomProyecto").html());
     $("#generadaPor").html(usuarioDesecho);
     $("#TipoPedido").html(tipoDesecho)
+    $("#MotivoModal").html(motivo)
+    
 
 
     if (TipoPedido == "Material") {
@@ -604,6 +624,7 @@ function Exportar_Pdf(idTabla) {
     var Proyecto = $("#nomProyectoPedidoSelecionado").html();
     var TipoBoleta = $("#TipoPedido").html();
     var generadaPor = $("#generadaPor").html();
+    var motivo = $("#MotivoModal").html();
     var pdf = new jsPDF('p', 'pt', 'letter');
     pdf.addImage(imgData, 'JPEG', 30, 50, 100, 100);
     pdf.setTextColor(255, 0, 0);
@@ -616,8 +637,9 @@ function Exportar_Pdf(idTabla) {
     pdf.text(30, 180, Proyecto);
     pdf.text(30, 210, "Boleta de: " + TipoBoleta);
     pdf.text(30, 240, "Generada Por: " + generadaPor);
-    pdf.setLineWidth(1);
-    pdf.line(20, 260, 600, 260);
+    pdf.text(30, 270, "Motivo: " + motivo);
+    
+    
     
 //pdf.save("Pedido"+'.pdf');
 

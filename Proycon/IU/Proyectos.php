@@ -500,7 +500,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                                     <tbody>
                                                         <tr>
                                                             <td><input type="text" id='txtCodigoMaquinaria' name="txtCodigoMaquinaria" class="form-control input-md" value="" placeholder="Codigo" /></td>
-                                                            <td><input type="submit" value="Agregar" class="btn btn-success" onclick="AgregarHerramientaPedido()" /></td>
+                                                            <td><input type="submit" value="Agregar" class="btn btn-success" onclick="AgregarMaquinariaPedido()" /></td>
                                                         </tr>
 
                                                     </tbody>

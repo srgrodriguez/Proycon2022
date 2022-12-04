@@ -135,11 +135,12 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                 </div>
 
                                 <h2>Proyecto: <span id="Proyecto"><strong></strong></span></h2>
-                                <h4>Pedido: <strong>Herramientas y Materiales</strong></h4>
+                                <h4>Pedido: <strong>Herramientas,Materiales, Maquinaria</strong></h4>
                                 <h4>Solicita: <strong><?php echo ' ' . $_SESSION['Nombre'] ?></strong></h4>
                                 <div style="width: 100%;margin-bottom: 10px;">
                                     <input  data-toggle='modal' data-target='#ModalBuscarHerramienta' type="submit" class="btn btn-success btnFuncionesBoletaProveeduria" value="Agregar Herramienta"style="float: left" /> 
                                     <input  data-toggle='modal' data-target='#ModalBuscarMaterial' type="submit" class="btn btn-success btnFuncionesBoletaProveeduria" value="Agregar Material"style="float: left;margin-left: 10px;margin-bottom: 10px" /> 
+                                    <input  data-toggle='modal' data-target='#ModalBuscarMaquinaria' type="submit" class="btn btn-success btnFuncionesBoletaProveeduria" value="Agregar Maquinaria"style="float: left;margin-left: 10px;margin-bottom: 10px" /> 
 
                                     <img  data-toggle='modal' data-target='#ModalAdjuntarCorreo' onclick="ModalAdjuntarCorreo()" id="imgCorreo" src="../resources/imagenes/correo.png" alt="" width="45" />
 
@@ -235,6 +236,39 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
         </div>
 
 
+
+         <!--Modal BuscarMaquinaria -->
+
+        <div  id="ModalBuscarMaquinaria" class="modal fade" role="dialog">   
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="headerModalBuscarMaquinaria"class="modal-header headerModal">
+                        <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="titulModalBuscarMaquinaria">Buscar Maquinaria</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <input id="txtBuscarMaquinariaPedido" name="txtBuscarMaquinariaPedido" type="text" class="form-control" placeholder="Buscar Por Tipo De Maquinaria">
+                            <span class="input-group-btn">
+                                <button id="btnBuscar" class="btn btn-default" type="button" onclick="BuscarMaquinaria()"><img src="../resources/imagenes/icono_buscar.png" width="18px" alt=""/></button>
+                            </span>
+
+                        </div>
+                        <div id="resultadoBusquedaMaquinariaPedidos">
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <!--Modal BuscarMaterial-->  
         <div  id="ModalBuscarMaterial" class="modal fade" role="dialog">   
             <div class="modal-dialog">
@@ -277,6 +311,10 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                 </div>
             </div>
         </div>
+
+
+
+
 
         <!--Modal Correo Electronico-->  
         <div  id="ModalAdjuntarCorreo" class="modal fade" role="dialog">   

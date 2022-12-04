@@ -35,8 +35,13 @@ if (isset($_GET['opc'])) {
           BuscarHerramientasPedido($_POST['consulta']);  
         }
        
+    } if ($_GET['opc']== 'bMaquinariapedido')
+    {
+        if (isset($_POST['consulta'])) {
+          BuscarMaquinariaPedido($_POST['consulta']);  
+        }
+       
     }
-    
     
 }
 
@@ -78,6 +83,57 @@ function BuscarHerramientasPedido($consulta){
     }
    
 }
+
+
+
+
+
+function BuscarMaquinariaPedido($consulta){
+    $bdPedidos = new MPedidos();
+    try {
+        $result = $bdPedidos->ContarMaquinariaDisponible($consulta);
+    if (mysqli_num_rows($result)>0) {
+        $concatenar ="<table class='tablasG' id='tbl_Peido_Proveeduria' style='margin-top: 10px;'>
+                        <thead>
+                            <th>ID</th>
+                            <th>Tipo</th>
+                            <th>Stock</th>
+                            <th>Cant Agregar</th>
+                             <th></th>
+                        </thead>
+                        <tbody>";
+        
+        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+            $concatenar.="<tr>"
+                            . "<td>".$fila['ID_Tipo']."</td>"
+                            . "<td>".$fila['Descripcion']."</td>"
+                            . "<td>".$fila['Total']."</td>"
+                            . "<td style='width: 100px;'><input width='20px' type='text' id='txtcantiSolicitadaHerramientas' name='txtcantiSolicitadaMaterial' class='form-control' value='' placeholder='Cantidad' /></td>
+                              <td style='text-align: center'>
+                                <button class='btn btn-default' onclick='AgregarHerramientaBuscadoPTipo(this)'>
+                                    <img src='../resources/imagenes/add_icon.png' width='20px' alt=''/>
+                                </button>
+                             </td>";         
+        }
+        echo $concatenar;
+    }
+    else{   
+     echo "<h2>No se encontraron resultado :(</h2>";
+    } 
+    } catch (\Throwable $ex) {
+        echo Log::GuardarEvento($ex, "BuscarHerramientasPedido");
+    }
+   
+}
+
+
+
+
+
+
+
+
+
 
 function ObternerCosecutivoPedido(){
     $bdPedidos = new MPedidos();
