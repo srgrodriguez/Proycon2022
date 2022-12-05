@@ -36,8 +36,9 @@ if (isset($_GET['opc'])) {
 
 function BuscarMaterialNombre($nombre)
 {
-    $bdMateriales = new MMaterial();
-    try {
+        try {
+        $bdMateriales = new MMaterial();
+
         $resultado = $bdMateriales->BuscarMaterialNombre($nombre);
 
         if ($resultado <> null) {

@@ -701,7 +701,7 @@ function MostrarFormPedidos() {
     }else{
        $("#cboPedidos2").val(3);
        $("#PedidoMaquinaria").show();
-       $("#PedidoMaquinaria").hide();
+       $("#PedidoHerramientas").hide();
        $("#PedidoMateriales").hide();
 
    }

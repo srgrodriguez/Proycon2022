@@ -106,268 +106,328 @@ if (isset($_GET['opc'])) {
 }
 
 function FiltroReparacionfecha($fecha)
-{
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltroReparacionfecha($fecha);
+{  
+    try{
+        $bdHerramientas = new MHerramientas();
+  
+        $result = $bdHerramientas->FiltroReparacionfecha($fecha);
 
-
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $concatenar .= "<tr>
-     
-						<td>" . $fila['ID_Reparacion'] . "</td>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-                        <td>" . $fila['FechaSalida'] . "</td>
-                        <td>" . $fila['FechaEntrada'] . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td> 
-						<td style='text-align: center'>
-						<button onclick=FacturaReparacion(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-                        </td>  
-						</tr>";
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= "<tr>
+        
+                            <td>" . $fila['ID_Reparacion'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $fila['FechaSalida'] . "</td>
+                            <td>" . $fila['FechaEntrada'] . "</td>
+                            <td>" . $fila['NumBoleta'] . "</td> 
+                            <td style='text-align: center'>
+                            <button onclick=FacturaReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>  
+                            </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltroReparacionfecha");
     }
 }
 
 function FiltroReparacionboleta($boleta)
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltroReparacionboleta($boleta);
+    try{
+        $bdHerramientas = new MHerramientas();
+    
+        $result = $bdHerramientas->FiltroReparacionboleta($boleta);
 
 
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $concatenar .= "<tr>
-     
-						<td>" . $fila['ID_Reparacion'] . "</td>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-                        <td>" . $fila['FechaSalida'] . "</td>
-                        <td>" . $fila['FechaEntrada'] . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td> 
-						<td style='text-align: center'>
-						<button onclick=FacturaReparacion(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-                        </td>
-						</tr>";
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= "<tr>
+        
+                            <td>" . $fila['ID_Reparacion'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $fila['FechaSalida'] . "</td>
+                            <td>" . $fila['FechaEntrada'] . "</td>
+                            <td>" . $fila['NumBoleta'] . "</td> 
+                            <td style='text-align: center'>
+                            <button onclick=FacturaReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>
+                            </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltroReparacionfecha");
     }
 }
 
 function EliminarTraslado($CodigoTH)
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->EliminarTraslado($CodigoTH);
-    if ($resultado != null) {
-        return 1;
+    try{
+        $bdHerramienta = new MHerramientas(); 
+        $resultado = $bdHerramienta->EliminarTraslado($CodigoTH);
+        if ($resultado != null) {
+            return 1;
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "EliminarTraslado");
     }
 }
 
 function FiltroReparacionCodigo($codigo)
 {
+    try{
+        $bdHerramientas = new MHerramientas();   
+        $result = $bdHerramientas->FiltroReparacionCodigo($codigo);
 
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltroReparacionCodigo($codigo);
 
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
 
-            $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
-
-            $concatenar .= "<tr>
-                            <td>" . $fila['ID'] . "</td>
-                           <td>" . $fila['Codigo'] . "</td>
-                           <td>" . $fila['Descripcion'] . "</td>
-                           <td>" . $Fecha . "</td>
-                           <td style='color:red'>" . $fila['Dias'] . "</td>
-                            <td>" . $fila['ProveedorReparacion'] . "</td>    
-                           <td>" . $fila['Boleta'] . "</td>
-                           <td style='text-align: center'>
-                           <button onclick=FacturaReparacion(this)>
-                           <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                           </button>
-                           </td>
-			</tr>";
+                $concatenar .= "<tr>
+                                <td>" . $fila['ID'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td style='color:red'>" . $fila['Dias'] . "</td>
+                                <td>" . $fila['ProveedorReparacion'] . "</td>    
+                            <td>" . $fila['Boleta'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=FacturaReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>
+                </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltroReparacionCodigo");
     }
 }
 
 function FiltroReparacionTipo($tipo)
 {
+     try{
+        $bdHerramientas = new MHerramientas();   
+        $result = $bdHerramientas->FiltroReparacionTipo($tipo);
 
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltroReparacionTipo($tipo);
 
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
 
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
-
-            $concatenar .= "<tr>
-                         <td>" . $fila['ID'] . "</td>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td style='color:red'>" . $fila['Dias'] . "</td>
-                        <td>" . $fila['ProveedorReparacion'] . "</td>  
-                        <td>" . $fila['Boleta'] . "</td>
-						<td style='text-align: center'>
-						<button onclick=FacturaReparacion(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-						</tr>";
+                $concatenar .= "<tr>
+                            <td>" . $fila['ID'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td style='color:red'>" . $fila['Dias'] . "</td>
+                            <td>" . $fila['ProveedorReparacion'] . "</td>  
+                            <td>" . $fila['Boleta'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=FacturaReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltroReparacionTipo");
     }
 }
 
 function listaEnviadas($codigo)
 {
-    $bdHerramientas = new MHerramientas();
-    $resultado = $bdHerramientas->listaEnviadas($codigo);
+    try{
+        $bdHerramientas = new MHerramientas();
+        $resultado = $bdHerramientas->listaEnviadas($codigo);
 
-    $valor = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+        $valor = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
 
-    echo $valor[0];
+        echo $valor[0];
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "listaEnviadas");
+    }
 }
 
 // FILTRO DE TRASLADO POR TIPO
 
 function FiltroTrasladoTipo($tipo)
 {
-    $bdHerramientas = new MHerramientas();
-    $resultado = $bdHerramientas->FiltroTrasladoTipo($tipo);
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
-            $concatenar .= "<tr>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Tipo'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['Disposicion'] . "</td>
-                        <td>" . $fila['Nombre'] . "</td>
-					
-                        <td>" . $fila['Estado'] . "</td>
-						<td style='text-align: center'>
-						<button onclick=TransladoHerramienta(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-						
-                       </tr>";
+    try{
+        $bdHerramientas = new MHerramientas();
+    
+        $resultado = $bdHerramientas->FiltroTrasladoTipo($tipo);
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+                $concatenar .= "<tr>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Tipo'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['Disposicion'] . "</td>
+                            <td>" . $fila['Nombre'] . "</td>
+                        
+                            <td>" . $fila['Estado'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=TransladoHerramienta(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            
+                        </tr>";
+            }
         }
+        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltroTrasladoTipo");
     }
-    echo $concatenar;
 }
 
 // FILTRO DE TRASLADO POR TIPO
 
 function FiltrosHerramientasU($ubicacion)
 {
-    $bdHerramientas = new MHerramientas();
-    $resultado = $bdHerramientas->FiltrosHerramientasU($ubicacion);
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
-            $concatenar .= "<tr>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Tipo'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['Disposicion'] . "</td>
-                        <td>" . $fila['Nombre'] . "</td>
-					
-                        <td>" . $fila['Estado'] . "</td>
-						<td style='text-align: center'>
-						<button onclick=TransladoHerramienta(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-						
-                       </tr>";
+    try{
+        $bdHerramientas = new MHerramientas();
+    
+        $resultado = $bdHerramientas->FiltrosHerramientasU($ubicacion);
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+                $concatenar .= "<tr>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Tipo'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['Disposicion'] . "</td>
+                            <td>" . $fila['Nombre'] . "</td>
+                        
+                            <td>" . $fila['Estado'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=TransladoHerramienta(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            
+                        </tr>";
+            }
         }
+        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientasU");
     }
-    echo $concatenar;
 }
 
 function FiltrosHerramientas0()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrosHerramientas0();
-    if (mysqli_num_rows($result) > 0) {
-      echo   GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo '<h2>Nose encontraron Resultdos</h2>';
+    try{    
+        $bdHerramientas = new MHerramientas();
+    
+        $result = $bdHerramientas->FiltrosHerramientas0();
+        if (mysqli_num_rows($result) > 0) {
+        echo   GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo '<h2>Nose encontraron Resultdos</h2>';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientas0");
     }
 }
 
 function FiltrosHerramientas1()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrosHerramientas1();
-    if (mysqli_num_rows($result) > 0) {
-      echo  GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo '<h2>Nose encontraron Resultdos</h2>';
+    try{
+        $bdHerramientas = new MHerramientas();
+    
+        $result = $bdHerramientas->FiltrosHerramientas1();
+        if (mysqli_num_rows($result) > 0) {
+        echo  GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo '<h2>Nose encontraron Resultdos</h2>';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientas1");
     }
 }
 
 function FiltrosHerramientas2()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrosHerramientas2();
-    if (mysqli_num_rows($result) > 0) {
-       echo GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo '<h2>Nose encontraron Resultdos</h2>';
+    try{
+        $bdHerramientas = new MHerramientas();
+    
+        $result = $bdHerramientas->FiltrosHerramientas2();
+        if (mysqli_num_rows($result) > 0) {
+        echo GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo '<h2>Nose encontraron Resultdos</h2>';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientas2");
     }
 }
 
 function FiltrosHerramientas3()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrosHerramientas3();
-    if (mysqli_num_rows($result) > 0) {
-      echo  GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo '<h2>Nose encontraron Resultdos</h2>';
+    try{
+        $bdHerramientas = new MHerramientas();    
+        $result = $bdHerramientas->FiltrosHerramientas3();
+        if (mysqli_num_rows($result) > 0) {
+        echo  GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo '<h2>Nose encontraron Resultdos</h2>';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientas3");
     }
 }
 
 function FiltrosHerramientas4()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrosHerramientas4();
-    if (mysqli_num_rows($result) > 0) {
-       echo GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo '<h2>Nose encontraron Resultdos</h2>';
+    try{
+        $bdHerramientas = new MHerramientas();    
+        $result = $bdHerramientas->FiltrosHerramientas4();
+        if (mysqli_num_rows($result) > 0) {
+        echo GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo '<h2>Nose encontraron Resultdos</h2>';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrosHerramientas4");
     }
 }
 
 function FiltrarTipoTotalHerramienta5()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->FiltrarTipoTotalHerramienta();
-    if (mysqli_num_rows($result) > 0) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $concatenar .= "<tr>
-                          <td>" . $fila['Descripcion'] . "</td>
-                          <td>" . $fila['Cantidad'] . "</td>" .
-                "</tr>";
+    try{
+        $bdHerramientas = new MHerramientas();    
+        $result = $bdHerramientas->FiltrarTipoTotalHerramienta();
+        if (mysqli_num_rows($result) > 0) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= "<tr>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $fila['Cantidad'] . "</td>" .
+                    "</tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "FiltrarTipoTotalHerramienta5");
     }
 }
 
@@ -376,14 +436,17 @@ function FiltrarTipoTotalHerramienta5()
 
 function GuardarTranslado()
 {
+    try{
+        $ID_Usuario = $_SESSION['ID_Usuario'];
+        $Destino = $_POST['Destino'];
+        $NumBoleta = $_POST['NumBoleta'];
+        $FechaFinal = $_POST['FechaFinal'];
+        $resultado = llamarFuncion($Destino, $NumBoleta, $FechaFinal, $ID_Usuario);
 
-    $ID_Usuario = $_SESSION['ID_Usuario'];
-    $Destino = $_POST['Destino'];
-    $NumBoleta = $_POST['NumBoleta'];
-    $FechaFinal = $_POST['FechaFinal'];
-    $resultado = llamarFuncion($Destino, $NumBoleta, $FechaFinal, $ID_Usuario);
-
-    echo ObtenerConsecutivoPedido();
+        echo ObtenerConsecutivoPedido();
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarTranslado");
+    }
 }
 
 // GUARDA LA FACTURA DE LA HERRAMIENTA EN REPACION
@@ -391,106 +454,130 @@ function GuardarTranslado()
 
 function GuardarFactura()
 {
-    $Facturacion = new Factura();
-    $bdFacturacion = new MHerramientas();
-    $Facturacion->Codigo = $_POST['Codigo'];
-    $Facturacion->ID_Reparacion = $_POST['ID_Reparacion'];
-    $Facturacion->NumFactura = $_POST['NumFactura'];
-    $Facturacion->FechaEntrada = $_POST['FechaEntrada'];
-    $Facturacion->DescripcionFactura = $_POST['DescripcionFactura'];
-    $Facturacion->CostoFactura = $_POST['CostoFactura'];
-    $Facturacion->NumBoleta = $_POST['NumBoleta'];
-    echo $bdFacturacion->FacturacionReparacion($Facturacion);
+    try{
+        $Facturacion = new Factura();
+        $bdFacturacion = new MHerramientas();
+        $Facturacion->Codigo = $_POST['Codigo'];
+        $Facturacion->ID_Reparacion = $_POST['ID_Reparacion'];
+        $Facturacion->NumFactura = $_POST['NumFactura'];
+        $Facturacion->FechaEntrada = $_POST['FechaEntrada'];
+        $Facturacion->DescripcionFactura = $_POST['DescripcionFactura'];
+        $Facturacion->CostoFactura = $_POST['CostoFactura'];
+        $Facturacion->NumBoleta = $_POST['NumBoleta'];
+        echo $bdFacturacion->FacturacionReparacion($Facturacion);
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarTranslado");
+    }
 }
 
 function facturarherramienta($idReparacion)
 {
-    $dbFacturacionHerramienta = new MHerramientas();
-    $resultado = $dbFacturacionHerramienta->FacturaReparacion($idReparacion);
+    try{
+        $dbFacturacionHerramienta = new MHerramientas();
+        $resultado = $dbFacturacionHerramienta->FacturaReparacion($idReparacion);
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "facturarherramienta");
+    }
 }
 
 function totalReparaciones()
 {
     $dbHerramientas = new MHerramientas();
-    $resultado = $dbHerramientas->totalReparaciones();
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+    try{
+        $resultado = $dbHerramientas->totalReparaciones();
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
 
-            $concatenar .= "<tr>
-                        <td>" . $fila['ID'] . "</td>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td style='color:red'>" . $fila['Dias'] . "</td>
-                        <td>" . $fila['ProveedorReparacion'] . "</td>  
-                        <td>" . $fila['Boleta'] . "</td>
-                            
-						<td style='text-align: center'>
-						<button onclick=FacturaReparacion(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-                        </td>
-                       
-						</tr>";
+                $concatenar .= "<tr>
+                            <td>" . $fila['ID'] . "</td>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td style='color:red'>" . $fila['Dias'] . "</td>
+                            <td>" . $fila['ProveedorReparacion'] . "</td>  
+                            <td>" . $fila['Boleta'] . "</td>
+                                
+                            <td style='text-align: center'>
+                            <button onclick=FacturaReparacion(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            </td>
+                        
+                            </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "totalReparaciones");
     }
 }
 
 function cambiarTipo($ID_Tipo, $DescripcionTipo)
 {
-
-    $DBCambio = new MHerramientas();
-    $resultado = $DBCambio->cambiarTipo($ID_Tipo, $DescripcionTipo);
+    try{
+        $DBCambio = new MHerramientas();
+        $resultado = $DBCambio->cambiarTipo($ID_Tipo, $DescripcionTipo);
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "cambiarTipo");
+    }
 }
 
 function GuardarReparacion($consecutivo, $fecha, $arreglo, $provedorReparacion)
 {
-    $arreglo = json_decode($arreglo, true);
-    $tam = sizeof($arreglo);
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-    $ID_Usuario = $_SESSION['ID_Usuario'];
-    $bdherramientas = new MHerramientas();
-    $bdherramientas->RegistrarReparacion($consecutivo, $fecha, $ID_Usuario, $provedorReparacion);
+    try{
+        $arreglo = json_decode($arreglo, true);
+        $tam = sizeof($arreglo);
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $ID_Usuario = $_SESSION['ID_Usuario'];
+        $bdherramientas = new MHerramientas();
+        $bdherramientas->RegistrarReparacion($consecutivo, $fecha, $ID_Usuario, $provedorReparacion);
 
-    for ($i = 0; $i < $tam; $i++) {
-        $codigoHerramienta = $arreglo[$i];
-        $result = $bdherramientas->RegistrarReparacionHerramienta($consecutivo, $codigoHerramienta, $fecha);
-    }
+        for ($i = 0; $i < $tam; $i++) {
+            $codigoHerramienta = $arreglo[$i];
+            $result = $bdherramientas->RegistrarReparacionHerramienta($consecutivo, $codigoHerramienta, $fecha);
+        }
 
-    if ($result == 1) {
-        echo ConsecutivoReparacion();
+        if ($result == 1) {
+            echo ConsecutivoReparacion();
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarReparacion");
     }
 }
 
 function BuscarHerramientaNombre($descripcion)
 {
     $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->BuscarHerramientaNombre($descripcion);
+    try{
+        $resultado = $bdHerramienta->BuscarHerramientaNombre($descripcion);
 
-    if ($resultado <> null) {
-        $concatenar = "";
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $concatenar .= " <tr>
-                                <td>" . $fila['Codigo'] . "</td>
-                                <td>" . $fila['Descripcion'] . "</td>
-				<td>" . $fila['Marca'] . "</td>
-                                <td>" . $fila['Estado'] . "</td>
-							    <td>" . $fila['Nombre'] . "</td>
-								<td style='text-align: center'>
-								<button onclick=EliminarLista(this)>
-                        <img src='../resources/imagenes/remove.png' width='15px' alt=''/>
-                        </button>
-                        </tr>";
+        if ($resultado <> null) {
+            $concatenar = "";
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $concatenar .= " <tr>
+                                    <td>" . $fila['Codigo'] . "</td>
+                                    <td>" . $fila['Descripcion'] . "</td>
+                    <td>" . $fila['Marca'] . "</td>
+                                    <td>" . $fila['Estado'] . "</td>
+                                    <td>" . $fila['Nombre'] . "</td>
+                                    <td style='text-align: center'>
+                                    <button onclick=EliminarLista(this)>
+                            <img src='../resources/imagenes/remove.png' width='15px' alt=''/>
+                            </button>
+                            </tr>";
+            }
+
+            echo $concatenar;
+        } else {
+            echo 0;
         }
-
-        echo $concatenar;
-    } else {
-        echo 0;
+    
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "BuscarHerramientaNombre");
     }
 }
 
@@ -499,70 +586,88 @@ function BuscarHerramientaNombre($descripcion)
 function listarTotalHerramientas()
 {
     $dbHerramientas = new MHerramientas();
-    $resultado = $dbHerramientas->listarTotalHerramientas();
-    if ($resultado != null) {
-        echo GenerarResultadoHTMLTablaPrincipal($resultado);
+    try{
+        $resultado = $dbHerramientas->listarTotalHerramientas();
+        if ($resultado != null) {
+            echo GenerarResultadoHTMLTablaPrincipal($resultado);
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "listarTotalHerramientas");
     }
 }
 
 function GuardarTrasladoT($CodigoT)
 {
     $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->GuardarTrasladoT($CodigoT);
-    echo $resultado == 1 ? 1 : 0;
+    try{        
+        $resultado = $bdHerramienta->GuardarTrasladoT($CodigoT);
+        echo $resultado == 1 ? 1 : 0;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarTrasladoT");
+    }
 }
 
 function ListarTrasladoMo()
 {
     $dbHerramientas = new MHerramientas();
+    try{ 
     $resultado = $dbHerramientas->ListarTrasladoMo();
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
-            $concatenar .= "<tr>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Ubicacion'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['Marca'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-						<td style='text-align: center'>
-						<button onclick=EliminarTraslado(this)>
-                        <img src='../resources/imagenes/remove.png' width='15px' alt=''/>
-                        </button>
-                        </tr>";
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+                $concatenar .= "<tr>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Ubicacion'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['Marca'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=EliminarTraslado(this)>
+                            <img src='../resources/imagenes/remove.png' width='15px' alt=''/>
+                            </button>
+                            </tr>";
+            }
         }
+        echo $concatenar;
+        
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ListarTrasladoMo");
     }
-    echo $concatenar;
 }
+
 
 // LISTA LAS HERRAMIENTAS QUE ESTAN BUENAS PARA UN TRASLADO
 
 function listarTotalHerramientasTranslado()
 {
     $dbHerramientas = new MHerramientas();
-    $resultado = $dbHerramientas->listarTotalHerramientasTranslado();
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+    try{ 
+        $resultado = $dbHerramientas->listarTotalHerramientasTranslado();
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
 
-            $concatenar .= "<tr>
-                        <td>" . $fila['Codigo'] . "</td>
-                        <td>" . $fila['Tipo'] . "</td>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['Disposicion'] . "</td>
-                        <td>" . $fila['Nombre'] . "</td>
-                        <td>" . $fila['Estado'] . "</td>
-						<td style='text-align: center'>
-						<button onclick=TransladoHerramienta(this)>
-                        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-                        </button>
-						
-                       </tr>";
+                $concatenar .= "<tr>
+                            <td>" . $fila['Codigo'] . "</td>
+                            <td>" . $fila['Tipo'] . "</td>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['Disposicion'] . "</td>
+                            <td>" . $fila['Nombre'] . "</td>
+                            <td>" . $fila['Estado'] . "</td>
+                            <td style='text-align: center'>
+                            <button onclick=TransladoHerramienta(this)>
+                            <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                            </button>
+                            
+                        </tr>";
+            }
         }
+        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "listarTotalHerramientasTranslado");
     }
-    echo $concatenar;
 }
 
 // COLOCA EL LISTADO DE LOS TIPOS DE HERRAMIENTAS
@@ -570,22 +675,26 @@ function listarTotalHerramientasTranslado()
 function listarTipoHerramientas()
 {
     $dbHerramientas = new MHerramientas();
-    $resultado = $dbHerramientas->listarTipoHerramientas();
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+    try{ 
+        $resultado = $dbHerramientas->listarTipoHerramientas();
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
 
-            $concatenar .= "<tr>
-                        <td>" . $fila['ID_Tipo'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-						<td style='text-align: center'>
-                                <button class='btn btn-default' onclick='EditarTipoHerramienta(this)'>
-                                    <img src='../resources/imagenes/Editar.png' width='20px' alt=''/>
-                                </button>
-                                </td>
-                        </tr>";
+                $concatenar .= "<tr>
+                            <td>" . $fila['ID_Tipo'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td style='text-align: center'>
+                                    <button class='btn btn-default' onclick='EditarTipoHerramienta(this)'>
+                                        <img src='../resources/imagenes/Editar.png' width='20px' alt=''/>
+                                    </button>
+                                    </td>
+                            </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "listarTipoHerramientas");
     }
 }
 
@@ -594,16 +703,20 @@ function listarTipoHerramientas()
 function ObtenerConsecutivoHerramienta()
 {
     $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->ObtenerConsecutivoHerramienta();
-    $valor = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    try{ 
+        $result = $bdHerramienta->ObtenerConsecutivoHerramienta();
+        $valor = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    if ($valor["mayor"] != null) {
-        $nuevo = $valor["mayor"];
-        $final = "P" . $nuevo;
-        return $final;
-    } else {
-        $final = "P1";
-        return $final;
+        if ($valor["mayor"] != null) {
+            $nuevo = $valor["mayor"];
+            $final = "P" . $nuevo;
+            return $final;
+        } else {
+            $final = "P1";
+            return $final;
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObtenerConsecutivoHerramienta");
     }
 }
 
@@ -612,212 +725,269 @@ function ObtenerConsecutivoHerramienta()
 function ObtenerConsecutivoTipo()
 {
     $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->ObtenerConsecutivoTipo();
-    $valor = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    try{ 
+        $result = $bdHerramienta->ObtenerConsecutivoTipo();
+        $valor = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    if ($valor["ID_Tipo"] != null) {
-        $final = $valor["ID_Tipo"] + 1;
-        return $final;
-    } else {
-        $final = "1";
-        return $final;
+        if ($valor["ID_Tipo"] != null) {
+            $final = $valor["ID_Tipo"] + 1;
+            return $final;
+        } else {
+            $final = "1";
+            return $final;
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObtenerConsecutivoTipo");
     }
 }
 
 function RegistrarTipoHerramienta()
 {
-    $Tipo = new Herramientas();
-    $bdTipo = new MHerramientas();
-    $Tipo->tipo = $_POST['ID_Tipo'];
-    $Tipo->descripcion = $_POST['DescripcionTipo'];
-    echo $bdTipo->RegistrarTipoHerramienta($Tipo);
+    try{ 
+        $Tipo = new Herramientas();
+        $bdTipo = new MHerramientas();
+        
+        $Tipo->tipo = $_POST['ID_Tipo'];
+        $Tipo->descripcion = $_POST['DescripcionTipo'];
+        echo $bdTipo->RegistrarTipoHerramienta($Tipo);
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "RegistrarTipoHerramienta");
+    }
 }
 
 // Registra las Herramientas
 
 function RegistrarHerramientas()
 {
-    $herramienta = new Herramientas();
-    $bdHerramienta = new MHerramientas();
-    $herramienta->descripcion = $_POST['Descripcion'];
-    $herramienta->codigo = $_POST['Codigo'];
-    $herramienta->fechaIngreso = $_POST['Fecha'];
-    $herramienta->estado = "1";
-    $herramienta->disposicion = "1";
-    $herramienta->tipo = $_POST['Tipo'];
-    $herramienta->marca = $_POST['Marca'];
-    $herramienta->procedencia = $_POST['Procedencia'];
-    $herramienta->ubicacion = "1";
-    $herramienta->precio = $_POST['Precio'];
-    $herramienta->numFactura = $_POST['NumFactura'];
-    $resultado =  $bdHerramienta->RegistrarHerramientas($herramienta);
-    echo $resultado;
+    try{ 
+        $herramienta = new Herramientas();
+        $bdHerramienta = new MHerramientas();
+        $herramienta->descripcion = $_POST['Descripcion'];
+        $herramienta->codigo = $_POST['Codigo'];
+        $herramienta->fechaIngreso = $_POST['Fecha'];
+        $herramienta->estado = "1";
+        $herramienta->disposicion = "1";
+        $herramienta->tipo = $_POST['Tipo'];
+        $herramienta->marca = $_POST['Marca'];
+        $herramienta->procedencia = $_POST['Procedencia'];
+        $herramienta->ubicacion = "1";
+        $herramienta->precio = $_POST['Precio'];
+        $herramienta->numFactura = $_POST['NumFactura'];
+        $resultado =  $bdHerramienta->RegistrarHerramientas($herramienta);
+        echo $resultado;
+
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "RegistrarTipoHerramienta");
+    }
 }
+
 
 function ConsecutivoReparacion()
 {
 
     $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->ObternerCosecutivoReparacion();
-    $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    if ($fila["NumBoleta"] != null) {
+    try{ 
+        $result = $bdHerramienta->ObternerCosecutivoReparacion();
+        $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        if ($fila["NumBoleta"] != null) {
 
-        return $fila["NumBoleta"] + 1;
-    } else {
-        return 1;
+            return $fila["NumBoleta"] + 1;
+        } else {
+            return 1;
+        }
+
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ConsecutivoReparacion");
     }
 }
+
 
 function listarBoletasReparacion()
 {
     $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->listarBoletasReparacion();
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+    try{
+        $result = $bdHerramienta->listarBoletasReparacion();
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 
-            $concatenar .= "<div class='lospedido'>
-                <table>
-                    <tbody>
-                          <td>" . $fila['NumBoleta'] . "</td>
-						  <td>" . $fila['Fecha'] . "</td>
-						  <td>" . $fila['Nombre'] . "</td>
-                          <td><a href='#' onclick = 'VerBoletaReparacion(this)'>Ver</a></td>  
-					</tbody>
-                    </table>
-            </div>";
+                $concatenar .= "<div class='lospedido'>
+                    <table>
+                        <tbody>
+                            <td>" . $fila['NumBoleta'] . "</td>
+                            <td>" . $fila['Fecha'] . "</td>
+                            <td>" . $fila['Nombre'] . "</td>
+                            <td><a href='#' onclick = 'VerBoletaReparacion(this)'>Ver</a></td>  
+                        </tbody>
+                        </table>
+                </div>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "listarBoletasReparacion");
     }
 }
+
 
 function VerBoletaReparacion($NumBoleta)
 {
     $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->VerBoletaReparacion($NumBoleta);
-    if ($result != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+    try{
+        $result = $bdHerramienta->VerBoletaReparacion($NumBoleta);
+        if ($result != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 
-            $concatenar .= "  <tr>
-                                                        <td>" . $fila['Codigo'] . "</td>
-                                                       <td>" . $fila['Descripcion'] . "</td>
-                                                       <td>" . $fila['Marca'] . "</td>
-                                                      <td>" . $fila['proveedor'] . "</td>
-                                                    </tr>";
+                $concatenar .= "  <tr>
+                                                            <td>" . $fila['Codigo'] . "</td>
+                                                        <td>" . $fila['Descripcion'] . "</td>
+                                                        <td>" . $fila['Marca'] . "</td>
+                                                        <td>" . $fila['proveedor'] . "</td>
+                                                        </tr>";
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "VerBoletaReparacion");
     }
 }
 
+
 function buscarherramienCodigo($Cod)
 {
-    $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->buscarherramienCodigo($Cod);
-    if (mysqli_num_rows($result) > 0) {
-      echo  GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo 'No se se encontraron resultados ';
+    try{
+        $bdHerramienta = new MHerramientas();
+        $result = $bdHerramienta->buscarherramienCodigo($Cod);
+        if (mysqli_num_rows($result) > 0) {
+        echo  GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo 'No se se encontraron resultados ';
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "buscarherramienCodigo");
     }
 }
 
 function BuscarherramienCodigoGetJson($Codidgo ="")
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->buscarherramienCodigo($Codidgo);
-    $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
-    echo $equipo;
+    try{
+        $bdHerramienta = new MHerramientas();
+        $resultado = $bdHerramienta->buscarherramienCodigo($Codidgo);
+        $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+        echo $equipo;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "buscarherramienCodigo");
+    }
+
 }
 
 // MUESTRA EL TOTAL DE REPARACIONES DE LA HERRAMIENTA
 
 function reparacionesTotales($codigo)
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->reparacionesTotales($codigo);
+    try{
+        $bdHerramienta = new MHerramientas();
+        $resultado = $bdHerramienta->reparacionesTotales($codigo);
 
-    if ($resultado != null) {
-        $concatenar = '';
-        $total = 0;
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Monto = "¢" . number_format($fila['MontoReparacion'], 2, ",", ".");
-            $Fecha = date('d/m/Y', strtotime($fila['FechaEntrada']));
+        if ($resultado != null) {
+            $concatenar = '';
+            $total = 0;
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Monto = "¢" . number_format($fila['MontoReparacion'], 2, ",", ".");
+                $Fecha = date('d/m/Y', strtotime($fila['FechaEntrada']));
+                $concatenar .= "<tr>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['ID_FacturaReparacion'] . "</td>
+                            <td>" . $fila['Descripcion'] . "</td>
+                            <td>" . $Monto . "</td>         
+                            </tr>";
+                $total = $total + $fila['MontoReparacion'];
+            }
+            $MontoTotal = "¢" . number_format($total, 2, ",", ".");
             $concatenar .= "<tr>
-                         <td>" . $Fecha . "</td>
-                        <td>" . $fila['ID_FacturaReparacion'] . "</td>
-                        <td>" . $fila['Descripcion'] . "</td>
-                        <td>" . $Monto . "</td>         
-						</tr>";
-            $total = $total + $fila['MontoReparacion'];
+                            <td></td>
+                            <td></td>
+                            <td><strong>TOTAL</strong></td>
+                            <td><strong>$MontoTotal</strong></td>";
+            echo $concatenar;
         }
-        $MontoTotal = "¢" . number_format($total, 2, ",", ".");
-        $concatenar .= "<tr>
-                         <td></td>
-                        <td></td>
-                        <td><strong>TOTAL</strong></td>
-                        <td><strong>$MontoTotal</strong></td>";
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "reparacionesTotales");
     }
+
 }
 
 function eliminarBoletaR($eliboleta)
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->eliminarBoletaR($eliboleta);
+    try{
+        $bdHerramienta = new MHerramientas();
+        $resultado = $bdHerramienta->eliminarBoletaR($eliboleta);
 
-    if ($resultado != null) {
-        return 1;
+        if ($resultado != null) {
+            return 1;
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "eliminarBoletaR");
     }
+
 }
 
 // MUESTRA EL TOTAL DE TRASLADOS DE LA HERRAMIENTA
 
 function trasladosTotales($codigo)
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->trasladosTotales($codigo);
+    try{
+        $bdHerramienta = new MHerramientas();
+        $resultado = $bdHerramienta->trasladosTotales($codigo);
 
-    if ($resultado != null) {
-        $concatenar = '';
-        while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
+        if ($resultado != null) {
+            $concatenar = '';
+            while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
 
-            if ($fila['Destino'] == "") {
+                if ($fila['Destino'] == "") {
 
-                // Cuando el destino o la ubicacion es nulo es porque viene de bodega
+                    // Cuando el destino o la ubicacion es nulo es porque viene de bodega
 
-                $concatenar .= "<tr>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . $fila['Ubicacion'] . "</td>
-                        <td>" . "En reparacion" . "</td>       
-						</tr>";
-            } else {
-
-                if ($fila['Ubicacion'] == "") {
                     $concatenar .= "<tr>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . "En reparacion" . "</td>
-                        <td>" . $fila['Destino'] . "</td>       
-						</tr>";
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['NumBoleta'] . "</td>
+                            <td>" . $fila['Ubicacion'] . "</td>
+                            <td>" . "En reparacion" . "</td>       
+                            </tr>";
                 } else {
-                    $concatenar .= "<tr>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . $fila['Ubicacion'] . "</td>
-                        <td>" . $fila['Destino'] . "</td>       
-						</tr>";
+
+                    if ($fila['Ubicacion'] == "") {
+                        $concatenar .= "<tr>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['NumBoleta'] . "</td>
+                            <td>" . "En reparacion" . "</td>
+                            <td>" . $fila['Destino'] . "</td>       
+                            </tr>";
+                    } else {
+                        $concatenar .= "<tr>
+                            <td>" . $Fecha . "</td>
+                            <td>" . $fila['NumBoleta'] . "</td>
+                            <td>" . $fila['Ubicacion'] . "</td>
+                            <td>" . $fila['Destino'] . "</td>       
+                            </tr>";
+                    }
                 }
             }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "trasladosTotales");
     }
+
 }
 
 function InfoHerramienta($codigo)
 {
+    try{
 
+    
     $bdHerramienta = new MHerramientas();
     $resultado = $bdHerramienta->InfoHerramienta($codigo);
 
@@ -830,12 +1000,18 @@ function InfoHerramienta($codigo)
         }
         echo $herramienta;
     }
+} catch (Exception $ex) {
+    echo Log::GuardarEvento($ex, "trasladosTotales");
 }
+
+}
+    
 
 function buscarTraslado($Cod)
 {
-    $bdHerramienta = new MHerramientas();
-    $resultado = $bdHerramienta->buscarTraslado($Cod);
+    try{
+        $bdHerramienta = new MHerramientas();
+        $resultado = $bdHerramienta->buscarTraslado($Cod);
 
     if ($resultado != null) {
         $concatenar = '';
@@ -860,33 +1036,46 @@ function buscarTraslado($Cod)
     } else {
         echo 'No se se encontraron resultados ';
     }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "buscarTraslado");
+    }
+
 }
 
 function BuscarTiempoRealHerramienta($consulta)
 {
-    $bdHerramienta = new MHerramientas();
-    $result = $bdHerramienta->BuscarTiempoRealHerramienta($consulta);
-    //echo $result;
-    if (mysqli_num_rows($result) > 0) {
-       echo GenerarResultadoHTMLTablaPrincipal($result);
-    } else {
-        echo "<h2>No se encontraron Resultados :( </h2>";
+    try{
+        $bdHerramienta = new MHerramientas();
+        $result = $bdHerramienta->BuscarTiempoRealHerramienta($consulta);
+        //echo $result;
+        if (mysqli_num_rows($result) > 0) {
+        echo GenerarResultadoHTMLTablaPrincipal($result);
+        } else {
+            echo "<h2>No se encontraron Resultados :( </h2>";
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "BuscarTiempoRealHerramienta");
     }
+    
 }
 
 function ObtenerConsecutivoPedido()
 {
-    $bdHerramientas = new MHerramientas();
-    $result = $bdHerramientas->ObternerCosecutivoPedido();
-    if (mysqli_num_rows($result) > 0) {
-        $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        return $fila['Consecutivo'] + 1;
-    } else {
+    try{
+        $bdHerramientas = new MHerramientas();
+        $result = $bdHerramientas->ObternerCosecutivoPedido();
+        if (mysqli_num_rows($result) > 0) {
+            $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            return $fila['Consecutivo'] + 1;
+        } else {
 
-        return 1;
+            return 1;
+        }
+    } catch (Exception $ex) {
+            echo Log::GuardarEvento($ex, "ObtenerConsecutivoPedido");
+        }
+        
     }
-}
-
 function EliminarHerramienta()
 {
     try {
@@ -896,14 +1085,14 @@ function EliminarHerramienta()
         $resultado =  $bdMaquinaria->EliminarHerramienta($request->codigo, $request->motivo);
         echo json_encode($resultado);
     } catch (Exception $ex) {
-        echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
+        echo  json_encode(Log::GuardarEvento($ex, "EliminarHerramienta"));
     }
 }
 
 function ActualizarHerramientaElectrica()
-{
-    $maquinaria = new Herramientas();
+{ 
     try {
+        $maquinaria = new Herramientas();   
         $bdHerramienta = new MHerramientas();
         $bdMaquinaria = new MMaquinaria();
         $maquinaria->codigo = $_POST["codigoNuevo"];
@@ -932,61 +1121,67 @@ function ActualizarHerramientaElectrica()
             echo json_encode($resultado);
         }
     } catch (Exception $ex) {
-        echo  json_encode(Log::GuardarEvento($ex, "ActualizarMaquinaria"));
+        echo  json_encode(Log::GuardarEvento($ex, "ActualizarHerramientaElectrica"));
     }
 }
 
 function GenerarResultadoHTMLTablaPrincipal($result)
 {
-    $Usuario =      UsuarioLogueado();
-    $resultadoHTML = "";
-    while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-        $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
-        $monedaAlquiler = $fila['CodigoMonedaCobro'] == 'D' ? "$":"¢"; 
-        $precioAlquiler = $monedaAlquiler.($fila['PrecioAlquiler']!= ""? number_format($fila['PrecioAlquiler'], 2, ",", "."):"0.00");
+    try{
 
-         $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
-        $btnEditar = " <button type='button' class='btn btn-default' disabled  onclick='OpenModalEditarHerramienta(\"" . $fila['Codigo'] . "\")'>
-    <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
-            </button>";
-        $btnEliminar = "<button type='button' disabled class='btn btn-danger' onclick=\"AbrirModalEliminarHerramienta('" . $fila['Codigo'] . "')\" >
-            <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
-            </button>";
+        $Usuario =      UsuarioLogueado();
+        $resultadoHTML = "";
+        while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+            $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
+            $monedaAlquiler = $fila['CodigoMonedaCobro'] == 'D' ? "$":"¢"; 
+            $precioAlquiler = $monedaAlquiler.($fila['PrecioAlquiler']!= ""? number_format($fila['PrecioAlquiler'], 2, ",", "."):"0.00");
 
-      
-        if ($Usuario->ID_Rol== Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
-            $btnEliminar =  str_replace("disabled", "", $btnEliminar);
+            $Fecha = date('d/m/Y', strtotime($fila['FechaIngreso']));
+            $btnEditar = " <button type='button' class='btn btn-default' disabled  onclick='OpenModalEditarHerramienta(\"" . $fila['Codigo'] . "\")'>
+        <img src='../resources/imagenes/Editar.png' width='15px' alt=''/>
+                </button>";
+            $btnEliminar = "<button type='button' disabled class='btn btn-danger' onclick=\"AbrirModalEliminarHerramienta('" . $fila['Codigo'] . "')\" >
+                <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
+                </button>";
 
-        if ($Usuario->ID_Rol == Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
-            $btnEditar =  str_replace("disabled", "", $btnEditar);
+        
+            if ($Usuario->ID_Rol== Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
+                $btnEliminar =  str_replace("disabled", "", $btnEliminar);
 
-        if ($fila['Estado'] == 'Buena') {
-            $resultadoHTML .= "<tr>
-                <td>" . $fila['Codigo'] . "</td>
-                <td>" . $fila['Tipo'] . "</td>
-                <td>" . $precioAlquiler . "</td>
-                <td>" . $Fecha . "</td>
-        <td>" . $Monto . "</td>
-                <td>" . $fila['Disposicion'] . "</td>
-                <td>" . $fila['Nombre'] . "</td>
-                <td>" . $fila['Estado'] . "</td>
-                <td>" . $btnEditar . "</td>
-                <td>" . $btnEliminar. "</td>
-            </tr>";
-        } else {
-            $resultadoHTML .= "<tr>
-                <td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td>
-                <td class='usuarioBolqueado'>" . $fila['Tipo'] . "</td>
-                 <td class='usuarioBolqueado'>" .$precioAlquiler . "</td>    
-                <td class='usuarioBolqueado'>" . $Fecha . "</td>
-        <td class='usuarioBolqueado'>" . $Monto . "</td>
-                <td class='usuarioBolqueado'>" . $fila['Disposicion'] . "</td>
-                <td class='usuarioBolqueado'>" . $fila['Nombre'] . "</td>
-                <td class='usuarioBolqueado'>" . $fila['Estado'] . "</td>
-                <td class='usuarioBolqueado' >" . $btnEditar . "</td>
-                <td class='usuarioBolqueado' >" . $btnEliminar. "</td>
-            </tr>";
+            if ($Usuario->ID_Rol == Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
+                $btnEditar =  str_replace("disabled", "", $btnEditar);
+
+            if ($fila['Estado'] == 'Buena') {
+                $resultadoHTML .= "<tr>
+                    <td>" . $fila['Codigo'] . "</td>
+                    <td>" . $fila['Tipo'] . "</td>
+                    <td>" . $precioAlquiler . "</td>
+                    <td>" . $Fecha . "</td>
+            <td>" . $Monto . "</td>
+                    <td>" . $fila['Disposicion'] . "</td>
+                    <td>" . $fila['Nombre'] . "</td>
+                    <td>" . $fila['Estado'] . "</td>
+                    <td>" . $btnEditar . "</td>
+                    <td>" . $btnEliminar. "</td>
+                </tr>";
+            } else {
+                $resultadoHTML .= "<tr>
+                    <td class='usuarioBolqueado'>" . $fila['Codigo'] . "</td>
+                    <td class='usuarioBolqueado'>" . $fila['Tipo'] . "</td>
+                    <td class='usuarioBolqueado'>" .$precioAlquiler . "</td>    
+                    <td class='usuarioBolqueado'>" . $Fecha . "</td>
+            <td class='usuarioBolqueado'>" . $Monto . "</td>
+                    <td class='usuarioBolqueado'>" . $fila['Disposicion'] . "</td>
+                    <td class='usuarioBolqueado'>" . $fila['Nombre'] . "</td>
+                    <td class='usuarioBolqueado'>" . $fila['Estado'] . "</td>
+                    <td class='usuarioBolqueado' >" . $btnEditar . "</td>
+                    <td class='usuarioBolqueado' >" . $btnEliminar. "</td>
+                </tr>";
+            }
         }
+        return $resultadoHTML;
+
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "GenerarResultadoHTMLTablaPrincipal"));
     }
-    return $resultadoHTML;
 }

@@ -27,91 +27,99 @@ if (isset($_GET['opc'])) {
 
 
 function ObtenerDatosUsuario($ID_Usuario){
-    $bdUsuario = new MUsuarios();
-    $result = $bdUsuario->ObtenerDatosUsuario($ID_Usuario);
-    if ($result != null)  {
-        $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        $ID = $fila['ID_Usuario'];
-        $Rol =$fila['Rol'];
-        $Nombre = $fila['Nombre'];
-        $Usuario = $fila['Usuario'];
-        $Pass = $fila['Pass'];
-        
-        $concatenar = "<span id='ID_UsuarioCuenta' style='display:none'>".$ID."</span>            
-                     <div class='contieneDatos'>
-                        <div class='flotarIz tma'><h3>Nombre</h3></div>
-                         <div class='flotarIz'><h3 id='NombreCuenta'>".$Nombre."</h3></div>
-                          <div class='flotarIz'><h3><a href='#' onclick='abrirModalCambiarNombre()' >Editar</a></h3></div>
-                    </div> 
-                    <div class='contieneDatos'>
-                        <div class='flotarIz tma'><h3>Usuario</h3></div>
-                         <div class='flotarIz'><h3 id='NombreCuenta'>".$Usuario."</h3></div>
-                    </div>
-                    <div class='contieneDatos'>
-                        <div class='flotarIz tma'><h3>Contraseña</h3></div>
-                         <div class='flotarIz'><h3 id='PassCuenta'>".$Pass."</h3></div>
-                          <div class='flotarIz'><h3><a href='#' data-toggle='modal' data-target='#ModalCambioPassword' >Editar</a></h3></div>
-                    </div>  
-                    <div class='contieneDatos'>
-                        <div class='flotarIz tma'><h3>Rol</h3></div>
-                         <div class='flotarIz'><h3 id='id='PassCuenta>".$Rol."</h3></div>
-                         
-                    </div> 
+    try{
+        $bdUsuario = new MUsuarios();
+        $result = $bdUsuario->ObtenerDatosUsuario($ID_Usuario);
+        if ($result != null)  {
+            $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            $ID = $fila['ID_Usuario'];
+            $Rol =$fila['Rol'];
+            $Nombre = $fila['Nombre'];
+            $Usuario = $fila['Usuario'];
+            $Pass = $fila['Pass'];
+            
+            $concatenar = "<span id='ID_UsuarioCuenta' style='display:none'>".$ID."</span>            
+                        <div class='contieneDatos'>
+                            <div class='flotarIz tma'><h3>Nombre</h3></div>
+                            <div class='flotarIz'><h3 id='NombreCuenta'>".$Nombre."</h3></div>
+                            <div class='flotarIz'><h3><a href='#' onclick='abrirModalCambiarNombre()' >Editar</a></h3></div>
+                        </div> 
+                        <div class='contieneDatos'>
+                            <div class='flotarIz tma'><h3>Usuario</h3></div>
+                            <div class='flotarIz'><h3 id='NombreCuenta'>".$Usuario."</h3></div>
+                        </div>
+                        <div class='contieneDatos'>
+                            <div class='flotarIz tma'><h3>Contraseña</h3></div>
+                            <div class='flotarIz'><h3 id='PassCuenta'>".$Pass."</h3></div>
+                            <div class='flotarIz'><h3><a href='#' data-toggle='modal' data-target='#ModalCambioPassword' >Editar</a></h3></div>
+                        </div>  
+                        <div class='contieneDatos'>
+                            <div class='flotarIz tma'><h3>Rol</h3></div>
+                            <div class='flotarIz'><h3 id='id='PassCuenta>".$Rol."</h3></div>
+                            
+                        </div> 
 
-                                ";
-        
-        echo $concatenar;
-        
-    }   
+                                    ";
+            
+            echo $concatenar;
+            
+        } 
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "llamarFuncion"));
+    }  
 }
  function CambiarPassword($viejoPass,$ID_Usuario, $ContraNueva) {
     
-     // traer el usuario para comparar contraseña anterior y procede con el cambio
-     
-    $bdUsuario = new MUsuarios();   
-    $result = $bdUsuario->ObtenerDatosUsuario($ID_Usuario);    
-    $Resultado = new Resultado();
-    
-    if ($result != null)  {        
+    try{
+        // traer el usuario para comparar contraseña anterior y procede con el cambio
         
-        $row = mysqlI_fetch_array($result, MYSQLI_ASSOC);        
+        $bdUsuario = new MUsuarios();   
+        $result = $bdUsuario->ObtenerDatosUsuario($ID_Usuario);    
+        $Resultado = new Resultado();
         
-        if (password_verify($viejoPass,$row['Pass'])) {
-            // si coincidencia del passowrd acutal
-            $bdUsuario = new MUsuarios();
-            $result = $bdUsuario->CambiarPassword($ID_Usuario, $ContraNueva);
+        if ($result != null)  {        
             
-            if ($result == "1") {
-                $Resultado->codigo = "1";
-                $Resultado->mensaje = "Actualizado Correctamente";
-            }else{
-                $Resultado->codigo = "0";
-                $Resultado->mensaje = "Problemas al actualizar";                
-            }
-            echo json_encode($Resultado);
+            $row = mysqlI_fetch_array($result, MYSQLI_ASSOC);        
+            
+            if (password_verify($viejoPass,$row['Pass'])) {
+                // si coincidencia del passowrd acutal
+                $bdUsuario = new MUsuarios();
+                $result = $bdUsuario->CambiarPassword($ID_Usuario, $ContraNueva);
                 
+                if ($result == "1") {
+                    $Resultado->codigo = "1";
+                    $Resultado->mensaje = "Actualizado Correctamente";
+                }else{
+                    $Resultado->codigo = "0";
+                    $Resultado->mensaje = "Problemas al actualizar";                
+                }
+                echo json_encode($Resultado);
+                    
+                
+            }else{
+                // no coindice el password actual por lo tanto no se puede cambiar la contraseña  
+                $Resultado->codigo = "0";
+                $Resultado->mensaje = "Contrasenna actual no coincide";
+                echo json_encode($Resultado);
+            }
+            
             
         }else{
-            // no coindice el password actual por lo tanto no se puede cambiar la contraseña  
-            $Resultado->codigo = "0";
-            $Resultado->mensaje = "Contrasenna actual no coincide";
-            echo json_encode($Resultado);
-        }
-        
-        
-    }else{
-        // no existe el usuario
-        
-       $Resultado->codigo = "0";
-            $Resultado->mensaje = "No existe el usuario";
-            echo json_encode($Resultado);
-    }    
-      
+            // no existe el usuario
+            
+        $Resultado->codigo = "0";
+                $Resultado->mensaje = "No existe el usuario";
+                echo json_encode($Resultado);
+        }    
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "CambiarPassword"));
+    }
  }
  
  
  
  function CambiarNombre($ID_Usuario,$NomNuevo){
+    try{
         $bdUsuarios = new MUsuarios();
         $result =  $bdUsuarios->CambiarNombre($ID_Usuario, $NomNuevo);
         if ($result == 1) {
@@ -119,61 +127,75 @@ function ObtenerDatosUsuario($ID_Usuario){
         }
          $_SESSION["Nombre"] = $NomNuevo;
         echo $result;  
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "CambiarNombre"));
+    }
  }
  function actualizarUsuario(){
-    $Usuarios = new Usuarios();
-    $bdUsuarios = new MUsuarios();
-    $Usuarios->ID_Usuarios = $_POST['id'];
-    $Usuarios->Nombre = $_POST['nombre'];
-    $Usuarios->Usuario = $_POST['usuario'];
-    $Usuarios->Password = $_POST['pass'];
-    $Usuarios->ID_Rol = $_POST['rol'];
-    $Usuarios->Estado = $_POST['status'];
-    
-    $bdUsuarios->ModificarUsuario($Usuarios);  
-    crearTabla();
+    try{
+        $Usuarios = new Usuarios();
+        $bdUsuarios = new MUsuarios();
+        $Usuarios->ID_Usuarios = $_POST['id'];
+        $Usuarios->Nombre = $_POST['nombre'];
+        $Usuarios->Usuario = $_POST['usuario'];
+        $Usuarios->Password = $_POST['pass'];
+        $Usuarios->ID_Rol = $_POST['rol'];
+        $Usuarios->Estado = $_POST['status'];
+        
+        $bdUsuarios->ModificarUsuario($Usuarios);  
+        crearTabla();
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "actualizarUsuario"));
+    }
 }
 
 function actualizarEstado(){
+    try{
+        $bdUsuarios = new MUsuarios();
+        $estado =  $_POST['estado'];
+        
+        $id =  $_POST['id'];
+        
+        if($estado== '0'){
+            $estado = '1';
+        }else{
+            $estado = '0';
+        }
     
-    $bdUsuarios = new MUsuarios();
-    $estado =  $_POST['estado'];
-    
-    $id =  $_POST['id'];
-    
-    if($estado== '0'){
-        $estado = '1';
-    }else{
-        $estado = '0';
+        $bdUsuarios->DesactivarUsuario($estado, $id);
+        crearTabla();
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "actualizarEstado"));
     }
-  
-    $bdUsuarios->DesactivarUsuario($estado, $id);
-    crearTabla();
 }
 
 
 function registrarUsuario(){
-   
-    $Usuarios = new Usuarios();
-    $bdUsuarios = new MUsuarios();
+    try{
+        $Usuarios = new Usuarios();
+        $bdUsuarios = new MUsuarios();
+        
+        $Usuarios->Nombre = $_POST['nombre'];
+        $Usuarios->Usuario = $_POST['usuario'];
+        $Usuarios->Password = $_POST['pass'];
+        $Usuarios->ID_Rol = $_POST['rol'];
+        $Usuarios->Estado = $_POST['status'];
+        $result = $bdUsuarios ->ValidarUsuarioRegistro( $Usuarios->Usuario);
+        if (mysqli_num_rows($result)> 0 ) {
+        return 0; 
+        }else{
+        $bdUsuarios->RegistrarUsuario($Usuarios);
+        
+        crearTabla();
+        }
     
-    $Usuarios->Nombre = $_POST['nombre'];
-    $Usuarios->Usuario = $_POST['usuario'];
-    $Usuarios->Password = $_POST['pass'];
-    $Usuarios->ID_Rol = $_POST['rol'];
-    $Usuarios->Estado = $_POST['status'];
-    $result = $bdUsuarios ->ValidarUsuarioRegistro( $Usuarios->Usuario);
-    if (mysqli_num_rows($result)> 0 ) {
-       return 0; 
-    }else{
-    $bdUsuarios->RegistrarUsuario($Usuarios);
-    
-    crearTabla();
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "actualizarEstado"));
+    }
 }
 
-    }
-
 function crearTabla(){ 
+    try{
     $bdUsuarios = new MUsuarios();
     $usuarios = $bdUsuarios->ListarUsuarios();
     $concatenar = '';
@@ -223,20 +245,25 @@ function crearTabla(){
         }       
     }
     print $concatenar;
-    
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "crearTabla"));
+    }
 }
 
 function cargarComboBox(){
-    //cargar el combobox del modal
-    $bdUsuarios = new MUsuarios();
-    $datosRoles =  $bdUsuarios->ComboBox();
-    
-     if($datosRoles != NULL){
-        while($fila = mysqli_fetch_array ($datosRoles, MYSQLI_ASSOC)){
-           echo "<option value=".$fila['ID_Rol'].">".$fila['Nombre'] . "</option>";            
+    try{
+        //cargar el combobox del modal
+        $bdUsuarios = new MUsuarios();
+        $datosRoles =  $bdUsuarios->ComboBox();
+        
+        if($datosRoles != NULL){
+            while($fila = mysqli_fetch_array ($datosRoles, MYSQLI_ASSOC)){
+            echo "<option value=".$fila['ID_Rol'].">".$fila['Nombre'] . "</option>";            
+            }
         }
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "cargarComboBox"));
     }
-    
 }
 
 

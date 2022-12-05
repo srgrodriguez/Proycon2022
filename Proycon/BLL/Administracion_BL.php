@@ -97,32 +97,42 @@ function BuscarHerramientaCodigo($codigo) {
 }
 
 function ActualizarHerramienta() {
-    $h = new Herramientas();
-    $h->codigo = $_POST['codigo'];
-    $h->descripcion = $_POST['des'];
-    $h->fechaIngreso = $_POST['fecha'];
-    $h->marca = $_POST['marca'];
-    $h->precio = $_POST['precio'];
-    $h->procedencia = $_POST['proced'];
-    $h->tipo = $_POST['tipo'];
+    try{
+        $h = new Herramientas();
+        $h->codigo = $_POST['codigo'];
+        $h->descripcion = $_POST['des'];
+        $h->fechaIngreso = $_POST['fecha'];
+        $h->marca = $_POST['marca'];
+        $h->precio = $_POST['precio'];
+        $h->procedencia = $_POST['proced'];
+        $h->tipo = $_POST['tipo'];
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ActualizarHerramienta");
+    }
+
 }
 
 function ObtenerTipo($id) {
-    $conexion = new Conexion();
-    $conn = $conexion->CrearConexion();
-    $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta";
-    $rec = $conn->query($sql);
-    $conn->close();
-    $concat = "";
-    if ($rec != null) {
-        while ($row = mysqlI_fetch_array($rec, MYSQLI_ASSOC)) {
-            if ($row['ID_Tipo'] != $id) {
+    try{
+        $conexion = new Conexion();
+        $conn = $conexion->CrearConexion();
+        $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta";
+        $rec = $conn->query($sql);
+        $conn->close();
+        $concat = "";
+        if ($rec != null) {
+            while ($row = mysqlI_fetch_array($rec, MYSQLI_ASSOC)) {
+                if ($row['ID_Tipo'] != $id) {
 
-                $concat .= "<option value ='" . $row['ID_Tipo'] . "'>";
-                $concat .= $row['Descripcion'];
-                $concat .= "</option>";
+                    $concat .= "<option value ='" . $row['ID_Tipo'] . "'>";
+                    $concat .= $row['Descripcion'];
+                    $concat .= "</option>";
+                }
             }
+            return $concat;
         }
-        return $concat;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObtenerTipo");
     }
+    
 }

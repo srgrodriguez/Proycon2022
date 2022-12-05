@@ -441,57 +441,82 @@ if($to != "") {mail($to, $subject, $message,$headers);}
     }
     
 function AdjuntarCorreoSiempre(){
-    $bdPedido = new MPedidos();
-    echo $bdPedido->AdjuntarCorreoSiempre($_GET['idUsuario']);   
+    try{
+        $bdPedido = new MPedidos();
+        echo $bdPedido->AdjuntarCorreoSiempre($_GET['idUsuario']); 
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "AdjuntarCorreoSiempre"));
+    } 
 }
 
 function ObtenerCorreosAdjuntadosSiempre(){
-    $bdPedidos = new MPedidos();
-    $result = $bdPedidos->ObtenerCorreosAdjuntadosSiempre();
-    if (mysqli_num_rows($result)>0) {
-        $concatenar = "";
-        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-          $concatenar.= "<tr><td>".$fila['ID_Usuario']."</td><td>".$fila['Usuario']."</td><td><img src='../resources/imagenes/remove.png' class='cursor' width='20px' title='Quitar Correo' onclick='RemoverCorreo(this)' alt=''/></td></tr>";  
+    try{
+        $bdPedidos = new MPedidos();
+        $result = $bdPedidos->ObtenerCorreosAdjuntadosSiempre();
+        if (mysqli_num_rows($result)>0) {
+            $concatenar = "";
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+            $concatenar.= "<tr><td>".$fila['ID_Usuario']."</td><td>".$fila['Usuario']."</td><td><img src='../resources/imagenes/remove.png' class='cursor' width='20px' title='Quitar Correo' onclick='RemoverCorreo(this)' alt=''/></td></tr>";  
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
-    }
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "ObtenerCorreosAdjuntadosSiempre"));
+    } 
     
 }
 
 function DesAdjuntarCorreo() {
-    $bdPedidos = new MPedidos();
-  ECHO $bdPedidos->DesAdjuntarCorreo($_GET['id']);    
+    try{
+        $bdPedidos = new MPedidos();
+        ECHO $bdPedidos->DesAdjuntarCorreo($_GET['id']);    
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "DesAdjuntarCorreo"));
+    } 
 }
 function VerPedido(){
-    $bdPedidos = new MPedidos();
-    echo $bdPedidos ->VerPedido($_GET['boleta']);           
+    try{
+        $bdPedidos = new MPedidos();
+        echo $bdPedidos ->VerPedido($_GET['boleta']);  
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "VerPedido"));
+    }          
 }
 function BuscarPedido() {
-    $bdPedidos = new MPedidos();
-    $result = $bdPedidos->BuscarPedido($_GET['boleta']);
-          $concatenar="<table class='tablasG'>"
-                    . "<thead>"
-                    . "<th>#Boleta</th>"
-                    . "<th>Fecha</th>"
-                    . "<th></th>"
-                    . "</thead><tbody>";
-    if (mysqli_num_rows($result) > 0 ) {       
-        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-         $concatenar.="<tr><td>".$fila['Consecutivo']."</td><td>".$fila['Fecha']."</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";           
+    try{
+        $bdPedidos = new MPedidos();
+        $result = $bdPedidos->BuscarPedido($_GET['boleta']);
+            $concatenar="<table class='tablasG'>"
+                        . "<thead>"
+                        . "<th>#Boleta</th>"
+                        . "<th>Fecha</th>"
+                        . "<th></th>"
+                        . "</thead><tbody>";
+        if (mysqli_num_rows($result) > 0 ) {       
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+            $concatenar.="<tr><td>".$fila['Consecutivo']."</td><td>".$fila['Fecha']."</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";           
+            }
+            $concatenar.="</tbody></table>";  
+        
         }
-        $concatenar.="</tbody></table>";  
-      
+        echo $concatenar;
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "BuscarPedido"));
     }
-    echo $concatenar;
 }
+
 function AnularBoletaPedido(){
-    $bdPedidos = new  MPedidos();
-   $result = $bdPedidos ->VerificarProcesoDeBoleta($_GET['boleta']);
-    if (mysqli_num_rows($result) > 0) {
-       echo $bdPedidos->AnularBoletaPedido($_GET['boleta']);   
-    }
-    else{
-        echo 0;
+    try{
+        $bdPedidos = new  MPedidos();
+        $result = $bdPedidos ->VerificarProcesoDeBoleta($_GET['boleta']);
+        if (mysqli_num_rows($result) > 0) {
+        echo $bdPedidos->AnularBoletaPedido($_GET['boleta']);   
+        }
+        else{
+            echo 0;
+        }
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "AnularBoletaPedido"));
     }
 }
 

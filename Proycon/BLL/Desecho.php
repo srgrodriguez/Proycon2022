@@ -49,9 +49,10 @@ if (isset($_GET['opc'])) {
 
 function CrearTablaListarDesecho()
 {
-    $MDesecho = new MDesecho();
+      try {
+        $MDesecho = new MDesecho();
 
-    try {
+  
         $resultado = $MDesecho->listarDesecho();
 
         if ($resultado <> null) {
@@ -78,9 +79,8 @@ function CrearTablaListarDesecho()
 
 function ListarDesechoMaterial()
 {
-    $MDesecho = new MDesecho();
-
-    try {
+       try {
+        $MDesecho = new MDesecho(); 
         $resultado = $MDesecho->listarDesechoMateriales();
 
         if ($resultado <> null) {
@@ -110,9 +110,10 @@ function ListarDesechoMaterial()
 
 function ListarDesechoHerramientas()
 {
-    $MDesecho = new MDesecho();
+       try { 
+        $MDesecho = new MDesecho();
 
-    try {
+
         $resultado = $MDesecho->listarDesechoHerramienta();
 
         if ($resultado <> null) {
@@ -135,17 +136,16 @@ function ListarDesechoHerramientas()
         }
         
     } catch (Exception $ex) {
-        echo Log::GuardarEvento($ex, "BuscarTiempoRealDesechoHerramientas");
+        echo Log::GuardarEvento($ex, "ListarDesechoHerramientas");
     }
 }
 
 function updateDesecho()
 {
-    $Desechos = new Desecho();
-    $MDesecho = new MDesecho();
-
+    
     try {
-
+        $Desechos = new Desecho();
+        $MDesecho = new MDesecho();
         $Desechos->Id = $_POST['id'];
         $Desechos->ID_Herramienta = $_POST['iD_Herramienta'];
         $Desechos->Codigo = $_POST['codigo'];
@@ -167,333 +167,367 @@ function updateDesecho()
 
 function ObtenerDescripcionTipoHerramienta($TipoDesecho){
 
+    try {
+        if($TipoDesecho == 1){
+            return "Herramienta";        
+        } else {
+            return "Material";        
 
-    if($TipoDesecho == 1){
-        return "Herramienta";        
-    } else {
-        return "Material";        
+        }
 
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObtenerDescripcionTipoHerramienta");
     }
-
-
 }
 
-function ConsecutivoPedido() {
-    $bdProyecto = new MDesecho();
-    $result = $bdProyecto->ObternerCosecutivoPedido();
-    $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    
-    $count = $result->num_rows;
 
-    if ($count > 0) {
-        return $fila["Boleta"] + 1;
-    } else {
-        return 1;
-    }
+function ConsecutivoPedido() {
+     try{
+        $bdProyecto = new MDesecho();
+
+       
+                   $result = $bdProyecto->ObternerCosecutivoPedido();
+            $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            
+            $count = $result->num_rows;
+
+            if ($count > 0) {
+                return $fila["Boleta"] + 1;
+            } else {
+                return 1;
+            }
+        } catch (Exception $ex) {
+            echo Log::GuardarEvento($ex, "ConsecutivoPedido");
+        }   
 }
 
 
 
 function GuardarPedido($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
-
-    $bdDesechos = new MDesecho();
-    
-
-    $bdDesechos->RegistrarDesecho($arreglo,$fecha,$ID_Usuario,$motivo, $consecutivo);
-        
+    try{
+        $bdDesechos = new MDesecho();
    
-
-    echo ConsecutivoPedido();
+        $bdDesechos->RegistrarDesecho($arreglo,$fecha,$ID_Usuario,$motivo, $consecutivo);  
+        echo ConsecutivoPedido();
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarPedido");
+    }
 }
 
 
 function GuardarPedidoMaterial($ID_Usuario,$arreglo, $fecha,$motivo, $consecutivo)  {
 
+    try{
     $bdDesechos = new MDesecho();   
     $bdDesechos->RegistrarDesechoMaterial($arreglo, $fecha,$ID_Usuario,$motivo, $consecutivo);
        
     //EnviarCorreoElectronico($consecutivo,$ID_Usuario,$arreglo,$motivo, "ajcg1995@hotmail.com");
 
     echo ConsecutivoPedido();
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "GuardarPedidoMaterial");
+    }
 }
    
 
 function BuscarHerramientaCodigo($codigo) {
-    $bdHerramienta = new MDesecho();
-    $restultado = $bdHerramienta->BuscarHerramientaPorCodigo($codigo);
-    $concatenar = "";
-    $filasAfectadas = mysqli_num_rows($restultado);
-    if ($filasAfectadas > 0) {
-        $fila = mysqli_fetch_array($restultado, MYSQLI_ASSOC);
-        $concatenar = "
-                         <tr>
-                             <td hidden='true' >" . $fila['ID_Tipo'] . "</td>
-                             <td class='codTablaHD'>" . $fila['Codigo'] . "</td>
-                             <td>" . $fila['Descripcion'] . "</td>
-                             <td>" . $fila['Marca'] . "</td>
-                             <td style='width: 25px;'>
-                             <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
-                                    <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
-                                </button>
-                          </td>
-                         </tr>";
-        echo $concatenar;
-    } else {
-        echo 0;
+    try{ 
+        $bdHerramienta = new MDesecho();
+   
+        $restultado = $bdHerramienta->BuscarHerramientaPorCodigo($codigo);
+        $concatenar = "";
+        $filasAfectadas = mysqli_num_rows($restultado);
+        if ($filasAfectadas > 0) {
+            $fila = mysqli_fetch_array($restultado, MYSQLI_ASSOC);
+            $concatenar = "
+                            <tr>
+                                <td hidden='true' >" . $fila['ID_Tipo'] . "</td>
+                                <td class='codTablaHD'>" . $fila['Codigo'] . "</td>
+                                <td>" . $fila['Descripcion'] . "</td>
+                                <td>" . $fila['Marca'] . "</td>
+                                <td style='width: 25px;'>
+                                <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
+                                        <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
+                                    </button>
+                            </td>
+                            </tr>";
+            echo $concatenar;
+        } else {
+            echo 0;
+        }
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "BuscarHerramientaCodigo");
     }
 }
     
 
 function BuscaAgregaMaterial($idMaterial, $cant) {
-    $bdMateriales = new MMaterial();
-    $result = $bdMateriales->BuscarMaterial($idMaterial, $cant);
-    $material = new Materiales();
-    $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
+       try{
+        $bdMateriales = new MMaterial();
+ 
+        $result = $bdMateriales->BuscarMaterial($idMaterial, $cant);
+        $material = new Materiales();
+        $fila = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    $count = $result->num_rows;
+        $count = $result->num_rows;
 
-    if ($count > 0) {
-        if ($fila['Codigo'] != null) {
-            $material->Codigo = $fila['Codigo'];
-            $material->Nombre = $fila['Nombre'];
-            $material->Cantidad = $fila['Cantidad'];
-    // $material->Disponibilidad=$fila['Diponibilidad'];                         
-            if ($cant > $material->Cantidad) {
-                echo $material->Cantidad;
+        if ($count > 0) {
+            if ($fila['Codigo'] != null) {
+                $material->Codigo = $fila['Codigo'];
+                $material->Nombre = $fila['Nombre'];
+                $material->Cantidad = $fila['Cantidad'];
+        // $material->Disponibilidad=$fila['Diponibilidad'];                         
+                if ($cant > $material->Cantidad) {
+                    echo $material->Cantidad;
+                } else {
+                    $concatenar = "
+                                <tr>
+                                    <td class='codTablaHD'>$material->Codigo</td>
+                                    <td class='cantidadTabla'>$cant</td>
+                                    <td>$material->Nombre</td>
+                                <td style='width: 25px;'>
+                                    <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
+                                            <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
+                                        </button>
+                                </td>
+                                </tr>";
+                    echo $concatenar;
+                }
             } else {
-                $concatenar = "
-                             <tr>
-                                <td class='codTablaHD'>$material->Codigo</td>
-                                <td class='cantidadTabla'>$cant</td>
-                                <td>$material->Nombre</td>
-                               <td style='width: 25px;'>
-                                 <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
-                                        <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>
-                                    </button>
-                              </td>
-                             </tr>";
-                echo $concatenar;
+                echo 0;
             }
         } else {
             echo 0;
         }
-    } else {
-        echo 0;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "BuscaAgregaMaterial");
     }
 }
 
 
 function ConsultarDesecho($id) {
-    $MDesecho = new MDesecho();
-    $result = $MDesecho->ConsultarDesecho($id);
+     try{
+         $MDesecho = new MDesecho();
+  
+        $result = $MDesecho->ConsultarDesecho($id);
 
-        if ($result != null) {
-            $concaternar = "<table id='tbl_P_Materiales_Selecionado' class='tablasG'>
-                            <thead>
-                                <tr>
-                                    <th>Codigo</th>
-                                    <th>Cantidad</th>
-                                    <th>Decripcion</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>";
+            if ($result != null) {
+                $concaternar = "<table id='tbl_P_Materiales_Selecionado' class='tablasG'>
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Cantidad</th>
+                                        <th>Decripcion</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>";
 
-            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-               
-                $concaternar .= 
-                            "<tr>".
-                                "<td>" . $fila['Codigo'] . "</td>
-                                <td>" . $fila['Cantidad'] . "</td>
-                                <td>" . $fila['Descripcion'] . "</td>".
-                               
-                            "</tr>";
+                while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                
+                    $concaternar .= 
+                                "<tr>".
+                                    "<td>" . $fila['Codigo'] . "</td>
+                                    <td>" . $fila['Cantidad'] . "</td>
+                                    <td>" . $fila['Descripcion'] . "</td>".
+                                
+                                "</tr>";
 
+                }
+                $concaternar .= "</tbody></table>";
+                echo $concaternar;
             }
-            $concaternar .= "</tbody></table>";
-            echo $concaternar;
+        } catch (Exception $ex) {
+            echo Log::GuardarEvento($ex, "ConsultarDesecho");
         }
-    
 }
 
 
 function ObtenerCorreosAdjuntadosSiempre(){
+   
+    try{
     $bdDesechos = new MDesecho();
-    $result = $bdDesechos->ObtenerCorreosAdjuntadosSiempre();
-    if (mysqli_num_rows($result)>0) {
-        $concatenar = "";
-        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-          $concatenar.= "<tr><td>".$fila['ID_Usuario']."</td><td>".$fila['Usuario']."</td><td><img src='../resources/imagenes/remove.png' class='cursor' width='20px' title='Quitar Correo' onclick='RemoverCorreo(this)' alt=''/></td></tr>";  
+   
+        $result = $bdDesechos->ObtenerCorreosAdjuntadosSiempre();
+        if (mysqli_num_rows($result)>0) {
+            $concatenar = "";
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+            $concatenar.= "<tr><td>".$fila['ID_Usuario']."</td><td>".$fila['Usuario']."</td><td><img src='../resources/imagenes/remove.png' class='cursor' width='20px' title='Quitar Correo' onclick='RemoverCorreo(this)' alt=''/></td></tr>";  
+            }
+            echo $concatenar;
         }
-        echo $concatenar;
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "ObtenerCorreosAdjuntadosSiempre");
     }
-    
 }
 
 
 
 function EnviarCorreoElectronico($boleta,$usuario,$contenido,$mensajeCorreo,$UsuarioCorreo) {
 
+    try{
+        $arreglo = json_decode($contenido, true);
+        $tam = sizeof($arreglo);
+        $concatenar = "";
 
-    $arreglo = json_decode($contenido, true);
-    $tam = sizeof($arreglo);
-    $concatenar = "";
+        foreach($arreglo as $item){
 
-    foreach($arreglo as $item){
-
-        $concatenar .=
-        "<tr>"
-            . "<td>" . $item['codigo'] . "</td>"
-            . "<td>" . $item['cantidad'] . "</td>"
-            . "<td>" . $item['descripcion'] . "</td>"
-
-
-        . "</tr>";
-    }
+            $concatenar .=
+            "<tr>"
+                . "<td>" . $item['codigo'] . "</td>"
+                . "<td>" . $item['cantidad'] . "</td>"
+                . "<td>" . $item['descripcion'] . "</td>"
 
 
-    $dia = date('d');
-     $mes = date('m');
-     $anno = date('y');
-    /*$arregloCorreos = json_decode($_POST['correos'], true);
-    $tam = sizeof($arregloCorreos);
-    $to="";
-    if ($tam>0) {
-    for($i = 0; $i<$tam;$i++){
-        $to.="$arregloCorreos[$i],";
-    }
-    }*/
-    $bdPedidos = new MDesecho();
-    $result = $bdPedidos ->ObtenerCorreosAdjuntadosSiempre();
-    if (mysqli_num_rows($result)> 0) {
-        while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-           $to.= $fila['Usuario'].",";
+            . "</tr>";
         }
-    }
-   $subject = "Pedido de Materiales";
-   $headers = "From: $usuario <$UsuarioCorreo> \r\n";
-   //$headers ="";
-   $headers .= "MIME-Version: 1.0" . "\r\n";
-   $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-   $message = "
-   <html>
-       <head>
-           <meta charset='UTF-8'>
-           <meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
-           <title></title>
-           <style>
-          .boleta{
-                width: 60%;
-                margin: 0 auto;
-                border: solid #000 1px;
-               }
-      .fecha{
-       width: 25%;
-       float: right;
-       border: solid 1px black;
-   }
-   .fecha thead tr th{
+
+
+        $dia = date('d');
+        $mes = date('m');
+        $anno = date('y');
+        /*$arregloCorreos = json_decode($_POST['correos'], true);
+        $tam = sizeof($arregloCorreos);
+        $to="";
+        if ($tam>0) {
+        for($i = 0; $i<$tam;$i++){
+            $to.="$arregloCorreos[$i],";
+        }
+        }*/
+        $bdPedidos = new MDesecho();
+        $result = $bdPedidos ->ObtenerCorreosAdjuntadosSiempre();
+        if (mysqli_num_rows($result)> 0) {
+            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+            $to.= $fila['Usuario'].",";
+            }
+        }
+    $subject = "Pedido de Materiales";
+    $headers = "From: $usuario <$UsuarioCorreo> \r\n";
+    //$headers ="";
+    $headers .= "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $message = "
+    <html>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+            <title></title>
+            <style>
+            .boleta{
+                    width: 60%;
+                    margin: 0 auto;
+                    border: solid #000 1px;
+                }
+        .fecha{
+        width: 25%;
+        float: right;
         border: solid 1px black;
+    }
+    .fecha thead tr th{
+            border: solid 1px black;
+            text-align: center;
+            color: white;
+            background: black;
+    }
+    .fecha tbody tr td{
+        border: solid 1px black;
+        text-align: center;
+        color: black;
+        background: white;
+    }
+    #boletaCorreo{
+        margin: 0 auto;
+        width: 80%;
+    }
+    #boletaCorreo thead tr td{
+        border: none;
+        border-style: none;
         text-align: center;
         color: white;
         background: black;
-   }
-   .fecha tbody tr td{
-       border: solid 1px black;
-       text-align: center;
-       color: black;
-       background: white;
-   }
-   #boletaCorreo{
-       margin: 0 auto;
-       width: 80%;
-   }
-   #boletaCorreo thead tr td{
-      border: none;
-      border-style: none;
-       text-align: center;
-       color: white;
-       background: black;
-   }
-   #boletaCorreo tbody tr{
-       border: none; 
-   }
-   #boletaCorreo tbody tr td{
-       text-decoration: none;
-       padding: 8px;
-       margin: 0px;
-       border: solid 1px black;
-       text-align: center;  
-   }
-   .hederBoleta{
-       padding: 10px;
-   }
-   @media screen and (max-width:600px){
-      #boletaCorreo{
-       width: 100%;
-   } 
-   .boleta{
-          width: 100%;
-          }
-   }
-           </style>
-       </head>
-       <body>
-           <div class='boleta'>
-               <div class='hederBoleta'>
-                   <div style='width: 100%;height:auto;overflow: hidden'>
-                       <h2 style=' float: right;margin-right: 10px;color: red'>NBoleta $boleta </h2>
-                   </div>
-                   <div>
-                       <table class='fecha'>
-                           <thead>
-                               <tr>
-                                   <th>Dia</th>
-                                    <th>Mes</th>
-                                     <th>Anno</th>
-                               </tr>
-                           </thead>
-                           <tbody>
-                               <tr>
-                                   <td>$dia</td>
-                                   <td>$mes</td>
-                                   <td>$anno</td>
-                               </tr>
-                           </tbody>
-                       </table>
-                       
-                   </div> 
-                    <img src='http://proycon.com/~proycon/wp-content/uploads/2014/08/logo-proycon-slider.png' alt='' width='150px;'/>
-                   <div>
-                       <h3><strong>Pedido: </strong>Desecho Herramientas y Materiales</h3>
-                       <h3><strong>Realizado por: </strong> $usuario</h3>
-                       
-                   </div>
-                   <hr>  
-               </div>
-                <br> 
-                <div id='CuerpoBoleta'>
-                    <table id='boletaCorreo'>
-                        <thead>
-                            <tr>
-                                <td>Codigo</td>
-                                <td>Cantidad</td>
-                                <td>Descripcion</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        $concatenar
+    }
+    #boletaCorreo tbody tr{
+        border: none; 
+    }
+    #boletaCorreo tbody tr td{
+        text-decoration: none;
+        padding: 8px;
+        margin: 0px;
+        border: solid 1px black;
+        text-align: center;  
+    }
+    .hederBoleta{
+        padding: 10px;
+    }
+    @media screen and (max-width:600px){
+        #boletaCorreo{
+        width: 100%;
+    } 
+    .boleta{
+            width: 100%;
+            }
+    }
+            </style>
+        </head>
+        <body>
+            <div class='boleta'>
+                <div class='hederBoleta'>
+                    <div style='width: 100%;height:auto;overflow: hidden'>
+                        <h2 style=' float: right;margin-right: 10px;color: red'>NBoleta $boleta </h2>
+                    </div>
+                    <div>
+                        <table class='fecha'>
+                            <thead>
+                                <tr>
+                                    <th>Dia</th>
+                                        <th>Mes</th>
+                                        <th>Anno</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>$dia</td>
+                                    <td>$mes</td>
+                                    <td>$anno</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div> 
+                        <img src='http://proycon.com/~proycon/wp-content/uploads/2014/08/logo-proycon-slider.png' alt='' width='150px;'/>
+                    <div>
+                        <h3><strong>Pedido: </strong>Desecho Herramientas y Materiales</h3>
+                        <h3><strong>Realizado por: </strong> $usuario</h3>
+                        
+                    </div>
+                    <hr>  
+                </div>
+                    <br> 
+                    <div id='CuerpoBoleta'>
+                        <table id='boletaCorreo'>
+                            <thead>
+                                <tr>
+                                    <td>Codigo</td>
+                                    <td>Cantidad</td>
+                                    <td>Descripcion</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            $concatenar
 
-               
-                          
-                        </tbody>
-                    </table>  
-                    <br><br>
-                </div>    
-           </div>
-       </body>
-   </html>
-   ".$mensajeCorreo;
-   if($to != "") {mail($to, $subject, $message,$headers);}
-   
-       }
+                
+                            
+                            </tbody>
+                        </table>  
+                        <br><br>
+                    </div>    
+            </div>
+        </body>
+    </html>
+    ".$mensajeCorreo;
+    if($to != "") {mail($to, $subject, $message,$headers);}
+    } catch (Exception $ex) {
+        echo Log::GuardarEvento($ex, "EnviarCorreoElectronico");
+    }
+    
+}
