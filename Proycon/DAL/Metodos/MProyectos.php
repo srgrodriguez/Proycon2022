@@ -214,10 +214,48 @@ class MProyectos implements IProyectos {
     }
 
     public function AnularBoletaMaterial($NBoleta) {
-        $sql = "CALL SP_ANULARBOLETAMATERIAL($NBoleta)";
+      /*  $sql = "CALL SP_ANULARBOLETAMATERIAL($NBoleta)";
         $result = $this->conn->query($sql);
         $this->conn->close();
-        return $result;
+        return $result;*/
+
+        
+
+        $sql = "SELECT tpm.ID_Material,tpm.Cantidad from  tbl_prestamomateriales tpm WHERE tpm.NBoleta= $NBoleta";
+        $result1 = $this->conn->query($sql);
+
+        if (mysqli_num_rows($result1) > 0) {
+            while ($fila = mysqli_fetch_array($result1, MYSQLI_ASSOC)) {
+                
+                $cantidad = $fila['Cantidad'];
+                $codMater = $fila['ID_Material'];
+
+                $sql2 = "UPDATE tbl_materiales SET Cantidad = (Cantidad + $cantidad) WHERE codigo = '" . $codMater  ."'";
+
+                $result2 = $this->conn->query($sql2);
+
+
+
+            }
+
+
+            $sql3 = "DELETE FROM tbl_prestamomateriales WHERE NBoleta =  $NBoleta";
+            $sql4 = "DELETE from tbl_boletaspedido WHERE Consecutivo = $NBoleta";
+
+            $result3 = $this->conn->query($sql3);
+            $result4 = $this->conn->query($sql4);
+
+        }else{
+            $this->conn->close();
+            return false;
+        }
+
+        $this->conn->close();
+        return true;
+
+
+
+
     }
 
     public function ColaPedidos($ID_Proyecto) {

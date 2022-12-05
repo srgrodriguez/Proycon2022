@@ -986,7 +986,15 @@ function AnularBoletaMaterial($NBoleta) {
 
     $bdProyectos = new MProyectos();
     $bdProyectos->AnularBoletaMaterial($NBoleta);
-    echo 1;
+
+    if($bdProyectos){
+        echo 1;
+    }else {
+        echo 0;
+    }
+
+
+    
 }
 
 function ColaPeidos($ID_Proyecto) {

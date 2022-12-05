@@ -1041,7 +1041,11 @@ function GuardarBoletaPedido(opc) {
     var dt = new Date();
     var mes = dt.getMonth() + 1;
     var fecha = dt.getFullYear() + '-' + mes + '-' + dt.getDate(); 
-        if ($("#cboPedidos2").val() == 1) {
+
+
+    var opcion = $("#cboPedidos2").val();
+
+        if (opcion == "1") {
             var numFilas = $("#tbl_P_Materiales tbody tr").length;
         // alert(numFilas);
             var consecutivo = $("#consecutivoPedidoM").html();
@@ -1086,7 +1090,8 @@ function GuardarBoletaPedido(opc) {
                 
 
             }
-        } else if ($("#cboPedidos2").val() == 1)  {
+        } else if (opcion == "2")  {
+
             var numFilas = $("#tbl_P_Herramientas tbody tr").length;
             var consecutivo = $("#consecutivoPedidoH").html();
             var ID_Proyecto = $("#idProecto").html();

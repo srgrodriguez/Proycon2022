@@ -453,7 +453,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
                                                     <button type="button" class="btn btn-default btn-estilos" onclick="">
                                                         <img src="../resources/imagenes/print.png" alt="" width="30px"/>
                                                     </button>
-                                                    <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaPedido()">Guardar</button>
+                                                    <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaPedido(1)">Guardar</button>
 
                                                 </div>
                                             </div>
