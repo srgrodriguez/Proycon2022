@@ -52,11 +52,14 @@ if (isset($_GET['opc'])) {
             ConsultarTodasLasBoletasReparacionMaquinariaPorNumBoleta();
             break;
         case "VerBoletaReparacion":
-             VerBoletaReparacion();
+            VerBoletaReparacion();
             break;
-            case "AnularBoletaReparacion":
-                AnularBoletaReparacion();
-               break;
+        case "AnularBoletaReparacion":
+            AnularBoletaReparacion();
+            break;
+        case "consecutivoBoletaReparacion":
+           echo ConsecutivoReparacion();
+            break;
         default:
             break;
     }

@@ -216,6 +216,7 @@ async function EnviarMaquinariaReparacion() {
                     let resultado = JSON.parse(data);
                     MostrarMensajeResultado(resultado.mensaje, resultado.esValido, idMostrarMensajes);
                     LimpiarBoletaReparacion();
+                    ConsecutivoReparacion();
                     ConsultarTodaMaquinariaReparacion();
                 }
 
@@ -528,6 +529,7 @@ function AnularBoletaReparacion() {
                 if (esJsonValido(data)) {
                     let resultado = JSON.parse(data);
                     MostrarMensajeResultado(resultado.mensaje, resultado.esValido, idMostrarMensajes);
+                    ConsultarTodasLasBoletasReparacionMaquinaria();
                 }
                 else {
                     MostrarMensajeResultado(data, false, idMostrarMensajes);
@@ -569,4 +571,30 @@ function Atras() {
         window.location.href = 'Maquinaria.php'
     }
 
+}
+
+async function ConsecutivoReparacion() {
+    const idMostrarMensajes ="idResultadoEnviarReparacion";
+    await fetch('../BLL/Historia_Y_ReparacionesMaquinaria_BL.php?opc=consecutivoBoletaReparacion',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            else {
+                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, idMostrarMensajes);
+                console.log(response);
+            }
+        })
+        .then((data) => {
+           document.getElementById("ConsecutivoPedidoHerramienta").innerHTML = data;
+        })
+        .catch((result) => {
+            MostrarMensajeResultado(result, false, idMostrarMensajes);
+        })
 }

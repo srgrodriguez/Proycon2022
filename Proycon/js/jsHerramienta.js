@@ -282,7 +282,7 @@ function FiltroTipoHerramientasT() {
     if (tipo != "0") {
 
         $.ajax({
-            data: {"tipo": tipo},
+            data: { "tipo": tipo },
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=FiltroTipoHerramientasT',
             success: function (result) {
@@ -352,7 +352,7 @@ function FiltrosHerramientasU() {
     if (ubicacion != "0") {
 
         $.ajax({
-            data: {"ubicacion": ubicacion},
+            data: { "ubicacion": ubicacion },
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=FiltrosHerramientasU',
             success: function (result) {
@@ -460,7 +460,7 @@ function FiltroReparacionTipo() {
     } else {
 
         $.ajax({
-            data: {"tipo": tipo},
+            data: { "tipo": tipo },
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=FiltroReparacionTipo',
             success: function (result) {
@@ -492,9 +492,8 @@ function soloLetras(evt) {
 
     evt = (evt) ? evt : event;
     var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
-            ((evt.which) ? evt.which : 0));
-    if (charCode > 31 && (charCode < 64 || charCode > 90) && (charCode < 97 || charCode > 122))
-    {
+        ((evt.which) ? evt.which : 0));
+    if (charCode > 31 && (charCode < 64 || charCode > 90) && (charCode < 97 || charCode > 122)) {
         return false;
     }
     return true;
@@ -532,7 +531,7 @@ function FiltroReparacionboleta() {
     var boleta = $("#cbofiltroboleta").val();
 
     $.ajax({
-        data: {"boleta": boleta},
+        data: { "boleta": boleta },
         type: 'POST',
         url: '../BLL/Herramientas.php?opc=FiltroReparacionboleta',
         success: function (result) {
@@ -565,7 +564,7 @@ function FiltroReparacionfecha() {
     var fecha = $("#cbofiltrofecha").val();
 
     $.ajax({
-        data: {"fecha": fecha},
+        data: { "fecha": fecha },
         type: 'POST',
         url: '../BLL/Herramientas.php?opc=FiltroReparacionfecha',
         success: function (result) {
@@ -839,7 +838,7 @@ function CambiarTipoHerramienta() {
     if (validaciones == 0) {
 
         $.ajax({
-            data: {ID_Tipo: ID_Tipo, DescripcionTipo: DescripcionTipo},
+            data: { ID_Tipo: ID_Tipo, DescripcionTipo: DescripcionTipo },
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=cambiarTipo',
             success: function (respuesta) {
@@ -909,20 +908,20 @@ function GuardarTipoHerramienta() {
             success: function (respuesta) {
                 if (respuesta == 1) {
                     // 
-                $("#modalTipo").addClass("mensajeCorrecto");
-                $("#tituloModalAgregarTipo").html("<strong>Se Guardo Correctamente el Tipo de Herramienta </strong>");
-                limpiarFormTipo(consecutivoTipo);
-                listarTipoHerramientas();
-                setTimeout(function () {
-                    $('#ModalAgregarTipoHerramienta').modal('hide');
-                    
-                }, 3000);
+                    $("#modalTipo").addClass("mensajeCorrecto");
+                    $("#tituloModalAgregarTipo").html("<strong>Se Guardo Correctamente el Tipo de Herramienta </strong>");
+                    limpiarFormTipo(consecutivoTipo);
+                    listarTipoHerramientas();
+                    setTimeout(function () {
+                        $('#ModalAgregarTipoHerramienta').modal('hide');
+
+                    }, 3000);
                 }
-                else{
+                else {
                     $('#ModalAgregarTipoHerramienta').modal('hide');
                     $('#infoResponse').html(respuesta);
                 }
-               
+
             },
             error: function (jqXhr, textStatus, errorMessage) {
                 alert("En este momento no podemos procesar la transaccion intente de nuevo " + errorMessage);
@@ -997,32 +996,32 @@ function limpiarFormTipo(consecutivoTipo) {
     var num2 = 1;
     var suma = parseInt(consecutivoTipo) + parseInt(num2);
     $('#txtnombreTipoHerramienta').val(""),
-            $('#txtIDTipoHerramienta').val(suma);
+        $('#txtIDTipoHerramienta').val(suma);
     $('#txtIDTipoHerramienta2').val(suma);
 }
 function EditarlimpiarFormTipo() {
     var EditarconsecutivoTipo = $('#txtIDTipoHerramienta2').val()
     $('#txtnombreTipoHerramienta').val(""),
-            $('#txtIDTipoHerramienta').val(EditarconsecutivoTipo);
+        $('#txtIDTipoHerramienta').val(EditarconsecutivoTipo);
 }
 
 function limpiarFormFactura() {
     $('#txtNunFactura').val(""),
-            $('#txtFechaFactura').val(""),
-            $('#txtDescripcionFactura').val(""),
-            $('#txtCantidadFactura').val("")
+        $('#txtFechaFactura').val(""),
+        $('#txtDescripcionFactura').val(""),
+        $('#txtCantidadFactura').val("")
 }
 
 function limpiarFormHerramienta(consecutivoHerramienta) {
     var codigoHerramienta = consecutivoHerramienta
     $('#txtCodigoH').val(codigoHerramienta),
-            $('#txtCodigoH2').val(""),
-            $('#txtDescripcionH').val(""),
-            $('#txtPrecioH').val(""),
-            $('#txtMarcaH').val(""),
-            $('#txtProcedenciaH').val(""),
-            $('#txtFechaRegistroH').val(""),
-            $('#comboHerramientaTipoH').val("0")
+        $('#txtCodigoH2').val(""),
+        $('#txtDescripcionH').val(""),
+        $('#txtPrecioH').val(""),
+        $('#txtMarcaH').val(""),
+        $('#txtProcedenciaH').val(""),
+        $('#txtFechaRegistroH').val(""),
+        $('#comboHerramientaTipoH').val("0")
 }
 
 function MostrarFormReparaciones() {
@@ -1102,8 +1101,7 @@ function LimpiarBusquedaHerramienta() {
 
 /////// CARGA EL TOTAL DE REPARACIONES Y HISTORIAL DE TRASLADO DE LAS HERRAMIENTAS
 
-function MostrarHistorial()
-{
+function MostrarHistorial() {
     var codigo = $("#txtCodigoVista").val();
     $("#codigo").val(codigo);
     $("#reparaciones").hide();
@@ -1124,7 +1122,7 @@ function MostrarHistorial()
         url: "../BLL/Herramientas.php?opc=reparacionesTotales&codigo=" + codigo,
         success: function (respuesta) {
             if (respuesta != "") {
-                 console.log(respuesta);
+                console.log(respuesta);
                 $('#tablareparacionestotales').html(respuesta);
             }
         },
@@ -1184,7 +1182,7 @@ function MostrarHistorial()
         type: "POST",
         url: "../BLL/Herramientas.php?opc=InfoHerramienta&codigo=" + codigo,
         success: function (respuesta) {
-            console.log ("header = "+respuesta);
+            console.log("header = " + respuesta);
             var informacion = respuesta;
             var Cadena = informacion.split(";");
             var Codigo = Cadena[0];
@@ -1455,7 +1453,7 @@ function EliminarLista(evento) {
 function TransladoHerramienta(evento) {
     var CodigoT = $(evento).parents("tr").find("td").eq(0).html();
     $.ajax({
-        data: {"CodigoT": CodigoT},
+        data: { "CodigoT": CodigoT },
         type: 'POST',
         url: '../BLL/Herramientas.php?opc=GuardarTrasladoT',
         success: function (resultado) {
@@ -1542,7 +1540,7 @@ function EliminarTraslado(evento) {
 
     var CodigoTH = $(evento).parents("tr").find("td").eq(0).html();
     $.ajax({
-        data: {"CodigoTH": CodigoTH},
+        data: { "CodigoTH": CodigoTH },
         type: 'POST',
         url: '../BLL/Herramientas.php?opc=EliminarTraslado',
         success: function (resultado) {
@@ -1792,7 +1790,7 @@ function EditarTipoHerramienta(evento) {
     var id = $(evento).parents("tr").find("td").eq(0).html();
     var tipo = $(evento).parents("tr").find("td").eq(1).html();
     $('#txtIDTipoHerramienta').val(id),
-            $('#txtnombreTipoHerramienta').val(tipo);
+        $('#txtnombreTipoHerramienta').val(tipo);
     $("#btnEditarTipo").show();
     $("#btnGuardarTipo").hide();
 }
@@ -1807,17 +1805,17 @@ function AgregarHerramientaBuscadoPNombre(evento) {
     var ubicacion = $(evento).parents("tr").find("td").eq(4).html();
 
     var nuevaFila = "<tr>" +
-            "<td>" + cod + "</td>" +
-            "<td>" + descripcion + "</td>" +
-            "<td>" + marca + "</td>" +
-            "<td>" + estado + "</td>" +
-            "<td>" + ubicacion + "</td>" +
-            "<td>" +
-            "<button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>" +
-            "<img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>" +
-            "</button>" +
-            "</td>" +
-            "</tr>";
+        "<td>" + cod + "</td>" +
+        "<td>" + descripcion + "</td>" +
+        "<td>" + marca + "</td>" +
+        "<td>" + estado + "</td>" +
+        "<td>" + ubicacion + "</td>" +
+        "<td>" +
+        "<button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>" +
+        "<img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>" +
+        "</button>" +
+        "</td>" +
+        "</tr>";
     $("#ContenidoReparaciones").append(nuevaFila);
 
 }
@@ -1846,7 +1844,7 @@ function GuardarBoletaReparaciones() {
     if (numFilas > 0 && $('#provedorReparacion').val() != "") {
         for (i = 0; i < numFilas; i++) {
 
-            totalHerramientas [i] = document.getElementById("tbl_R_Herramientas").rows[cont].cells[0].innerHTML
+            totalHerramientas[i] = document.getElementById("tbl_R_Herramientas").rows[cont].cells[0].innerHTML
             cont++;
         }
         var datos = {
@@ -2012,8 +2010,7 @@ function ActualizarTipoHerramienta(event) {
     }
 }
 function RegistrarGasto(evento) {
-    if (evento != null)
-    {
+    if (evento != null) {
         $("#ModalRegistrarGastos").modal();
         var codigo = $(evento).parents("tr").find("td").eq(0).html();
         var tipo = $(evento).parents("tr").find("td").eq(1).html();
@@ -2035,23 +2032,20 @@ function Regrasar() {
     var tablaReparacion = $("#tablaReparaciones").is(":visible");
     var HistorialHerramiennas = $("#MostrarHistorialHerramienta").is(":visible")
     var buscador = $("#buscarHerrmientas").is(":visible");
-    if (boletas)
-    {
+    if (boletas) {
         $("#tablaReparaciones").show();
 
         $("#BoletasReparacion").hide();
         $("#MostrarHistorialHerramienta").hide();
 
 
-    } else if (HistorialHerramiennas)
-    {
+    } else if (HistorialHerramiennas) {
         $("#tablaReparaciones").show("slow");
 
         $("#BoletasReparacion").hide();
         $("#MostrarHistorialHerramienta").hide();
         // $("#buscarHerrmientas").hide();  
-    } else if (tablaReparacion)
-    {
+    } else if (tablaReparacion) {
         //$("#buscarHerrmientas").show();   
         $("#tablaReparaciones").hide();
         $("#BoletasReparacion").hide();
@@ -2087,7 +2081,7 @@ function BuscarHerramientaTablaReparaciones() {
 
     var codigo = $("#CodHerramientaReparacion").val();
     $.ajax({
-        data: {"codigo": codigo},
+        data: { "codigo": codigo },
         type: 'POST',
         url: '../BLL/Herramientas.php?opc=FiltroReparacionCodigo',
         success: function (result) {
@@ -2234,7 +2228,7 @@ function BuscarHerramientasPorCodigo() {
 }
 
 //$(BuscarTiempoRealHerramienta());
-function  BuscarTiempoRealHerramienta(consulta) {
+function BuscarTiempoRealHerramienta(consulta) {
 
 
     $(".MostrarHistorialHerramienta").hide();
@@ -2247,7 +2241,7 @@ function  BuscarTiempoRealHerramienta(consulta) {
     $.ajax({
         type: "POST",
         url: "../BLL/Herramientas.php?opc=buscarTiempoReal",
-        data: {"consulta": consulta},
+        data: { "consulta": consulta },
         beforeSend: function () {
             $("#ResultadoBusqudaHerramienta").html("<div style='margin:auto;width:200px'><img src='../resources/imagenes/loanding.gif'  width='100px'/></div>");
         },
@@ -2287,8 +2281,7 @@ function Exportar_Pdf(idTablaContent, idtablaFecha, Boleta, idProyecto, tipoBole
     var mes = $("#" + idtablaFecha + " tbody tr td").eq(1).html();
     var anno = $("#" + idtablaFecha + "  tbody tr td").eq(2).html();
     var Proyecto = "";
-    if (idProyecto != "")
-    {
+    if (idProyecto != "") {
         var Proyecto = $("#" + idProyecto).html();
     }
     var TipoBoleta = $("#" + tipoBoleta).html();
@@ -2308,11 +2301,171 @@ function Exportar_Pdf(idTablaContent, idtablaFecha, Boleta, idProyecto, tipoBole
     pdf.setLineWidth(1);
     pdf.line(20, 260, 600, 260);
     var htmlBody = $("#" + idTablaContent).html();
-    var margins = {top: 270, bottom: 20, left: 70, width: 100};
-    pdf.fromHTML(htmlBody, margins.left, margins.top, {'width': margins.width}, function (dispose) {
+    var margins = { top: 270, bottom: 20, left: 70, width: 100 };
+    pdf.fromHTML(htmlBody, margins.left, margins.top, { 'width': margins.width }, function (dispose) {
         pdf.save("Boleta" + '.pdf');
     }, margins);
 }
+
+
+function AbrirModalEliminarHerramienta(codigo) {
+    $("#ModalEliminarHerramienta").modal();
+    $("#IdCodigo").val(codigo)
+}
+
+function EliminarHerramientaElectrica() {
+    let motivo = $("#txtMotivoEliminarHerramienta").val();
+    let codigo = $("#IdCodigo").val();
+    if (StringIsNullOrEmpty(motivo)) {
+        MostrarMensajeResultado("Se debe ingresar un motivo", resultado.esValido, "idResultadoEliminarMaquinaria");
+    }
+    else {
+        fetch('../BLL/Herramientas.php?opc=eliminarHerramienta',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({//Estos son los parametros que recibe el método
+                    "codigo": codigo,
+                    "motivo": motivo
+                })
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else {
+                    MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "idResultadoEliminarMaquinaria");
+                    console.log(response);
+                }
+            })
+            .then((data) => {
+                if (esJsonValido(data)) {
+                    let resultado = JSON.parse(data);
+                    $("#txtMotivoEliminarMaquinria").val("");
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, "idResultadoEliminarMaquinaria");
+                    if (resultado.esValido)
+                        listarTotalHerramientas()
+                }
+                else {
+                    MostrarMensajeResultado(data, false, "idResultadoEliminarMaquinaria");
+                }
+            })
+            .catch((result) => {
+                MostrarMensajeResultado(result, false, "idResultadoEliminarMaquinaria");
+            });
+    }
+}
+
+function OpenModalEditarHerramienta(codigo) {
+    fetch('../BLL/Maquinaria_BL.php?opc=bucarPorCodigoGetJson&codigo=' + codigo,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            else {
+                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
+                console.log(response);
+            }
+        })
+        .then((data) => {
+            if (esJsonValido(data)) {
+                let equipo = JSON.parse(data);
+                console.log(data)
+                $("#txtIdHerramientaEditar").val(equipo.ID_Herramienta)
+                $("#txtCodigoEditar").val(equipo.Codigo);
+                $("#txtCodigoHerramientaActualEditar").val(equipo.Codigo);
+                $("#txtDescripcionEditar").val(equipo.Descripcion);
+                $("#txtMarcaEditar").val(equipo.Marca);
+                $("#txtPrecioEditar").val(equipo.Precio);
+                $("#txtFechaRegistroEditar").val(equipo.FechaIngreso);
+                $("#txtProcedenciaEditar").val(equipo.Procedencia);
+                document.getElementById("cboTipoHerramientaEditar").value = equipo.ID_Tipo;
+                $("#txtNumFacturaEditar").val(equipo.NumFactura)
+                // document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra ==null || equipo.MonedaCompra ==""?"0":equipo.MonedaCompra;
+                $("#ModalEidtarHerramienta").modal()
+            }
+
+        })
+        .catch((result) => {
+            MostrarMensajeResultado(result, false, "listadoHerramientas");
+        });
+
+}
+
+function EditarHerramienta() {
+
+    const mensajesResultado = "idResultadoActulizarHerramienta";
+    let id = $("#txtIdHerramientaEditar").val()
+    let codigo = $("#txtCodigoEditar").val();
+    let CodigoActual = $("#txtCodigoHerramientaActualEditar").val();
+    let descripcion = $("#txtDescripcionEditar").val();
+    let marca = $("#txtMarcaEditar").val();
+    let precio = $("#txtPrecioEditar").val();
+    let fechaRegistro = $("#txtFechaRegistroEditar").val();
+    let procedencia = $("#txtProcedenciaEditar").val();
+    let tipo = document.getElementById("cboTipoHerramientaEditar").value;
+    let factuara = $("#txtNumFacturaEditar").val();
+
+    const formData = new FormData();
+    formData.append("codigoNuevo", codigo);
+    formData.append("codigoActual", CodigoActual);
+    formData.append("tipo", tipo);
+    formData.append("marca", marca);
+    formData.append("descripcion", descripcion);
+    formData.append("fechaIngreso", fechaRegistro);
+    formData.append("procedencia", procedencia);
+    formData.append("precio", precio);
+    formData.append("numFactura", factuara);
+    formData.append("idHerramienta", id)
+    fetch('../BLL/Herramientas.php?opc=editarHerramienta',
+        {
+            method: 'POST',
+            body: formData
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            else {
+                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, mensajesResultado);
+                console.log(response);
+            }
+        })
+        .then((data) => {
+            if (esJsonValido(data)) {
+
+                let resultado = JSON.parse(data);
+                MostrarMensajeResultado(resultado.mensaje, resultado.esValido, mensajesResultado);
+                if (resultado.esValido) {
+                    listarTotalHerramientas();
+                    $("#txtIdHerramientaEditar").val("")
+                    $("#txtCodigoEditar").val("");
+                    $("#txtCodigoHerramientaActualEditar").val("");
+                    $("#txtDescripcionEditar").val("");
+                    $("#txtMarcaEditar").val("");
+                    $("#txtPrecioEditar").val("");
+                    $("#txtFechaRegistroEditar").val("");
+                    $("#txtProcedenciaEditar").val("");
+                    document.getElementById("cboTipoHerramientaEditar").value = "0";
+                    $("#txtNumFacturaEditar").val("");
+                }
+            }
+
+        })
+        .catch((result) => {
+            MostrarMensajeResultado(result, false, mensajesResultado);
+        });
+
+}
+
 
 $(document).on('keyup', '#txtCodigo', function () {
     var valor = $(this).val();

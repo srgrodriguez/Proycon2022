@@ -54,8 +54,23 @@ function SeleccionarEquipoTrasladar(event)
     equipo.ubicacion = Ubicacion;
     if($(event).is(":checked"))
       { 
-        $(event).parents("tr").find("td").addClass('trasladoT');      
-        listaEquipoTrasladar.push(equipo);
+        if(listaEquipoTrasladar.length >0 )
+        {
+            let existeElemento =listaEquipoTrasladar.find(x=>x.codigo == Codigo);
+            if(existeElemento)
+            {
+               alert("El equipo ya fue seleccionado")
+            }
+            else{
+                $(event).parents("tr").find("td").addClass('trasladoT');      
+                listaEquipoTrasladar.push(equipo);
+            }
+        }
+        else{
+            $(event).parents("tr").find("td").addClass('trasladoT');      
+            listaEquipoTrasladar.push(equipo);
+        }
+      
       }
      else 
      {
@@ -63,11 +78,7 @@ function SeleccionarEquipoTrasladar(event)
 
         let posicion = listaEquipoTrasladar.indexOf(equipo)
         listaEquipoTrasladar.splice(posicion, 1)
-     } 
-     
-     console.log(listaEquipoTrasladar);
-    
-       
+     }    
 }
 
 function MostrarBoletaTraslado()
@@ -145,16 +156,44 @@ async function TrasladarEquipo()
            {
             let resultado = JSON.parse(data);
             MostrarMensajeResultado(resultado.mensaje, resultado.esValido, idMostrarMensajes);
-            document.getElementById("listadoTranslado").innerHTML = ""
-            document.getElementById("tablaMostrarTraslado").innerHTML = ""
-           }       
+            document.getElementById("listadoTranslado").innerHTML = "";
+            document.getElementById("tablaMostrarTraslado").innerHTML = "";
+            ObtenerConsecutivoBoleta();
+           }
+           else
+             MostrarMensajeResultado(data, false, idMostrarMensajes);    
         })
         .catch((result) => {
             MostrarMensajeResultado(result, false, idMostrarMensajes);
         })
-
-        btnGuardar.prop('disabled',false);
-
     }
+    btnGuardar.prop('disabled',false);
+}
 
+
+async function ObtenerConsecutivoBoleta()
+{
+    const idMostrarMensajes = "mensajesResultadoTraslado";
+    await  fetch('../BLL/TrasladarEquipo_BL.php?opc=consecutivoBoleta',
+    {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.text();
+        }
+        else {
+            MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, idMostrarMensajes);
+            console.log(response);
+        }
+    })
+    .then((data) => {
+        document.getElementById("ConsecutivoPedidoHerramientaF").innerHTML = data;      
+    })
+    .catch((result) => {
+        MostrarMensajeResultado(result, false, idMostrarMensajes);
+    })
 }

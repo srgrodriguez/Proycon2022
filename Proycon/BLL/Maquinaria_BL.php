@@ -42,6 +42,9 @@ if (isset($_GET['opc'])) {
         case "fichaTecnica":
             ConultarFichaTecinica();
             break;
+        case "filtrarMaquinaria":
+            OrdenarConsusltaMaquinaria();
+            break;       
         default:
             break;
     }
@@ -111,7 +114,6 @@ function ActualizarMaquinaria()
         $maquinaria->descripcion = $_POST["descripcion"];
         $maquinaria->fechaIngreso = $_POST["fechaIngreso"];
         $maquinaria->procedencia = $_POST["procedencia"];
-        $maquinaria->ubicacion = Constantes::Bodega;
         $maquinaria->precio = str_replace(",", "", $_POST["precio"]);;
         $maquinaria->numFactura = $_POST["numFactura"];
         $maquinaria->nombreArchivo =  $archivo_nombre;
@@ -317,4 +319,30 @@ function ObtenerComboBoxMonedas($id)
             <option value='C'>Colones</option>
             <option value='D'>Dólares</option>
           </select>";
+}
+
+function OrdenarConsusltaMaquinaria()
+{
+
+    try {
+        $filtro = $_GET["filtro"];
+        $bdMaquinaria = new MMaquinaria();
+        $resultado = $bdMaquinaria->OrdenarConsusltaMaquinaria($filtro);
+        if ($resultado != null) {
+            if ($filtro == "VerTotales") {
+                $resultadoHTML = '';
+                while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                    $resultadoHTML .= "<tr>
+                                            <td>" . $fila['Descripcion'] . "</td>
+                                            <td>" . $fila['Cantidad'] . "</td>" .
+                        "</tr>";
+                }
+                echo $resultadoHTML;
+            } else
+                echo  GenerarHtmlListaMaquinaria($resultado);
+        } else
+            echo 'No hay datos para mostara';
+    } catch (Exception $ex) {
+        echo  json_encode(Log::GuardarEvento($ex, "listarTotalMaquinaria"));
+    }
 }

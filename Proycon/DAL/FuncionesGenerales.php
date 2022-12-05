@@ -32,3 +32,24 @@ function EsProduccion()
     $servername = $_SERVER['SERVER_NAME'];
     return !($servername == "localhost");
 }
+
+function ObtenerRol():int{
+    if (!isset($_SESSION)) 
+        session_start();
+    
+    return $_SESSION['ID_ROL']; 
+}
+
+function UsuarioLogueado():Usuarios
+{
+    if (!isset($_SESSION)) 
+    { session_start();}
+
+     $usuario = new Usuarios();
+     $usuario->Nombre = $_SESSION['Nombre'];
+     $usuario->ID_Rol = $_SESSION['ID_ROL'];
+     $usuario->Usuario=  $_SESSION['Usuario'];
+     $usuario->ID_Usuarios = $_SESSION['ID_Usuario'];
+     return $usuario;
+    
+}

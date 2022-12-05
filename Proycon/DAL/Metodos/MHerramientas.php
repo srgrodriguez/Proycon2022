@@ -708,7 +708,7 @@ class MHerramientas implements IHerrramientas
     public function buscarherramienCodigo($Cod)
     {
         $$Cod = LimpiarCadenaCaracter($this->conn, $Cod);
-        $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
+        $sql = "select ID_Herramienta,Codigo,Marca,NumFactura,Procedencia,b.ID_Tipo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
         b.CodigoMonedaCobro,
         b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
         $stmt = $this->conn->prepare($sql);
@@ -917,7 +917,6 @@ class MHerramientas implements IHerrramientas
         FechaIngreso='" . $maquinaria->fechaIngreso . "',
         Procedencia='" . $maquinaria->procedencia . "',
         Precio=" . $maquinaria->precio . ",
-        MonedaCompra='" . $maquinaria->monedaCompra . "',
         NumFactura='" . $maquinaria->numFactura . "'
         WHERE ID_Herramienta = " . $maquinaria->idHerramienta . "";
         $resultado->esValido  = $this->conn->query($sql);

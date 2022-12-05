@@ -2,6 +2,7 @@
 function GenerarReporteTotalMaquinaria() {
     let txtBuscarTimpoReal = $("#txtBuscaraquinariaTiempoReal").val();
     let txtBuscarCodigo = $("#txtCodigoMaquinariaBuscar").val();
+    let filtro= document.getElementById("cboFiltroHerramienta").value;
     let url = "../BLL/Reportes/ReportesExcelMaquinaria.php?opc=totalMaquinaria"
     let opcionBusqueda = "totalMaquinaria";
     if (txtBuscarTimpoReal != "") {
@@ -10,6 +11,10 @@ function GenerarReporteTotalMaquinaria() {
     } else if (txtBuscarCodigo != "") {
         url = "../BLL/Reportes/ReportesExcelMaquinaria.php?opc=totalMaquinaria&codigo=" + txtBuscarCodigo
     }
+    else if(filtro != "0"){
+        url = "../BLL/Reportes/ReportesExcelMaquinaria.php?opc=totalMaquinaria&filtro=" + filtro
+    }
+
     $("#ModalLoanding").modal();
     fetch(url,
         {

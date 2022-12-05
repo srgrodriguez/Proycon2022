@@ -4,12 +4,16 @@ include '../DAL/Conexion.php';
 include '../DATA/Herramientas.php';
 include '../DAL/Interfaces/IHerrramientas.php';
 include '../DAL/Metodos/MHerramientas.php';
+require_once '../DAL/Interfaces/IMaquinaria.php';
+require_once '../DAL/Metodos/MMaquinaria.php';
 include '../DAL/FuncionesGenerales.php';
 include '../DATA/Factura.php';
 include 'traslado.php';
 require_once 'Autorizacion.php';
 require_once '../DAL/Constantes.php';
-
+require_once '../DATA/Usuarios.php';
+require_once '../DATA/Resultado.php';
+require_once '../DAL/Metodos/MBitacora.php';
 
 if (!isset($_SESSION)) {
     session_start();
@@ -92,6 +96,12 @@ if (isset($_GET['opc'])) {
         buscarTraslado($_GET['codigo']);
     } elseif ($_GET['opc'] == "eliminarHerramienta") {
         EliminarHerramienta();
+    }
+    elseif ($_GET['opc'] == "bucarPorCodigoGetJson") {
+        BuscarherramienCodigoGetJson();
+    }
+    elseif ($_GET['opc'] == "editarHerramienta") {
+        ActualizarHerramientaElectrica();
     }
 }
 
@@ -711,6 +721,14 @@ function buscarherramienCodigo($Cod)
     }
 }
 
+function BuscarherramienCodigoGetJson($Codidgo ="")
+{
+    $bdHerramienta = new MHerramientas();
+    $resultado = $bdHerramienta->buscarherramienCodigo($Codidgo);
+    $equipo = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+    echo $equipo;
+}
+
 // MUESTRA EL TOTAL DE REPARACIONES DE LA HERRAMIENTA
 
 function reparacionesTotales($codigo)
@@ -894,10 +912,8 @@ function ActualizarHerramientaElectrica()
         $maquinaria->descripcion = $_POST["descripcion"];
         $maquinaria->fechaIngreso = $_POST["fechaIngreso"];
         $maquinaria->procedencia = $_POST["procedencia"];
-        $maquinaria->ubicacion = Constantes::Bodega;
         $maquinaria->precio = str_replace(",", "", $_POST["precio"]);;
         $maquinaria->numFactura = $_POST["numFactura"];
-        $maquinaria->monedaCompra = $_POST["monedaCompra"];
         $maquinaria->idHerramienta = $_POST["idHerramienta"];
 
         if ($_POST["codigoNuevo"] != $_POST["codigoActual"]) {
@@ -922,6 +938,7 @@ function ActualizarHerramientaElectrica()
 
 function GenerarResultadoHTMLTablaPrincipal($result)
 {
+    $Usuario =      UsuarioLogueado();
     $resultadoHTML = "";
     while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
@@ -936,10 +953,11 @@ function GenerarResultadoHTMLTablaPrincipal($result)
             <img src='../resources/imagenes/Eliminar.png' width='15px' alt=''/>
             </button>";
 
-        if ($_SESSION['ID_ROL'] == Constantes::RolAdminBodega)
+      
+        if ($Usuario->ID_Rol== Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
             $btnEliminar =  str_replace("disabled", "", $btnEliminar);
 
-        if ($_SESSION['ID_ROL'] == Constantes::RolAdminBodega || $_SESSION['ID_ROL'] == Constantes::RolBodega)
+        if ($Usuario->ID_Rol == Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
             $btnEditar =  str_replace("disabled", "", $btnEditar);
 
         if ($fila['Estado'] == 'Buena') {

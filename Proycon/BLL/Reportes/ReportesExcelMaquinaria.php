@@ -28,6 +28,11 @@ if (isset($_GET['opc'])) {
 function GenerarExcelListadoMaquinaria()
 {
     try {
+        if(isset($_GET['filtro']) && $_GET['filtro'] =="VerTotales")
+        {
+            die(GenerarReporteTotalPorTipo());
+        }
+
         $objPHPExcel = new PHPExcel();
         $bdMaquinaria = new MMaquinaria();
         $objPHPExcel->getProperties()->setCreator("Reporte")
@@ -41,7 +46,7 @@ function GenerarExcelListadoMaquinaria()
       $listadoColumnas = ["Código","Tipo","Precio Alquiler","Fecha Registro","Precio","Disposición","Ubicación","Estado"];
       GenerarEncabezadoTabla($objPHPExcel, $listadoColumnas);
       $resultado =null;
-       if(!isset($_GET['codigo']) && !isset($_GET['consulta'])){
+       if(!isset($_GET['codigo']) && !isset($_GET['consulta']) && !isset($_GET['filtro'])){
         $resultado =  $bdMaquinaria->ListarTotalMaquinaria();
        }
        elseif (isset($_GET['consulta']))
@@ -53,6 +58,11 @@ function GenerarExcelListadoMaquinaria()
       {
         $codigo = $_GET['codigo'];
         $resultado =  $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
+      } 
+      elseif (isset($_GET['filtro']))
+      {
+        $filtro = $_GET['filtro'];
+        $resultado =  $bdMaquinaria->OrdenarConsusltaMaquinaria($filtro);
       } 
        
        $i = 9;
@@ -113,6 +123,7 @@ function GenerarReporteHistorial_Y_ReparacionesMaquinaria()
 {
     $codigo =$_GET["codigo"];
     try {
+      
         $objPHPExcel = new PHPExcel();
         $bdMaquinaria = new MMaquinaria();
         $resultadoInfoMaquinaria =   $bdMaquinaria->BuscarMaquinariaPorCodigo($codigo);
@@ -322,4 +333,68 @@ function GenerarReporteMaquinariaEnReparacion()
         //throw $th;
     }
 }
+
+function GenerarReporteTotalPorTipo()
+{
+    try {
+
+        $objPHPExcel = new PHPExcel();
+        $bdMaquinaria = new MMaquinaria();
+
+       $resultado =  $bdMaquinaria ->OrdenarConsusltaMaquinaria("VerTotales");
+        $objPHPExcel->getProperties()->setCreator("Reporte")
+        ->setLastModifiedBy("Reporte")
+        ->setTitle("Reporte total por tipo de equipo")
+        ->setSubject("Reporte total por tipo de equipo")
+        ->setDescription("Reporte total por tipo de equipo")
+        ->setKeywords("office 2010 openxml php")
+        ->setCategory("Reporte total por tipo de equipo");
+        GenerarEncabezadoReporte($objPHPExcel,"Reporte total por tipo de equipo");
+
+        $listadoColumnas = ["Descripción","Cantidad"];
+         GenerarEncabezadoTabla($objPHPExcel, $listadoColumnas);
+
+         $i = 9;
+         $filaInicioTabla = 9;
+         while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+             $objPHPExcel->setActiveSheetIndex(0)
+                     ->setCellValue("C$i", $fila["Descripcion"])
+                     ->setCellValue("D$i", $fila['Cantidad']);
+      
+             $i++;
+         }
+
+
+         $rangoTablaReparaciones = "C$filaInicioTabla:D$i";
+         $objPHPExcel->getActiveSheet()->getStyle($rangoTablaReparaciones)->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+         'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFF')))));
+      
+         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(40);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+         $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+      
+         $objPHPExcel->getActiveSheet()->setTitle('Reporte');
+         Headers();
+      $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+      ob_start();
+      $objWriter->save("php://output");
+      $xlsData = ob_get_contents();
+      ob_end_clean();
+      
+      $response =  array(
+              'op' => 'ok',
+              'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+          );
+      
+     return json_encode($response);
+
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
+}
+
 

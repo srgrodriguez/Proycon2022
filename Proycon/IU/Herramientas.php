@@ -16,6 +16,7 @@ ValidarIniciodeSession();
     <link href="../css/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="../css/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../js/jquery.js"></script>
+    <script src="../js/FuncionesGenerales.js" type="text/javascript"></script>
     <script src="../js/jsHerramienta.js" type="text/javascript"></script>
     <script src="../js/jquery.table2excel.js" type="text/javascript"></script>
     <script src="../js/jsMenu.js" type="text/javascript"></script>
@@ -301,6 +302,128 @@ ValidarIniciodeSession();
                             </form>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success btn-estilos" onclick="GuardarHerramienta()">Guardar</button>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="LimpiarColorHerramienta()">Cerrar</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!----  Modal Editar Herramienta ---->
+
+                        <div id="ModalEidtarHerramienta" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div id="modalheaderEditarHerramienta" class="modal-header headerModal">
+
+                            <button type="button" class="close" data-dismiss="modal" onclick="LimpiarColorHerramienta()">&times;</button>
+
+                            <h4 class="modal-title">Eidtar Herramientas</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <form method="POST" name="frmInsertar" class="form-horizontal" action="">
+                                <div class="form-group">
+                                    <label class="col-lg-2">Código Mayor</label>
+                                    <div class="col-lg-10">
+                                        <div class="input-group col-md-7">
+                                            <input type="text" class="form-control" value="<?php echo ObtenerConsecutivoHerramienta() ?>" name="txtCodigoH" id="txtCodigoH" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Código</label>
+                                    <div class="col-lg-10">
+                                        <div class="input-group col-md-7">
+                                        <input type="text" class="form-control" style="display:none" placeholder="Código" name="txtCodigoHerramientaActualEditar" id="txtCodigoHerramientaActualEditar" />                                            
+                                        <input type="text" class="form-control" style="display:none" placeholder="Código" name="txtIdHerramientaEditar" id="txtIdHerramientaEditar" />
+                                            <input type="text" class="form-control" placeholder="Código" name="txtCodigoEditar" id="txtCodigoEditar" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Descripcion</label>
+                                    <div class="col-md-8">
+                                        <textarea type="text" name="txtDescripcionEditar" id="txtDescripcionEditar" class="form-control " placeholder="Descripcion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2">Marca</label>
+                                    <div class="col-md-8">
+                                        <textarea type="text" name="txtMarcaEditar" id="txtMarcaEditar" class="form-control " placeholder="Marca"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Precio</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="txtPrecioEditar" id="txtPrecioEditar" class="form-control "onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" placeholder="Precio" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Fecha</label>
+                                    <div class="col-md-6">
+                                        <input type="date" name="txtFechaRegistroEditar" id="txtFechaRegistroEditar" class="form-control " placeholder="Fecha" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Procedencia</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="txtProcedenciaEditar" id="txtProcedenciaEditar" class=" form-control " placeholder="Procedencia" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Tipo</label>
+                                    <div class="col-md-6">
+
+                                        <select id="cboTipoHerramientaEditar" name="cboTipoHerramientaEditar" class="form-control ">
+
+                                            <option value="0" selected="">Seleccione el tipo de herramienta</option>
+
+                                            <?php
+                                            $conexion = new Conexion();
+                                            $conn = $conexion->CrearConexion();
+                                            $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta";
+                                            $rec = $conn->query($sql);
+                                            $conn->close();
+                                            if ($rec != null) {
+                                                while ($row = mysqlI_fetch_array($rec, MYSQLI_ASSOC)) {
+                                                    echo "<option value ='" . $row['ID_Tipo'], "'>";
+                                                    echo $row['Descripcion'];
+                                                    echo "</option>";
+                                                }
+                                            }
+                                            ?>
+
+                                        </select>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2">Num. Factura</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="txtNumFacturaEditar" id="txtNumFacturaEditar" class=" form-control " placeholder="Numero de Factura" />
+                                    </div>
+                                </div>
+
+
+                            </form>
+                            <div id="idResultadoActulizarHerramienta"></div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success btn-estilos" onclick="EditarHerramienta()">Guardar</button>
                                 <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="LimpiarColorHerramienta()">Cerrar</button>
 
 
@@ -958,7 +1081,7 @@ ValidarIniciodeSession();
     </div>
 
                     <!-- MODAL Eliminar Maquinaria -->
-                    <div id="ModalEliminarMaquinaria" class="modal fade" role="dialog">
+                    <div id="ModalEliminarHerramienta" class="modal fade" role="dialog">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div id="modalTipo" class="modal-header headerModal">
