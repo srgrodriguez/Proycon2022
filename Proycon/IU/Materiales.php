@@ -21,9 +21,10 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
         <script src="../js/jsMenu.js" type="text/javascript"></script>
                 <script src="../js/jsLogin.js" type="text/javascript"></script>
         <script src="../js/push.min.js" type="text/javascript"></script>
-        <?php if ($_SESSION['ID_ROL'] == 4 ||$_SESSION['ID_ROL']==5) {?>
-      <script src="../js/Notificaciones.js" type="text/javascript"></script>
-        <?php }?>
+        <?php if ($_SESSION['ID_ROL'] == 4 || $_SESSION['ID_ROL'] == 5) { ?>
+        <script src="../js/Notificaciones.js" type="text/javascript"></script>
+        <script src="../js/push.min.js" type="text/javascript"></script>
+    <?php } ?>
     </head>
     <header id="header">
         <?php

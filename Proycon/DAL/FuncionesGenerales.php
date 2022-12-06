@@ -50,6 +50,7 @@ function UsuarioLogueado():Usuarios
      $usuario->ID_Rol = $_SESSION['ID_ROL'];
      $usuario->Usuario=  $_SESSION['Usuario'];
      $usuario->ID_Usuarios = $_SESSION['ID_Usuario'];
+     $usuario->IdProyecto = $_SESSION['ID_Proyecto'];
      return $usuario;
     
 }

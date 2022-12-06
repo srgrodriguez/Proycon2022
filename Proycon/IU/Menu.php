@@ -16,6 +16,7 @@ if (isset($_REQUEST["mostrarP"])) {
 function Crearmenu() {
      //session_start();
     $nombre =$_SESSION['Nombre'];
+    $menu ="";
      if ($_SESSION['ID_ROL']== 1) {//administrador
      $id = "<span id='IdRolUsuario' style='display:none'>".$_SESSION['ID_ROL']."</span>";
     $menu = '<div id="menu"> <img src="../resources/imagenes/menu.png" id="imgMenu" onclick="Menu()" width="50px"/>' .$id.
@@ -35,7 +36,7 @@ function Crearmenu() {
             '</nav>' .
             '</div>';  
      }
-     else if ($_SESSION['ID_ROL']== 2) {//proveeduria
+     else if ($_SESSION['ID_ROL']== 2 || $_SESSION['ID_ROL'] == 6) {//proveeduria
           $id = "<span id='IdRolUsuario' style='display:none'>".$_SESSION['ID_ROL']."</span>";
         $menu = '<div id="menu"><img src="../resources/imagenes/menu.png" id="imgMenu" onclick="Menu()" width="50px"/>'.
                  '<button id="btnAtras" type="button" class="btn btn-default" onclick="Regresar()">

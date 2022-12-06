@@ -3,12 +3,7 @@
  * de bodega y Proveeduria
  */
 $(document).ready(function(){
-   if($("#IdRolUsuario").html()== 4){
-    setInterval(NotificarUsuarioBodega, 10000);
-   }
-    /*    setTimeout(function () {
-            NotificarUsuarioBodega();
-    }, 10000);*/
+    setInterval(NotificarUsuarioBodega, 180000);
 });
 
 

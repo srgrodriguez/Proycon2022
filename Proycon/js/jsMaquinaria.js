@@ -1,6 +1,8 @@
 
 
-function AgregarMaquinaria() {
+async function AgregarMaquinaria() {
+    btnAgregar = $("#btnAgregarMaquinaria")
+    btnAgregar.prop('disabled', true);
     const IdDivRespuesta = "respuestaAgregarMaquinaria";
     let txtCodigoMaquinaria = $("#txtCodigoMaquinaria");
     let txtDescripcionMaquinaria = $("#txtDescripcionMaquinaria");
@@ -31,7 +33,7 @@ function AgregarMaquinaria() {
         MostrarMensajeResultado("Debe completar los campos del fromulario", false, IdDivRespuesta)
     }
     else {
-        fetch('../BLL/Maquinaria_BL.php?opc=agregar',
+        await fetch('../BLL/Maquinaria_BL.php?opc=agregar',
             {
                 method: 'POST',
                 body: formData
@@ -71,6 +73,8 @@ function AgregarMaquinaria() {
             });
 
     }
+
+    btnAgregar.prop('disabled', false);
 
 }
 
@@ -118,7 +122,9 @@ function OpenModalEditarMaquinaria(codigo, idArchivo) {
 
 }
 
-function OnclickEditarMaquinaria() {
+async function OnclickEditarMaquinaria() {
+    const btnEditar = $("#btnEditarMaquinaria");
+    btnEditar.prop('disabled', true);
     const IdDivRespuesta = "respuestaEditarMaquinaria";
     let txtCodigoMaquinaria = $("#txtCodigoEditarMaquinaria");
     let txtCodigoActual = $("#txtCodigoActualEditarMaquinaria");
@@ -153,7 +159,7 @@ function OnclickEditarMaquinaria() {
         MostrarMensajeResultado("Debe completar los campos del fromulario", false, IdDivRespuesta)
     }
     else {
-        fetch('../BLL/Maquinaria_BL.php?opc=actualizar',
+        await fetch('../BLL/Maquinaria_BL.php?opc=actualizar',
             {
                 method: 'POST',
                 body: formData
@@ -196,6 +202,8 @@ function OnclickEditarMaquinaria() {
             });
 
     }
+
+    btnEditar.prop('disabled', false);
 }
 
 function AbrirModalEliminarMaquinaria(codigo) {
@@ -203,7 +211,9 @@ function AbrirModalEliminarMaquinaria(codigo) {
     $('#ModalEliminarMaquinaria').modal('show');
 }
 
-function EliminarMaquinaria() {
+async function EliminarMaquinaria() {
+    const btnEliminar = $("#btnEliminarMaquinaria")
+    btnEliminar.prop("disabled", true)
     let motivo = $("#txtMotivoEliminarMaquinria").val();
     let codigo = $("#IdCodigo").val();
     if (StringIsNullOrEmpty(motivo)) {
@@ -246,6 +256,8 @@ function EliminarMaquinaria() {
                 MostrarMensajeResultado(result, false, "idResultadoEliminarMaquinaria");
             });
     }
+
+    btnEliminar.prop("disabled", false);
 }
 
 function ListarTotalMaquinaria() {
@@ -407,46 +419,43 @@ function MostrarTraslado() {
     $("#idTrasladarMaquinaria").show();
 }
 
-function OrdenarConsusltaMaquinaria(){
+function OrdenarConsusltaMaquinaria() {
     $("#txtCodigoMaquinariaBuscar").val("");
     $("#txtBuscaraquinariaTiempoReal").val("");
- let opc = document.getElementById("cboFiltroHerramienta").value;
- if(opc!= "0")
- {
-    fetch('../BLL/Maquinaria_BL.php?opc=filtrarMaquinaria&filtro='+opc,
-    {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then((response) => {
-        if (response.ok) {
-            return response.text();
-        }
-        else {
-            MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
-            console.log(response);
-        }
-    })
-    .then((data) => {
-        if(opc=="VerTotales")
-        {
-            $("#tbl_total__tipo_herramientas").css("display","inline-table")
-            $("#tbl_total_maquinaria").css("display","none")
-            document.getElementById("listadoTotalTipoHerramientas").innerHTML = data
-        }
-        else
-         { 
-            $("#tbl_total__tipo_herramientas").css("display","none")
-            $("#tbl_total_maquinaria").css("display","inline-table")
-            document.getElementById("listadoHerramientas").innerHTML = data
+    let opc = document.getElementById("cboFiltroHerramienta").value;
+    if (opc != "0") {
+        fetch('../BLL/Maquinaria_BL.php?opc=filtrarMaquinaria&filtro=' + opc,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else {
+                    MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, "listadoHerramientas");
+                    console.log(response);
+                }
+            })
+            .then((data) => {
+                if (opc == "VerTotales") {
+                    $("#tbl_total__tipo_herramientas").css("display", "inline-table")
+                    $("#tbl_total_maquinaria").css("display", "none")
+                    document.getElementById("listadoTotalTipoHerramientas").innerHTML = data
+                }
+                else {
+                    $("#tbl_total__tipo_herramientas").css("display", "none")
+                    $("#tbl_total_maquinaria").css("display", "inline-table")
+                    document.getElementById("listadoHerramientas").innerHTML = data
 
-        }
+                }
 
-    })
-    .catch((result) => {
-        MostrarMensajeResultado(result, false, "listadoHerramientas");
-    });
- }
+            })
+            .catch((result) => {
+                MostrarMensajeResultado(result, false, "listadoHerramientas");
+            });
+    }
 }

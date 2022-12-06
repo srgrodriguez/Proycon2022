@@ -2400,8 +2400,8 @@ function OpenModalEditarHerramienta(codigo) {
 
 }
 
-function EditarHerramienta() {
-
+async function EditarHerramienta() {
+    const btnEdiatar = $("#btnEditarHerramienta");
     const mensajesResultado = "idResultadoActulizarHerramienta";
     let id = $("#txtIdHerramientaEditar").val()
     let codigo = $("#txtCodigoEditar").val();
@@ -2414,56 +2414,69 @@ function EditarHerramienta() {
     let tipo = document.getElementById("cboTipoHerramientaEditar").value;
     let factuara = $("#txtNumFacturaEditar").val();
 
-    const formData = new FormData();
-    formData.append("codigoNuevo", codigo);
-    formData.append("codigoActual", CodigoActual);
-    formData.append("tipo", tipo);
-    formData.append("marca", marca);
-    formData.append("descripcion", descripcion);
-    formData.append("fechaIngreso", fechaRegistro);
-    formData.append("procedencia", procedencia);
-    formData.append("precio", precio);
-    formData.append("numFactura", factuara);
-    formData.append("idHerramienta", id)
-    fetch('../BLL/Herramientas.php?opc=editarHerramienta',
-        {
-            method: 'POST',
-            body: formData
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
-            else {
-                MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, mensajesResultado);
-                console.log(response);
-            }
-        })
-        .then((data) => {
-            if (esJsonValido(data)) {
 
-                let resultado = JSON.parse(data);
-                MostrarMensajeResultado(resultado.mensaje, resultado.esValido, mensajesResultado);
-                if (resultado.esValido) {
-                    listarTotalHerramientas();
-                    $("#txtIdHerramientaEditar").val("")
-                    $("#txtCodigoEditar").val("");
-                    $("#txtCodigoHerramientaActualEditar").val("");
-                    $("#txtDescripcionEditar").val("");
-                    $("#txtMarcaEditar").val("");
-                    $("#txtPrecioEditar").val("");
-                    $("#txtFechaRegistroEditar").val("");
-                    $("#txtProcedenciaEditar").val("");
-                    document.getElementById("cboTipoHerramientaEditar").value = "0";
-                    $("#txtNumFacturaEditar").val("");
+    if (codigo == "")
+        MostrarMensajeResultado("Debe ingresar un código", false, mensajesResultado);
+    else if (precio == "" || precio == ".00")
+        MostrarMensajeResultado("Debe ingresar el precio del equipo", false, mensajesResultado);
+    else if (fechaRegistro == "")
+        MostrarMensajeResultado("La fecha de registro no puede ser vacia", false, mensajesResultado);
+    else if (tipo == "0")
+        MostrarMensajeResultado("Debe seleccionar el tipo de equipo", false, mensajesResultado);
+    else {
+        btnEdiatar.prop('disabled', true);
+        const formData = new FormData();
+        formData.append("codigoNuevo", codigo);
+        formData.append("codigoActual", CodigoActual);
+        formData.append("tipo", tipo);
+        formData.append("marca", marca);
+        formData.append("descripcion", descripcion);
+        formData.append("fechaIngreso", fechaRegistro);
+        formData.append("procedencia", procedencia);
+        formData.append("precio", precio);
+        formData.append("numFactura", factuara);
+        formData.append("idHerramienta", id)
+        await fetch('../BLL/Herramientas.php?opc=editarHerramienta',
+            {
+                method: 'POST',
+                body: formData
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
                 }
-            }
+                else {
+                    MostrarMensajeResultado("Ha ocurrido un error " + response.statusText, false, mensajesResultado);
+                    console.log(response);
+                }
+            })
+            .then((data) => {
+                if (esJsonValido(data)) {
 
-        })
-        .catch((result) => {
-            MostrarMensajeResultado(result, false, mensajesResultado);
-        });
+                    let resultado = JSON.parse(data);
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, mensajesResultado);
+                    if (resultado.esValido) {
+                        listarTotalHerramientas();
+                        $("#txtIdHerramientaEditar").val("")
+                        $("#txtCodigoEditar").val("");
+                        $("#txtCodigoHerramientaActualEditar").val("");
+                        $("#txtDescripcionEditar").val("");
+                        $("#txtMarcaEditar").val("");
+                        $("#txtPrecioEditar").val("");
+                        $("#txtFechaRegistroEditar").val("");
+                        $("#txtProcedenciaEditar").val("");
+                        document.getElementById("cboTipoHerramientaEditar").value = "0";
+                        $("#txtNumFacturaEditar").val("");
+                    }
+                }
 
+            })
+            .catch((result) => {
+                MostrarMensajeResultado(result, false, mensajesResultado);
+            });
+    }
+
+    btnEdiatar.prop('disabled', false);
 }
 
 

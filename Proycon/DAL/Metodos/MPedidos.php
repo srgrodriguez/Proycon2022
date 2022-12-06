@@ -29,16 +29,19 @@ class MPedidos implements IPedidos {
         $this-> conn->close();
         return $result; 
     }
-        public function ListarProyectos() {
-        $sql = "SELECT ID_Proyecto,Nombre FROM tbl_proyectos where Estado = 1 and ID_Proyecto != 1";
+    public function ListarProyectos($idProyecto = "") {
+        if($idProyecto == "")
+           $sql = "SELECT ID_Proyecto,Nombre FROM tbl_proyectos where Estado = 1 and ID_Proyecto != 1";
+        else
+          $sql = "SELECT ID_Proyecto,Nombre FROM tbl_proyectos where ID_Proyecto = $idProyecto and Estado = 1 ";
+
         $result =  $this-> conn->query($sql);
         $this-> conn->close();
         return $result;
     }
 
     public function ListarPedidosProyecto($ID_Proyecto) {
-        $sql ="SELECT p.Consecutivo,p.Fecha,u.Nombre FROM tbl_pedidoproveeduria p, tbl_usuario u WHERE ID_Proyecto = $ID_Proyecto and p.ID_Usuario = u.ID_Usuario order by Consecutivo desc";
-       // $sql ="SELECT *, FROM tbl_pedidoproveeduria WHERE ID_Proyecto = $ID_Proyecto order by Consecutivo desc;";
+        $sql ="SELECT p.Consecutivo,p.Fecha,u.Nombre FROM tbl_pedidoproveeduria p, tbl_usuario u WHERE p.ID_Proyecto = $ID_Proyecto and p.ID_Usuario = u.ID_Usuario order by Consecutivo desc";
         $result =  $this-> conn->query($sql);
         $this-> conn->close();
         return $result;

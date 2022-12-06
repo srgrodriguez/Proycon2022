@@ -30,6 +30,7 @@ function ValidarLogin($Usuario, $Pass) {
             $_SESSION['Nombre'] = $rows["Nombre"];
             $_SESSION['ID_Usuario'] = $rows["ID_Usuario"];
             $_SESSION['ID_ROL'] = $rows["ID_ROL"];
+            $_SESSION['ID_Proyecto'] = $rows["ID_Proyecto"];
 
             crearSessionesSistema();
             $Resultado->codigo = "1";

@@ -23,6 +23,9 @@ if (isset($_GET['opc'])) {
     else if ($_GET['opc']=="cambioNom") {
         CambiarNombre($_POST['ID_Usuario'], $_POST['nuevoNombre']);
     }
+    elseif($_GET['opc']=="getUser"){
+        ObtenerDatosUsuarioGetJson();
+    }
 }
 
 
@@ -265,6 +268,16 @@ function cargarComboBox(){
         echo  json_encode(Log::GuardarEvento($ex, "cargarComboBox"));
     }
 }
+
+function ObtenerDatosUsuarioGetJson(){
+    $ID_Usuario = $_GET["idUsuario"];
+     $bdUsuario = new MUsuarios();
+     $result = $bdUsuario->ObtenerDatosUsuario($ID_Usuario);
+     if ($result != null)  {
+         $infoUsuario = mysqli_fetch_array($result, MYSQLI_ASSOC);
+         echo json_encode($infoUsuario);
+     }
+ }
 
 
 

@@ -10,7 +10,7 @@ class MUsuarios implements IUsuarios {
     }
 
     public function ObtenerDatosUsuario($ID_Usuario) {
-        $sql = "SELECT u.ID_Usuario,r.Nombre as Rol,u.Nombre,u.Usuario,u.Pass from tbl_usuario u , tbl_rol r
+        $sql = "SELECT u.ID_Usuario,r.Nombre as Rol,u.Nombre,u.Usuario,u.Pass,u.ID_Proyecto,u.ID_Rol from tbl_usuario u , tbl_rol r
                 WHERE u.ID_Usuario = $ID_Usuario and u.ID_Rol=r.ID_Rol; ";
         $result = $this->conn->query($sql);
         $this->conn->close();
@@ -138,7 +138,7 @@ class MUsuarios implements IUsuarios {
                 return -1;
             }
 
-            $sql = "Select Nombre,ID_Usuario,Usuario,Pass,ID_ROL from tbl_usuario where Usuario =?";
+            $sql = "Select Nombre,ID_Usuario,Usuario,Pass,ID_ROL,ID_Proyecto from tbl_usuario where Usuario =?";
 
 
             $filtradoCadena = LimpiarCadenaCaracter($this->conn, $Usuario);

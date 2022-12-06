@@ -6,8 +6,10 @@ require_once '..//DATA/PedidoProveeduria.php';
 require_once 'Autorizacion.php';
 require_once '../DAL/Log.php';
 require_once '../DAL/FuncionesGenerales.php';
+require_once '../DAL/Constantes.php';
 require_once '../DAL/Log.php';
-require_once '../DAL/FuncionesGenerales.php';
+require_once '../DATA/Resultado.php';
+require_once '..//DATA/Usuarios.php';
 
 if (!isset($_SESSION)) {
     session_start();
@@ -157,19 +159,23 @@ function ObternerCosecutivoPedido(){
 function ListarProyectos(){
     $bdPedidos = new MPedidos();
     try {
-        $result =  $bdPedidos->ListarProyectos(); 
-        if (mysqli_num_rows($result)> 0) {
-            $concatenar="";
-            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-              $concatenar.= "<section class='proyecto'>
-                              <h3> <a href='javascript:void(0);' id='".$fila['ID_Proyecto']."' onclick='MostrarPedidosProyecto(".$fila['ID_Proyecto'].")'>".$fila['Nombre']."</a></h3>  
-                             </section>";  
+
+        $usuario = UsuarioLogueado();
+        if ($usuario->ID_Rol == Constantes::RolBodegaProyecto)
+            $result = $bdPedidos->ListarProyectos($usuario->IdProyecto);
+        else
+            $result = $bdPedidos->ListarProyectos();
+        if (mysqli_num_rows($result) > 0) {
+            $concatenar = "";
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= "<section class='proyecto'>
+                              <h3> <a href='javascript:void(0);' id='" . $fila['ID_Proyecto'] . "' onclick='MostrarPedidosProyecto(" . $fila['ID_Proyecto'] . ")'>" . $fila['Nombre'] . "</a></h3>  
+                             </section>";
             }
-            echo $concatenar;         
-        }
-        else{
-            //echo '<script>alert("Ocurrio un error a la Hora de LISTAR LOS Proyectos")</script>';  
-            
+            echo $concatenar;
+        } else {
+            echo 'No hay datos para mostrar';  
+
         }
     } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "ListarProyectos");
@@ -181,26 +187,23 @@ function ListarPedidosProyecto($ID_Proyecto){
     $bdPedidos = new MPedidos();
     try {
         $result = $bdPedidos->ListarPedidosProyecto($ID_Proyecto);
-        if (mysqli_num_rows($result)>0) {
+        if ($result != null && mysqli_num_rows($result) > 0) {
             $concatenar = "";
-           $concatenar.="<table class='tablasG'>"
-                        . "<thead>"
-                        . "<th>#Boleta</th>"
-                         ."<th>Generada por</th>"
-                        . "<th>Fecha</th>"
-                        . "<th></th>"
-                        . "</thead><tbody>";
-            while ($fila = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-             $concatenar.="<tr><td>".$fila['Consecutivo']."</td><td>".$fila['Nombre']."</td><td>".$fila['Fecha']."</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";   
-                        
+            $concatenar .= "<table class='tablasG'>"
+                . "<thead>"
+                . "<th>#Boleta</th>"
+                . "<th>Generada por</th>"
+                . "<th>Fecha</th>"
+                . "<th></th>"
+                . "</thead><tbody>";
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $concatenar .= "<tr><td>" . $fila['Consecutivo'] . "</td><td>" . $fila['Nombre'] . "</td><td>" . $fila['Fecha'] . "</td><td><a href='javascript:void(0);' onclick='VerPedido(this)'>Ver</a></td></tr>";
             }
-            $concatenar.="</tbody></table>";
+            $concatenar .= "</tbody></table>";
             echo $concatenar;
-            
+        } else {
+            echo '<h3>No hay pedidos registrados</h3>';
         }
-           else{
-           echo '<h3>No hay pedidos registrados</h3>';    
-       }
     } catch (\Throwable $ex) {
         echo Log::GuardarEvento($ex, "ListarPedidosProyecto");
     }   

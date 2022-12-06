@@ -7,6 +7,7 @@ class Usuarios {
     public  $Usuario;
     public $Password;
     public $Estado;
+    public $IdProyecto;
     
     function Usuarios() {
         

@@ -10,6 +10,7 @@ class Constantes{
    public const EstadoOK = "1";
    public const Bodega =1;
    public const RolAdminBodega = "5";
+   public const RolBodegaProyecto = "6";
    public const ImagenReportes = "../../resources/imagenes/proycon.png";
 
   
