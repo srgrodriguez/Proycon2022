@@ -25,16 +25,14 @@ ValidarIniciodeSession();
     <script src="../js/jsMenu.js" type="text/javascript"></script>
     <script src="../js/jsLogin.js" type="text/javascript"></script>
     <script src="../js/jsDesecho.js" type="text/javascript"></script>
-    <!-- <script src="../js/Notificaciones.js" type="text/javascript"></script>-->
+    <?php if ($_SESSION['ID_ROL'] == 4 || $_SESSION['ID_ROL'] == 5) { ?>
+        <script src="../js/Notificaciones.js" type="text/javascript"></script>
+        <script src="../js/push.min.js" type="text/javascript"></script>
+    <?php } ?>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 </head>
-
-
-
-
-
 <body class="body">
     <header id="header">
         <?php

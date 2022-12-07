@@ -13,7 +13,7 @@
             Log::GenerarArchivoLog($e->getMessage());
         }
         $resultado->esValido = false;
-        $resultado->mensaje = "Ocurrio un error al procesar la transacción";
+        $resultado->mensaje = "Ocurrio un error al procesar la transacción ".$exception->getMessage();
         return json_encode($resultado);
        
     }
@@ -30,7 +30,7 @@
         }
 
         $resultado->esValido = false;
-        $resultado->mensaje = "Ocurrio un error al procesar la transacción";
+        $resultado->mensaje = "Ocurrio un error al procesar la transacción ".$mensaje;
         return json_encode($resultado);
        
     }

@@ -14,49 +14,83 @@ class MHerramientas implements IHerrramientas
 
     public function FacturacionReparacion(Factura $Facturacion)
     {
-        $Facturacion->Codigo = LimpiarCadenaCaracter($this->conn, $Facturacion->Codigo);
-        $Facturacion->NumFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->NumFactura);
-        $Facturacion->DescripcionFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->DescripcionFactura);
-        $Facturacion->FechaEntrada = LimpiarCadenaCaracter($this->conn, $Facturacion->FechaEntrada);
-        $Facturacion->NumBoleta = LimpiarCadenaCaracter($this->conn, $Facturacion->NumBoleta);
-        $sql = "UPDATE tbl_reparacionherramienta SET 
-		ID_FacturaReparacion=" . $Facturacion->NumFactura . ",
-		Descripcion='" . $Facturacion->DescripcionFactura . "', 
-		FechaEntrada='" . $Facturacion->FechaEntrada . "', 
-		MontoReparacion=" . $Facturacion->CostoFactura . "
-		where Codigo = '$Facturacion->Codigo'
-		and NumBoleta = '$Facturacion->NumBoleta'";
+        mysqli_begin_transaction($this->conn);
+        $resultado = new Resultado();
+        $resultado->esValido = false;
+        try {
+            $Facturacion->Codigo = LimpiarCadenaCaracter($this->conn, $Facturacion->Codigo);
+            $Facturacion->NumFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->NumFactura);
+            $Facturacion->DescripcionFactura = LimpiarCadenaCaracter($this->conn, $Facturacion->DescripcionFactura);
+            $Facturacion->FechaEntrada = LimpiarCadenaCaracter($this->conn, $Facturacion->FechaEntrada);
+            $Facturacion->NumBoleta = LimpiarCadenaCaracter($this->conn, $Facturacion->NumBoleta);
+            $sqlUpdateReparacion = "UPDATE tbl_reparacionherramienta SET 
+            ID_FacturaReparacion=" . $Facturacion->NumFactura . ",
+            Descripcion='" . $Facturacion->DescripcionFactura . "', 
+            FechaEntrada='" . $Facturacion->FechaEntrada . "', 
+            MontoReparacion=" . $Facturacion->CostoFactura . "
+            where Codigo = '$Facturacion->Codigo'
+            and NumBoleta = '$Facturacion->NumBoleta'";
 
 
-        $sql3 = "Delete from tbl_tempoherramientareparacion where Codigo = '$Facturacion->Codigo'";
-        // Insetar el transtalo de Bodega al proyecto 
-        $sql4 = "select Ubicacion from tbl_herramientaelectrica where Codigo = '$Facturacion->Codigo'";
-        $ubi = $this->conn->query($sql4);
-        if ($ubi <> null) {
-            while ($fila = mysqli_fetch_array($ubi, MYSQLI_ASSOC)) {
-                $ubicacion = $fila['Ubicacion'];
+            $sqlEliminarEquipoReparacion = "Delete from tbl_tempoherramientareparacion where Codigo = '$Facturacion->Codigo'";
+            // Insetar el transtalo de Bodega al proyecto 
+            $sqlObtenerUbicacion = "select Ubicacion from tbl_herramientaelectrica where Codigo = '$Facturacion->Codigo'";
+            $ubicacion = "";
+            if ($ubi =  $this->conn->query($sqlObtenerUbicacion)) {
+                while ($fila = mysqli_fetch_array($ubi, MYSQLI_ASSOC)) {
+                    $ubicacion = $fila['Ubicacion'];
+                }
             }
-        }
-        //Si la ubicacion despues de que regresa de reparacion es bodega se mantiene disponible si no se pone en estado no dispobible
-        if ($ubicacion == 1)
-            $sql2 = "UPDATE tbl_herramientaelectrica SET Disposicion = 1,Estado = 1 
-		WHERE Codigo = '$Facturacion->Codigo'";
-        else {
-            $sql2 = "UPDATE tbl_herramientaelectrica SET Disposicion = 0,Estado = 1 
-		WHERE Codigo = '$Facturacion->Codigo'";
-        }
-        //Insertar en el historial
-        if ($sql4 <> null) {
-            $sql5 = "Insert into tbl_historialherramientas (Codigo,Ubicacion,Destino,NumBoleta,Fecha) values ('" . $Facturacion->Codigo . "','" . "1000" . "','" . $ubicacion . "','" . $Facturacion->NumBoleta . "'," . "'$Facturacion->FechaEntrada');";
-            $this->conn->query($sql5);
-        }
+            //Si la ubicacion despues de que regresa de reparacion es bodega se mantiene disponible si no se pone en estado no dispobible
+            if ($ubicacion == 1)
+                $sqlActualizarHerramienta = "UPDATE tbl_herramientaelectrica SET Disposicion = 1,Estado = 1 
+            WHERE Codigo = '$Facturacion->Codigo'";
+            else {
+                $sqlActualizarHerramienta = "UPDATE tbl_herramientaelectrica SET Disposicion = 0,Estado = 1 
+            WHERE Codigo = '$Facturacion->Codigo'";
+            }
 
-        $this->conn->query($sql2);
-        $this->conn->query($sql3);
+            $sqlInsertarHistorial = "Insert into tbl_historialherramientas (Codigo,Ubicacion,Destino,NumBoleta,Fecha) values ('" . $Facturacion->Codigo . "','" . "1000" . "','" . $ubicacion . "','" . $Facturacion->NumBoleta . "'," . "'$Facturacion->FechaEntrada');";
+            //Insertar en el historial
 
-        $resultado = $this->conn->query($sql);
-        $this->conn->close();
-        return $resultado;
+
+            if ($ubicacion != "") {
+                if ($this->conn->query($sqlUpdateReparacion)) {
+                    if ($this->conn->query($sqlEliminarEquipoReparacion)) {
+                        if ($this->conn->query($sqlInsertarHistorial)) {
+                            if ($this->conn->query($sqlActualizarHerramienta)) {
+                                $resultado->esValido = true;
+                                $resultado->mensaje = "Se procesaron los datos correctamente";
+                            }
+                            else
+                              $resultado->mensaje = "Ocurrio al actualizar el equipo";
+                        }
+                        else
+                           $resultado->mensaje = "Ocurrio un error al insertar el historial del equipo";
+                    }
+                    else
+                        $resultado->mensaje = "Ocurrio un error al sacar el equipo de reparación";
+                }
+                else
+                  $resultado->mensaje = "Ocurrio un error al ingresar la factura de la herramienta";
+            }
+            else
+                $resultado->mensaje = "No se puedo obtener la ubicación actual del equipo";
+            
+
+            if ($resultado->esValido) {
+                mysqli_commit($this->conn);
+            } else {
+                mysqli_rollback($this->conn);
+            }
+
+            $this->conn->close();
+            return $resultado;
+        } catch (\Throwable $th) {
+            mysqli_rollback($this->conn);
+            Log::GuardarEvento($th, "FacturacionReparacion");
+            $resultado->mensaje = "Falló el proceso de facturación ".$th->getMessage();
+        }
     }
 
     public function listaEnviadas($codigo)
@@ -76,7 +110,8 @@ class MHerramientas implements IHerrramientas
         return $result;
     }
 
-    public function BuscarMaquinariaPorCodigo($codigo) {
+    public function BuscarMaquinariaPorCodigo($codigo)
+    {
         $sql = "SELECT tt.ID_Tipo,Codigo, tt.Descripcion,th.Descripcion AS DesH,Marca,th.Precio,th.Procedencia,th.FechaIngreso from tbl_herramientaelectrica th, tbl_tipoherramienta tt
                 where th.Codigo= '" . $codigo . "' AND th.ID_Tipo = tt.ID_Tipo AND tt.TipoEquipo = 'M'";
         $result = $this->conn->query($sql);
@@ -569,7 +604,7 @@ class MHerramientas implements IHerrramientas
          tbl_tipoherramienta b,
          tbl_proyectos c 
          where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY b.ID_Tipo";
-         $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $this->conn->close();
@@ -594,7 +629,7 @@ class MHerramientas implements IHerrramientas
         tbl_tipoherramienta b,
         tbl_proyectos c 
         where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto ORDER BY Disposicion;";
-        
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();
