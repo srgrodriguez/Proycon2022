@@ -548,7 +548,8 @@ function AgregarMaterialPedido() {
                         $("#ModalDefaul").modal("show");
                         $("#MensajeErrorMaterial").html("<strong>Error de Conexion con el servidor de Base de datos</strong>");
                     } else {
-                        $("#ContenidoPedido").html($("#ContenidoPedido").html() + respuesta);
+                        //$("#ContenidoPedido").html($("#ContenidoPedido").html() + respuesta);
+                        $("#tbl_Materiales").append(respuesta);
                         $("#txtCodigoMaterial").val("");
                         $("#txtCantidadMaterial").val("");
                     }

@@ -773,6 +773,7 @@ function RegistrarHerramientas()
         $herramienta->ubicacion = "1";
         $herramienta->precio = $_POST['Precio'];
         $herramienta->numFactura = $_POST['NumFactura'];
+        $herramienta->monedaCompra = $_POST['Moneda'];
         $resultado =  $bdHerramienta->RegistrarHerramientas($herramienta);
         echo $resultado;
 
@@ -1132,7 +1133,8 @@ function GenerarResultadoHTMLTablaPrincipal($result)
         $Usuario =      UsuarioLogueado();
         $resultadoHTML = "";
         while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $Monto = "¢" . number_format($fila['Precio'], 2, ",", ".");
+            $monedaCompra = $fila['MonedaCompra'] == 'D' ? "$":"¢"; 
+            $Monto = $monedaCompra . number_format($fila['Precio'], 2, ",", ".");
             $monedaAlquiler = $fila['CodigoMonedaCobro'] == 'D' ? "$":"¢"; 
             $precioAlquiler = $monedaAlquiler.($fila['PrecioAlquiler']!= ""? number_format($fila['PrecioAlquiler'], 2, ",", "."):"0.00");
 
@@ -1157,7 +1159,7 @@ function GenerarResultadoHTMLTablaPrincipal($result)
                     <td>" . $fila['Tipo'] . "</td>
                     <td>" . $precioAlquiler . "</td>
                     <td>" . $Fecha . "</td>
-            <td>" . $Monto . "</td>
+                    <td>" . $Monto . "</td>
                     <td>" . $fila['Disposicion'] . "</td>
                     <td>" . $fila['Nombre'] . "</td>
                     <td>" . $fila['Estado'] . "</td>
@@ -1184,4 +1186,14 @@ function GenerarResultadoHTMLTablaPrincipal($result)
     } catch (Exception $ex) {
         echo  json_encode(Log::GuardarEvento($ex, "GenerarResultadoHTMLTablaPrincipal"));
     }
+}
+
+
+function ObtenerComboBoxMonedas($id)
+{
+    echo " <select id='$id' name='$id' class='form-control '>
+            <option value='0' selected='true'>Seleccione la moneda</option>
+            <option value='C'>Colones</option>
+            <option value='D'>Dólares</option>
+          </select>";
 }
