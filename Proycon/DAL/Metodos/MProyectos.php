@@ -65,7 +65,7 @@ class MProyectos implements IProyectos {
     public function ListaHerramientaProyecto($idProyecto) {
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
         $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
-            tp.ID_Proyecto = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'H';
+            th.Ubicacion = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'H';
             ;";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idProyecto);

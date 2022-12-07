@@ -282,9 +282,9 @@ function BuscaAgregaMaterial($idMaterial, $cant) {
                 } else {
                     $concatenar = "
                                 <tr>
-                                    <td class='codTablaHD'>$material->Codigo</td>
+                                    <td class='codTabla'>$material->Codigo</td>
                                     <td class='cantidadTabla'>$cant</td>
-                                    <td>$material->Nombre</td>
+                                    <td class='descripcionTabla'>$material->Nombre</td>
                                 <td style='width: 25px;'>
                                     <button title='Quitar Fila' class='btnRemoverFila' type='button'  onclick='Remover(this)'>
                                             <img title='Eliminar Fila' src='../resources/imagenes/remove.png' alt='' width='20px'/>

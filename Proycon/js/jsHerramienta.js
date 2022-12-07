@@ -667,13 +667,14 @@ function LimpiarColorHerramienta() {
 
 function GuardarHerramienta() {
     var consecutivoHerramienta = $('#txtCodigoH2').val()
-    var validaciones = 7;
+    var validaciones = 8;
     var validardescripcion = $('#txtDescripcionH').val()
     var validarmarca = $('#txtMarcaH').val()
     var validarprocedencia = $('#txtProcedenciaH').val()
     var validarfecha = $('#txtFechaRegistroH').val()
     var validartipo = $('#comboHerramientaTipoH').val()
     var validarprecio = $('#txtPrecioH').val()
+    var validaMoneda = $('#cboMonedaAgregar').val()
 
     var datos = {
         "Codigo": $('#txtCodigoH2').val(),
@@ -683,7 +684,8 @@ function GuardarHerramienta() {
         "Fecha": $('#txtFechaRegistroH').val(),
         "Tipo": $('#comboHerramientaTipoH').val(),
         "Precio": $('#txtPrecioH').val(),
-        "NumFactura": $('#txtNumFacturaH').val()
+        "NumFactura": $('#txtNumFacturaH').val(),
+        "Moneda" : $('#cboMonedaAgregar').val()
     };
     // Valida el campo de la Descripcion
 
@@ -754,6 +756,16 @@ function GuardarHerramienta() {
         $("#comboHerramientaTipoH").css('border', '1px solid Gainsboro');
         validaciones = validaciones - 1;
     }
+
+    // Valida campo Moneda
+    if (validaMoneda == 0) {
+        $("#cboMonedaAgregar").css('border', '1px solid red');
+        validaciones = validaciones + 1;
+    } else {
+        $("#cboMonedaAgregar").css('border', '1px solid Gainsboro');
+        validaciones = validaciones - 1;
+    }
+
 
     if (validaciones == 0) {
 

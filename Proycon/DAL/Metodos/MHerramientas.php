@@ -153,6 +153,7 @@ class MHerramientas implements IHerrramientas
          IF(a.Estado = '1','Buena','En Reparacion')as Estado,
          a.Estado as numEstado,
          Precio,
+         MonedaCompra,
          b.PrecioEquipo as PrecioAlquiler,
          b.CodigoMonedaCobro,
          b.CodigoFormaCobro 
@@ -286,7 +287,7 @@ class MHerramientas implements IHerrramientas
             $this->conn->close();
             return 0;
         } else {
-            $sql = "Insert into tbl_herramientaelectrica(ID_Tipo,Codigo,Marca,Descripcion,FechaIngreso,Estado,Disposicion,Procedencia,Ubicacion,Precio,NumFactura) values(?,?,?,?,?,?,?,?,?,?,?)";
+            $sql = "Insert into tbl_herramientaelectrica(ID_Tipo,Codigo,Marca,Descripcion,FechaIngreso,Estado,Disposicion,Procedencia,Ubicacion,Precio,NumFactura,MonedaCompra) values(?,?,?,?,?,?,?,?,?,?,?,?)";
             if ($stmt = $this->conn->prepare($sql)) {
                 $Herramientas->codigo = LimpiarCadenaCaracter($this->conn, $Herramientas->codigo);
                 $Herramientas->marca = LimpiarCadenaCaracter($this->conn, $Herramientas->marca);
@@ -298,7 +299,8 @@ class MHerramientas implements IHerrramientas
                 $Herramientas->ubicacion = LimpiarCadenaCaracter($this->conn, $Herramientas->ubicacion);
                 $Herramientas->precio = LimpiarCadenaCaracter($this->conn, $Herramientas->precio);
                 $Herramientas->numFactura = LimpiarCadenaCaracter($this->conn, $Herramientas->numFactura);
-                $stmt->bind_param("issssiisiis", $Herramientas->tipo, $Herramientas->codigo, $Herramientas->marca, $Herramientas->descripcion, $Herramientas->fechaIngreso, $Herramientas->estado, $Herramientas->disposicion, $Herramientas->procedencia, $Herramientas->ubicacion, $Herramientas->precio, $Herramientas->numFactura);
+                $Herramientas->monedaCompra = LimpiarCadenaCaracter($this->conn, $Herramientas->monedaCompra);
+                $stmt->bind_param("issssiisiiss", $Herramientas->tipo, $Herramientas->codigo, $Herramientas->marca, $Herramientas->descripcion, $Herramientas->fechaIngreso, $Herramientas->estado, $Herramientas->disposicion, $Herramientas->procedencia, $Herramientas->ubicacion, $Herramientas->precio, $Herramientas->numFactura,$Herramientas->monedaCompra);
                 $OK = $stmt->execute();
             } else {
                 echo "Error de sintaxis en consulta SQL ";
@@ -710,7 +712,7 @@ class MHerramientas implements IHerrramientas
         $$Cod = LimpiarCadenaCaracter($this->conn, $Cod);
         $sql = "select ID_Herramienta,Codigo,Marca,NumFactura,Procedencia,b.ID_Tipo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
         b.CodigoMonedaCobro,
-        b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
+        b.CodigoFormaCobro, MonedaCompra  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Codigo = ? ";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $Cod);
         $stmt->execute();

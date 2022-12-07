@@ -242,9 +242,16 @@ ValidarIniciodeSession();
                                 </div>
 
                                 <div class="form-group">
+                                        <label class="col-lg-2">Moneda</label>
+                                        <div class="col-lg-8">
+                                            <?php ObtenerComboBoxMonedas("cboMonedaAgregar") ?>
+                                        </div>
+                                    </div>
+
+                                <div class="form-group">
                                     <label class="col-lg-2">Precio</label>
                                     <div class="col-md-8">
-                                        <input type="text" name="txtPrecioH" id="txtPrecioH" class="form-control " onkeypress="return soloNumeros(event)" placeholder="Precio" />
+                                        <input type="text" name="txtPrecioH" id="txtPrecioH" class="form-control " onkeypress="return AceptarSoloNumerosMonto(event);" onchange="Formateo_Monto(this)" placeholder="Precio" />
                                     </div>
                                 </div>
 
