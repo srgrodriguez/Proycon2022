@@ -80,7 +80,10 @@ function EliminarTipoHerramienta(codigo, tipoEquipo) {
             })
             .then((data) => {
                 if (esJsonValido(data)) {
-                    let resultado = JSON.parse(data);
+                    let resultado = JSON.parse(data);                 
+                    window.scroll({
+                        top: 0,
+                      });
                     listarTipoHerramientas(tipoEquipo);
 
                     MostrarMensajeResultado(resultado.mensaje, resultado.esValido, idMensajesResultado);
