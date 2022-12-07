@@ -15,9 +15,9 @@ class MTrasladarEquipo implements ITrasladarEquipo
         $resultado = new Resultado();
         $resultado->esValido = true;
         $resultado->mensaje = "Se traslado el equipo correctamente";
-       // $fechaActual = date('d/m/y');
         $CodigosProcesados = [];
         $CodigoEquipoQueFallo = "";
+        mysqli_begin_transaction($this->conn);
         try {
             $insertarBoleta = true;;
             foreach ($equiposTrasladar as &$equipo) {
@@ -96,11 +96,16 @@ class MTrasladarEquipo implements ITrasladarEquipo
             }
             $this->conn->close();
             if (!$resultado->esValido) {
+                mysqli_rollback($this->conn);
                 $class = new MTrasladarEquipo();
                 $class->ReversarTrasaldos($CodigosProcesados);
             }
+            else{
+                mysqli_commit($this->conn);
+            }
             return $resultado;
         } catch (\Throwable $th) {
+            mysqli_rollback($this->conn);
             $resultado->esValido = false;
             $resultado->mensaje = "Ocurrio un error al realizar el traslado del equipo";
             echo Log::GuardarEvento($th, "TrasdalarEquipo");

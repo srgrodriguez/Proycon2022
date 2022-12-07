@@ -90,6 +90,8 @@ class MHerramientas implements IHerrramientas
             mysqli_rollback($this->conn);
             Log::GuardarEvento($th, "FacturacionReparacion");
             $resultado->mensaje = "Falló el proceso de facturación ".$th->getMessage();
+            $this->conn->close();
+            return $resultado;
         }
     }
 

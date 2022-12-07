@@ -760,7 +760,9 @@ ValidarIniciodeSession();
 
 
                         </form>
+                         <div id="mensajesResultadoFacturarReparacion">
 
+                         </div>
 
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success btn-estilos" onclick="ElaborarFactura()">Guardar</button>

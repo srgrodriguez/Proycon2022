@@ -13,6 +13,10 @@ require_once 'Autorizacion.php';
 require_once '../DAL/Constantes.php';
 require_once '../DAL/FuncionesGenerales.php';
 require_once '../DAL/Log.php';
+require_once '../DAL/Interfaces/ITrasladarEquipo.php';
+require_once '..//DAL/Metodos/MTrasladarEquipo.php';
+require_once '../DATA/Resultado.php';
+require_once '../DATA/TrasladarEquipo.php';
 
 Autorizacion();
 if (isset($_GET['opc'])) {
@@ -462,11 +466,12 @@ function ConsecutivoPedido() {
 function GuardarPedido($idProyecto, $idUsuario, $consecutivo, $fecha, $datos, $TipoPedido) {
     try{
         $arreglo = json_decode($datos, true);
-        $tam = sizeof($arreglo);
-        $bdProyectos = new MProyectos();
-        $bdProyectos->RegistrarPedido($consecutivo, $idProyecto, $fecha, $idUsuario, $TipoPedido);
+      
         $result = 0;
-        if ($TipoPedido == 1) {
+        if ($TipoPedido == 1) {//Materiales
+            $tam = sizeof($arreglo);
+            $bdProyectos = new MProyectos();
+            $bdProyectos->RegistrarPedido($consecutivo, $idProyecto, $fecha, $idUsuario, $TipoPedido);
             $values = "";
             for ($i = 0; $i < $tam; $i++) {
                 for ($j = 0; $j < 2; $j++) {
@@ -475,29 +480,37 @@ function GuardarPedido($idProyecto, $idUsuario, $consecutivo, $fecha, $datos, $T
                 }
             }
             $result = $bdProyectos->RegistrarPedidoMaterial($values);
-        } else if ($TipoPedido == 2) {
-            // echo $tam;
-            $values = "";
-            for ($i = 0; $i < $tam; $i++) {
-                for ($j = 0; $j < 2; $j++) {
-                    $values .= "(" . $consecutivo . "," . $idProyecto . ",'" . $arreglo[$i][$j + 1] . "',1,'" . $fecha . "'," . $arreglo[$i][$j] . "),";
-                    $j = 2;
-                }
-            }
+        } else if ($TipoPedido == 2) {//Herramienta eléctrica
 
-            $result = $bdProyectos->RegistrarPedidoHerramientas($values);
+            $NumBoleta = ConsecutivoPedido();
+            $equipoTrasladar =[];
+            foreach ($arreglo as &$equipo) {
+                $trasladar = new TrasladarEquipo();
+                $trasladar->NumBoleta =  $NumBoleta;
+                $trasladar->CodigoEquipo = $equipo[1];
+                $trasladar->IdProyectoDestino =  $idProyecto;
+                $trasladar->IdUsuario = $idUsuario;
+                array_push($equipoTrasladar, $trasladar);
+            }
+            $bdTransladarEquipo = new MTrasladarEquipo();
+            $restultado =  $bdTransladarEquipo->TrasdalarEquipo($equipoTrasladar);
+            $result = $restultado->esValido ? 1:0;
 
         }else { // Maquinaria
-            // echo $tam;
-            $values = "";
-            for ($i = 0; $i < $tam; $i++) {
-                for ($j = 0; $j < 2; $j++) {
-                    $values .= "(" . $consecutivo . "," . $idProyecto . ",'" . $arreglo[$i][$j + 1] . "',1,'" . $fecha . "'," . $arreglo[$i][$j] . "),";
-                    $j = 2;
-                }
-            }
+            $NumBoleta = ConsecutivoPedido();
+            $equipoTrasladar =[];
 
-            $result = $bdProyectos->RegistrarPedidoMaquinaria($values);
+             foreach ($arreglo as &$equipo) {
+                $trasladar = new TrasladarEquipo();
+                $trasladar->NumBoleta =  $NumBoleta;
+                $trasladar->CodigoEquipo = $equipo[1];
+                $trasladar->IdProyectoDestino =  $idProyecto;
+                $trasladar->IdUsuario = $idUsuario;
+                array_push($equipoTrasladar, $trasladar);
+            }
+            $bdTransladarEquipo = new MTrasladarEquipo();
+            $restultado =  $bdTransladarEquipo->TrasdalarEquipo($equipoTrasladar);
+            $result = $restultado->esValido ? 1:0;
         }
 
         if ($result == 1) {
@@ -1386,3 +1399,5 @@ function listarSoloHerramienta($idProyecto) {
         echo  json_encode(Log::GuardarEvento($ex, "listarSoloHerramienta"));
     }
 }
+
+

@@ -464,7 +464,7 @@ function GuardarFactura()
         $Facturacion->DescripcionFactura = $_POST['DescripcionFactura'];
         $Facturacion->CostoFactura = $_POST['CostoFactura'];
         $Facturacion->NumBoleta = $_POST['NumBoleta'];
-        echo $bdFacturacion->FacturacionReparacion($Facturacion);
+        echo  json_encode($bdFacturacion->FacturacionReparacion($Facturacion));
     } catch (Exception $ex) {
         echo Log::GuardarEvento($ex, "GuardarTranslado");
     }
