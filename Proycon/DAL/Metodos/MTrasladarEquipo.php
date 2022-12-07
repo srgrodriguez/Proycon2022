@@ -94,7 +94,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
                     break;
                 }
             }
-            $this->conn->close();
+          
             if (!$resultado->esValido) {
                 mysqli_rollback($this->conn);
                 $class = new MTrasladarEquipo();
@@ -103,14 +103,17 @@ class MTrasladarEquipo implements ITrasladarEquipo
             else{
                 mysqli_commit($this->conn);
             }
+            $this->conn->close();
             return $resultado;
         } catch (\Throwable $th) {
             mysqli_rollback($this->conn);
+            $this->conn->close();
             $resultado->esValido = false;
             $resultado->mensaje = "Ocurrio un error al realizar el traslado del equipo";
             echo Log::GuardarEvento($th, "TrasdalarEquipo");
             $class = new MTrasladarEquipo();
             $class->ReversarTrasaldos($CodigosProcesados);
+
             return  $resultado;
         }
     }

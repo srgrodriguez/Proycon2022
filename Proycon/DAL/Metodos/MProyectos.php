@@ -56,7 +56,7 @@ class MProyectos implements IProyectos {
     public function ListarProyectos() {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
-        $sql = "SELECT ID_Proyecto,Nombre,(SELECT DISTINCT ID_Proyecto FROM tbl_notificaciones WHERE ID_Proyecto = tp.ID_Proyecto ) as noti FROM tbl_proyectos tp where Estado = 1";
+        $sql = "SELECT ID_Proyecto,Nombre,(SELECT DISTINCT ID_Proyecto FROM tbl_notificaciones WHERE ID_Proyecto = tp.ID_Proyecto ) as noti FROM tbl_proyectos tp where Estado = 1 order by noti desc;";
         $result = $this->conn->query($sql);
         $this->conn->close();
         return $result;
@@ -138,7 +138,7 @@ class MProyectos implements IProyectos {
     public function MostrarPedidos($TipoPedido, $ID_Proyecto) {
         $TipoPedido = LimpiarCadenaCaracter($this->conn, $TipoPedido);
         $ID_Proyecto = LimpiarCadenaCaracter($this->conn, $ID_Proyecto);
-        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE ID_Proyecto = ? AND TipoPedido= ? and tb.ID_Usuario = tu.ID_Usuario  ORDER BY CONSECUTIVO DESC;";
+        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Proyecto = ? AND TipoPedido= ? and tb.ID_Usuario = tu.ID_Usuario  ORDER BY CONSECUTIVO DESC;";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ii", $ID_Proyecto, $TipoPedido);
         $stmt->execute();
