@@ -1587,7 +1587,7 @@ function EliminarTraslado(evento) {
 // GUARDA LA FACTURA DE LA REPARACION DE LA HERRAMIENTA Y VALIDA SUS CAMPOS
 
 function ElaborarFactura() {
-
+    const idMostrarMensajesResultado = "mensajesResultadoFacturarReparacion";
     var validaciones = 4;
     var validarFactura = $('#txtNunFactura').val();
     var validarFecha = $('#txtFechaFactura').val();
@@ -1654,15 +1654,18 @@ function ElaborarFactura() {
             data: datos,
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=guardarFactura',
-            success: function (resultado) {
-
-                $("#headermodalRegistroGastos").addClass("mensajeCorrecto");
-                $("#tituloRegistrarGasto").html("<strong>Factura registrada correctamente</strong>")
-                limpiarFormFactura();
-                MostrarListaReparaciones();
-                setTimeout(function () {
-                    $('#ModalRegistrarGastos').modal('hide');
-                }, 3000);
+            success: function (data) {
+               
+                if(esJsonValido(data))
+                {
+                    let resultado = JSON.parse(data);
+                    MostrarMensajeResultado(resultado.mensaje, resultado.esValido, idMostrarMensajesResultado);
+                    limpiarFormFactura();
+                    MostrarListaReparaciones();
+                }
+                else{
+                    MostrarMensajeResultado(data, false, idMostrarMensajesResultado);
+                }
 
             },
             error: function (jqXhr, textStatus, errorMessage) {
@@ -1686,8 +1689,7 @@ function ElaborarFactura() {
 
         });
     } else {
-        $("#headermodalRegistroGastos").addClass("mensajeError");
-        $("#tituloRegistrarGasto").html("<strong>Debes llenar todos los campos del Formulario</strong>");
+        MostrarMensajeResultado("Debes llenar todos los campos del Formulario", false, idMostrarMensajesResultado);
     }
 
     setTimeout(function () {
