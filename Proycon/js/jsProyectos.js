@@ -1139,12 +1139,10 @@ function GuardarBoletaPedido(opc) {
                     var i;
                     var j;
                     if (numFilas > 0) {
-                        //alert("numFilas " +numFilas);
                         for (i = 0; i < numFilas; i++) {
                             matriz[i] = new Array(numFilas);
                             for (j = 0; j < 2; j++) {
                                 matriz[i][j] = document.getElementById("tbl_P_Maquinaria").rows[cont].cells[j].innerHTML;
-                            //console.log( matriz[i][j]);
                             }
                             cont++;
                         }

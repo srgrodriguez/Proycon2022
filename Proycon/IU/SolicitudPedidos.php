@@ -3,7 +3,7 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
 ?>
 <!DOCTYPE html>
 <html>
-    <head>
+    <head> 
         <meta charset="UTF-8">
 		<link rel="icon" href="resources\imagenes\favicon.ico"  type="image/x-icon">
         <title>Solicitud Pedido</title>
@@ -11,7 +11,6 @@ session_start();require_once '../BLL/Autorizacion.php';ValidarIniciodeSession();
         <meta charset="UTF-8">
         <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <title>Solicitud de pedidos</title>
         <link rel="stylesheet" type="text/css" href="../css/estilos.css"/>
         <link href="../css/responsivecss.css" rel="stylesheet" type="text/css"/>
         <link href="../fonts/icon/style.css" rel="stylesheet" type="text/css"/>
