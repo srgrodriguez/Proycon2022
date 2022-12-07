@@ -836,11 +836,11 @@ class MHerramientas implements IHerrramientas
         if ($_SESSION['ID_ROL'] == '4') {
             $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
             b.CodigoMonedaCobro,
-            b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
+            b.CodigoFormaCobro, a.MonedaCompra  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and b.Descripcion like ? ";
         } else {
             $sql = "select Codigo, b.Descripcion as Tipo,a.Descripcion, FechaIngreso, IF(Disposicion = '1','Disponible','No Disponible')as Disposicion, c.Nombre,IF(a.Estado = '1','Buena','En Reparacion')as Estado,a.Estado as numEstado,Precio,b.PrecioEquipo as PrecioAlquiler,
             b.CodigoMonedaCobro,
-            b.CodigoFormaCobro  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Disposicion = 1 and a.Estado = 1 and b.Descripcion LIKE '%" . $consulta . "%'";
+            b.CodigoFormaCobro, a.MonedaCompra  from tbl_herramientaelectrica a, tbl_tipoherramienta b, tbl_proyectos c where a.ID_Tipo = b.ID_Tipo and a.Ubicacion = c.ID_Proyecto and a.Disposicion = 1 and a.Estado = 1 and b.Descripcion LIKE ? ";
         }
         if ($stmt = $this->conn->prepare($sql)) {
             $like = "%" . $consulta . "%";
