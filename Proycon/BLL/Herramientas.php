@@ -1105,6 +1105,7 @@ function ActualizarHerramientaElectrica()
         $maquinaria->precio = str_replace(",", "", $_POST["precio"]);;
         $maquinaria->numFactura = $_POST["numFactura"];
         $maquinaria->idHerramienta = $_POST["idHerramienta"];
+        $maquinaria->monedaCompra = $_POST["moneda"];
 
         if ($_POST["codigoNuevo"] != $_POST["codigoActual"]) {
             $existeMaquinaria = $bdMaquinaria->BuscarMaquinariaPorCodigo($maquinaria->codigo);

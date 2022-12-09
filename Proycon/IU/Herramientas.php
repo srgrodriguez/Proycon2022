@@ -246,7 +246,7 @@ ValidarIniciodeSession();
                                         <div class="col-lg-8">
                                             <?php ObtenerComboBoxMonedas("cboMonedaAgregar") ?>
                                         </div>
-                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label class="col-lg-2">Precio</label>
@@ -367,6 +367,13 @@ ValidarIniciodeSession();
                                     <div class="col-md-8">
                                         <textarea type="text" name="txtMarcaEditar" id="txtMarcaEditar" class="form-control " placeholder="Marca"></textarea>
                                     </div>
+                                </div>
+
+                                <div class="form-group">
+                                        <label class="col-lg-2">Moneda</label>
+                                        <div class="col-lg-8">
+                                            <?php ObtenerComboBoxMonedas("cboMonedaEditar") ?>
+                                        </div>
                                 </div>
 
                                 <div class="form-group">

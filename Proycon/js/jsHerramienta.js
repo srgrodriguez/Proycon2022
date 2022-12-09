@@ -2402,6 +2402,7 @@ function OpenModalEditarHerramienta(codigo) {
                 $("#txtFechaRegistroEditar").val(equipo.FechaIngreso);
                 $("#txtProcedenciaEditar").val(equipo.Procedencia);
                 document.getElementById("cboTipoHerramientaEditar").value = equipo.ID_Tipo;
+                document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra;
                 $("#txtNumFacturaEditar").val(equipo.NumFactura)
                 // document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra ==null || equipo.MonedaCompra ==""?"0":equipo.MonedaCompra;
                 $("#ModalEidtarHerramienta").modal()
@@ -2427,8 +2428,8 @@ async function EditarHerramienta() {
     let procedencia = $("#txtProcedenciaEditar").val();
     let tipo = document.getElementById("cboTipoHerramientaEditar").value;
     let factuara = $("#txtNumFacturaEditar").val();
-
-
+    let moneda = $('#cboMonedaEditar').val()
+    
     if (codigo == "")
         MostrarMensajeResultado("Debe ingresar un código", false, mensajesResultado);
     else if (precio == "" || precio == ".00")
@@ -2449,7 +2450,8 @@ async function EditarHerramienta() {
         formData.append("procedencia", procedencia);
         formData.append("precio", precio);
         formData.append("numFactura", factuara);
-        formData.append("idHerramienta", id)
+        formData.append("idHerramienta", id);
+        formData.append("moneda", moneda)
         await fetch('../BLL/Herramientas.php?opc=editarHerramienta',
             {
                 method: 'POST',
@@ -2480,6 +2482,7 @@ async function EditarHerramienta() {
                         $("#txtFechaRegistroEditar").val("");
                         $("#txtProcedenciaEditar").val("");
                         document.getElementById("cboTipoHerramientaEditar").value = "0";
+                        document.getElementById("cboMonedaEditar").value = "0";
                         $("#txtNumFacturaEditar").val("");
                     }
                 }

@@ -25,6 +25,8 @@ ValidarIniciodeSession();
     <script src="../js/jsMenu.js" type="text/javascript"></script>
     <script src="../js/jsLogin.js" type="text/javascript"></script>
     <script src="../js/jsDesecho.js" type="text/javascript"></script>
+    <script src="../js/jsReportesDesecho.js" type="text/javascript"></script>
+    <script src="../js/FuncionesGenerales.js" type="text/javascript"></script>
     <?php if ($_SESSION['ID_ROL'] == 4 || $_SESSION['ID_ROL'] == 5) { ?>
         <script src="../js/Notificaciones.js" type="text/javascript"></script>
         <script src="../js/push.min.js" type="text/javascript"></script>
@@ -47,7 +49,7 @@ ValidarIniciodeSession();
 
             <div class="panel-heading">
                 <h3>Desecho</h3>
-                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="Atras()">
+                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="AtrasP()">
                     <img src="../resources/imagenes/regresar.png" alt="" width="20px;" />
                 </button>
 
@@ -63,7 +65,7 @@ ValidarIniciodeSession();
                         <h4 id="textoHeaderPanelListadoDesechos">Listado Desechos</h4>
 
                         <input type="hidden" name="txtTotalMateriales" value="">
-                        <button id="btnImprimirHerramientas" style="right:-90%;position: relative;top: -35px" class="btn btn-default">
+                        <button id="btnImprimirHerramientas" style="right:-90%;position: relative;top: -35px" class="btn btn-default" onclick="GenerarReporteDesecho()">
                             <img src="../resources/imagenes/Excel.png" alt="" width="20">
                         </button>
 
@@ -509,7 +511,6 @@ ValidarIniciodeSession();
                                 <button  type="button" class="btn btn-default btn-estilos" onclick="Exportar_Pdf('ContenidoPedido_Selecionado')">
                                     <img  src="../resources/imagenes/print.png" alt="" width="30px"/>
                                 </button>
-                                <img  data-toggle='modal' data-target='#ModalAdjuntarCorreo' onclick="ModalAdjuntarCorreo()" id="imgCorreo" src="../resources/imagenes/correo.png" alt="" width="45" />
 
                             </div>
                         </div>
@@ -565,3 +566,19 @@ ValidarIniciodeSession();
         </div>
         <!--FIN Modal Correo Electronico-->  
 
+     <!-- MODAL Ficha técnica -->
+                <div id="ModalLoanding" class="modal fade" role="dialog">
+                    <div class="modal-dialog" style="width:15% ;">
+                        <div class="modal-content">
+                            <div  class="modal-header">
+                                <button id="btnCloseModalLoading" type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" style="text-align:center ;">
+                            <h3>Procesando...</h3>
+                            <img src="../resources/imagenes/loanding.gif" alt="" width="60px"/>                         
+                            <br>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>

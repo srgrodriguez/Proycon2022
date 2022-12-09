@@ -301,7 +301,7 @@ function listarHerramientas($idProyecto){
 
             $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
 
-        // $concatenar .= $form . '<section id="herramientas" class="materiales">';
+         $concatenar .= $form . '<section id="herramientas" class="materiales">';
             $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
                     . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
             $concatenar .= '<div class="titulomaterialesherramienta"><h4>Herramientas</h4></div> ' .
@@ -380,9 +380,9 @@ function listarMaquinaria($idProyecto){
 
         $form = "<form action='../BLL/Reportes/ReportesExcel.php' method='POST'>";
 
-       // $concatenar .= $form . '<section id="herramientas" class="materiales">';
+        $concatenar .= $form . '<section id="herramientas" class="materiales">';
         $concatenar .= "<input type='hidden' name='txtID_Proyecto' id='txtID_Proyecto' value='$idProyecto' />"
-                . "<input type='hidden' name='txtReporteHerramientasP' value='1' />";
+                . "<input type='hidden' name='txtReporteMaquinaria' value='1' />";
         $concatenar .= '<div class="titulomaterialesherramienta"><h4>Maquinaria</h4></div> ' .
                 $btnImprimir . $combobox .
                 $buscarHerramientatxt;

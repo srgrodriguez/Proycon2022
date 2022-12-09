@@ -56,6 +56,49 @@ class MDesecho implements IDesecho {
         return $resultado;     
     }
 
+    public function listarDesechoMaterialesR(){
+        // El id Para Listar el desecho de Materiales es 0
+        $sql = "SELECT tb.Boleta, tb.Cantidad, tb.Codigo, tb.Descripcion, tb.ID_herramienta, tb.ID_Proyecto, td.FechaDesecho, tu.Usuario FROM tbl_bitacoradesechodetalles tb, tbl_bitacoradesecho td, tbl_usuario tu WHERE tb.boleta = td.Boleta and td.ID_Usuario = tu.ID_Usuario and  td.TipoDesecho = 0; ";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+        } else {
+            echo "Error de sintaxis en consulta SQL ";
+        }
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;     
+    }
+
+    
+    public function listarDesechoMaterialesMyH(){
+        // El id Para Listar el desecho de Materiales es 0
+        $sql = "SELECT tb.Boleta, tb.Cantidad, tb.Codigo, tb.Descripcion, tb.ID_herramienta, tb.ID_Proyecto, td.FechaDesecho, tu.Usuario FROM tbl_bitacoradesechodetalles tb, tbl_bitacoradesecho td, tbl_usuario tu WHERE tb.boleta = td.Boleta and td.ID_Usuario = tu.ID_Usuario";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+        } else {
+            echo "Error de sintaxis en consulta SQL ";
+        }
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;     
+    }
+
+    
+    public function listarDesechoHerramientasR(){
+        // El id Para Listar el desecho de herraminetas es 1
+        $sql = "SELECT tb.Boleta, tb.Cantidad, tb.Codigo, tb.Descripcion, tb.ID_herramienta, tb.ID_Proyecto, td.FechaDesecho, tu.Usuario FROM tbl_bitacoradesechodetalles tb, tbl_bitacoradesecho td, tbl_usuario tu WHERE tb.boleta = td.Boleta and td.ID_Usuario = tu.ID_Usuario and  td.TipoDesecho = 1; ";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+        } else {
+            echo "Error de sintaxis en consulta SQL ";
+        }
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        $this->conn->close();
+        return $resultado;     
+    }
 
     public  function ActualizarDesecho(Desecho $desecho){
 
@@ -171,11 +214,11 @@ class MDesecho implements IDesecho {
                 // ******** Se insertan los detalles de la herramienta *****************
 
                         
-                        $sqlD = "INSERT INTO tbl_bitacoradesechodetalles(Boleta, ID_Herramienta, Codigo, Cantidad, Descripcion) VALUES  (?,?,?,?,?);";
+                        $sqlD = "INSERT INTO tbl_bitacoradesechodetalles(Boleta, ID_Herramienta, Codigo, Cantidad, Descripcion, ID_Proyecto) VALUES  (?,?,?,?,?,?);";
                         $stmtD = $this->conn->prepare($sqlD);      
 
                         $stmtD = mysqli_prepare($this->conn, $sqlD);
-                        $stmtD->bind_param("iisis", $Nuevaboleta,$idHerramienta,$item['codigo'] ,$item['cantidad'],$descripcion);
+                        $stmtD->bind_param("iisisi", $Nuevaboleta,$idHerramienta,$item['codigo'] ,$item['cantidad'],$descripcion,$idUbicacion);
                         if (mysqli_stmt_execute($stmtD)) {
                             $ok = mysqli_stmt_insert_id($stmtD);
                         } else {

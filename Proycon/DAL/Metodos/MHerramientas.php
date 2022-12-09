@@ -947,6 +947,7 @@ class MHerramientas implements IHerrramientas
         $maquinaria->procedencia = LimpiarCadenaCaracter($this->conn, $maquinaria->procedencia);
         $maquinaria->precio = LimpiarCadenaCaracter($this->conn, $maquinaria->precio);
         $maquinaria->numFactura = LimpiarCadenaCaracter($this->conn, $maquinaria->numFactura);
+        $maquinaria->monedaCompra = LimpiarCadenaCaracter($this->conn, $maquinaria->monedaCompra);
 
         $sql = "UPDATE tbl_herramientaelectrica SET 
         Codigo='" . $maquinaria->codigo . "',
@@ -956,6 +957,7 @@ class MHerramientas implements IHerrramientas
         FechaIngreso='" . $maquinaria->fechaIngreso . "',
         Procedencia='" . $maquinaria->procedencia . "',
         Precio=" . $maquinaria->precio . ",
+        MonedaCompra='" . $maquinaria->monedaCompra . "',
         NumFactura='" . $maquinaria->numFactura . "'
         WHERE ID_Herramienta = " . $maquinaria->idHerramienta . "";
         $resultado->esValido  = $this->conn->query($sql);
