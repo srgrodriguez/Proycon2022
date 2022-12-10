@@ -281,7 +281,7 @@ ValidarIniciodeSession();
                                             <?php
                                             $conexion = new Conexion();
                                             $conn = $conexion->CrearConexion();
-                                            $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta";
+                                            $sql = "Select Descripcion,ID_Tipo from tbl_tipoherramienta Where TipoEquipo = 'H'";
                                             $rec = $conn->query($sql);
                                             $conn->close();
                                             if ($rec != null) {

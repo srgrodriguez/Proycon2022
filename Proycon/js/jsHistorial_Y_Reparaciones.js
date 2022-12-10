@@ -549,7 +549,7 @@ function MostraBoletasReparaciones() {
 }
 
 function Atras() {
-    $("#BoletaReparacionHerramienta").is(":visible")
+    //$("#BoletaReparacionHerramienta").is(":visible")
 
     let reparacion = $("#equipoEnReparacion");
     let gastos = $("#historialGastos");
