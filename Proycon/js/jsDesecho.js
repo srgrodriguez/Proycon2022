@@ -151,15 +151,16 @@ function MostrarFormMaterial() {
 
 }
 
-function Atras() {
+function AtrasP() {
 
-    $("#panelContienetblDesecho").show("slow");
+    $("#panelContienetblDesecho").show();
 
-    $(".nuevoPedidoMaterial").hide();
-    $("#pnlnuevoPedidoMaterial").hide();
-
-    $(".pnlnuevoPedido").hide();
     $("#pnlnuevoPedido").hide();
+    $(".nuevoPedido").hide();    
+    $("#PedidoMateriales").hide();
+    $("#PedidoHerramientas").hide();
+
+    console.log("ATRASSS");
 }
 
 

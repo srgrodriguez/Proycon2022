@@ -29,6 +29,11 @@ if (isset($_POST['txtIDMaterial'])) {
     ExportarTablaDevolucionMaterial($_POST['txtIDMaterial'], $_POST['txtIDProyectotblDevolucion']);
 }
 
+
+if (isset($_POST['txtReporteMaquinaria'])) {
+    ExportarExcelMaquinariaProyecto($_POST['txtID_Proyecto']);
+}
+
 if (isset($_POST['Codigo'])) {
     if ($_POST['Codigo'] != "") {
         ExportarContenidoTblMateriales($_POST['Codigo']);
@@ -361,6 +366,140 @@ function ExportarExcelHerramientasProyecto($ID_Proyecto) {
     exit;
 }
 
+
+
+
+
+
+
+
+
+function ExportarExcelMaquinariaProyecto($ID_Proyecto) {
+    $objPHPExcel = new PHPExcel();
+    $bdProyectos = new MProyectos();
+    $opc = $_POST['cboFiltrarMaquinaria'];
+    $result = "";
+    switch ($opc) {
+        case "Filtrar por...":$result = $bdProyectos->ListaMaquinariaProyecto($ID_Proyecto);
+            break;
+        case "Reparacion":$result = $bdProyectos->FiltrosMaquinariaProyecto("SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and th.Estado = 0 and tt.TipoEquipo = 'M' ORDER by tp.FechaSalida ASC;");
+            break;
+        case "Fecha":$result = $bdProyectos->FiltrosMaquinariaProyecto("SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
+ tp.ID_Proyecto = $ID_Proyecto and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'M' ORDER by tp.FechaSalida ASC;");
+            break;
+        case "Ver Totales":ExportarVerTotalesMaquinaria($ID_Proyecto);
+            break;
+        default:
+            break;
+    }
+    $objPHPExcel = new PHPExcel();
+    // $bdProyectos = new MProyectos();
+    $objPHPExcel->getProperties()->setCreator("Reporte")
+            ->setLastModifiedBy("Reporte")
+            ->setTitle("Reporte Materiales")
+            ->setSubject("Reporte Materiales")
+            ->setDescription("Reporte Materiales.")
+            ->setKeywords("office 2010 openxml php")
+            ->setCategory("Reporte Materiales");
+
+    $nombreProyecto = $bdProyectos->ObtenerNombreProyecto($ID_Proyecto);
+    $fila = mysqli_fetch_array($nombreProyecto, MYSQLI_ASSOC);
+    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('C2:F2');
+    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('C3:F3');
+    $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('C2', 'Proycon S.A')
+            ->setCellValue('C3', 'Reportes del sistema')
+            ->setCellValue('C4', 'Proyecto')
+            ->setCellValue('D4', $fila['Nombre'])
+            ->setCellValue('C6', 'CODIGO')
+            ->setCellValue('D6', 'TIPO')
+            ->setCellValue('E6', 'FECHA')
+            ->setCellValue('F6', 'N°BOLETA')
+            ->setCellValue('G6', 'ESTADO');
+
+
+
+    //$result = $bdProyectos ->ListaHerramientaProyecto($ID_Proyecto);
+
+
+    $i = 7;
+
+    while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+        $estado = "";
+        if ($fila['Estado'] == 1) {
+            $estado = "Bueno";
+        } else {
+            $objPHPExcel->getActiveSheet()->getStyle("C$i:G$i")->getFill()->applyFromArray(array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => '003DA6')));
+            $estado = "Reparacion";
+        }
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue("C$i", $fila['Codigo'])
+                ->setCellValue("D$i", $fila['Descripcion'])
+                ->setCellValue("E$i", date('d/m/Y', strtotime($fila['FechaSalida'])))
+                ->setCellValue("F$i", $fila['NBoleta'])
+                ->setCellValue("G$i", $estado);
+        $i++;
+    }
+
+    $rango = "C7:G$i";
+
+//
+    // Fuente de la primera fila en negrita
+    //Alinear al centro ,'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    $objPHPExcel->getActiveSheet()->getStyle('C2:F4')->applyFromArray(array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 18)));
+    // $objPHPExcel->getActiveSheet()->getStyle('A1:Z200')->getFill()->applyFromArray(array(
+    //    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+    //   'startcolor' => array('rgb' => 'ffffff')));
+    $objPHPExcel->getActiveSheet()->getStyle('C6:G6')->applyFromArray(
+            array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 14, 'color' => array('rgb' => 'ffffff')),
+                'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+                'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFF'))))
+    );
+
+    $objPHPExcel->getActiveSheet()->getStyle($rango)->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+        'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFF')))));
+
+    $objPHPExcel->getActiveSheet()->getStyle('C6:G6')->getFill()->applyFromArray(array(
+        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+        'startcolor' => array('rgb' => '003DA6')));
+
+    /* Establecer tamanos a las celdas */
+    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+    $objDrawing = new PHPExcel_Worksheet_Drawing();
+    $objDrawing->setName('imgNotice');
+    $objDrawing->setDescription('Noticia');
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $objDrawing->setPath($img);
+    $objDrawing->setOffsetX(28);    // setOffsetX works properly
+    $objDrawing->setOffsetY(200);  //setOffsetY has no effect
+    $objDrawing->setCoordinates('A1');
+    $objDrawing->setHeight(100); // logo height
+    $objDrawing->setWorksheet($objPHPExcel->setActiveSheetIndex(0));
+    //Nombre de la hoja
+    $objPHPExcel->getActiveSheet()->setTitle('Reporte Herramientas');
+    Headers();
+
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    $objWriter->save('php://output');
+    exit;
+}
+
+
+
+
+
+
+
+
+
+
+
 function Headers() {
     /*
       header('Content-Type: application/vnd.ms-excel');
@@ -486,6 +625,87 @@ function ExportarVerTotalesHerramienta($ID_Proyecto) {
             ->setCellValue('C6', 'TIPO')
             ->setCellValue('D6', 'CANTIDAD');
     $result = $bdProyectos->FiltrosHerramientasProyecto("SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_prestamoherramientas th, tbl_tipoherramienta tt where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo GROUP by tt.Descripcion;");
+    $i = 7;
+    while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue("C$i", $fila['Descripcion'])
+                ->setCellValue("D$i", $fila['Cantidad']);
+        $i++;
+    }
+    $rango = "C7:D$i";
+
+
+
+    // Fuente de la primera fila en negrita
+    //Alinear al centro ,'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    $objPHPExcel->getActiveSheet()->getStyle('C2:F4')->applyFromArray(array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 18)));
+    // $objPHPExcel->getActiveSheet()->getStyle('A1:Z200')->getFill()->applyFromArray(array(
+    //    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+    //   'startcolor' => array('rgb' => 'ffffff')));
+    //$rango="C2:F3";
+    // $styleArray = array('font' => array( 'name' => 'Calibri','size' => 18)); 
+    // $objPHPExcel->getActiveSheet()->getStyle($rango)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('C6:D6')->applyFromArray(
+            array('font' => array('bold' => true, 'name' => 'Calibri', 'size' => 14, 'color' => array('rgb' => 'ffffff')),
+                'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+                'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFF'))))
+    );
+    // Cambiar el nombre de hoja de cálculo
+    $objPHPExcel->getActiveSheet()->getStyle($rango)->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+        'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFF')))));
+
+    $objPHPExcel->getActiveSheet()->getStyle('C6:D6')->getFill()->applyFromArray(array(
+        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+        'startcolor' => array('rgb' => '003DA6')));
+
+    /* Establecer tamanos a las celdas */
+    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+    $objDrawing = new PHPExcel_Worksheet_Drawing();
+    $objDrawing->setName('imgNotice');
+    $objDrawing->setDescription('Noticia');
+    $img = '../../resources/imagenes/proycon.png'; // Provide path to your logo file
+    $objDrawing->setPath($img);
+    $objDrawing->setOffsetX(28);    // setOffsetX works properly
+    $objDrawing->setOffsetY(200);  //setOffsetY has no effect
+    $objDrawing->setCoordinates('A1');
+    $objDrawing->setHeight(100); // logo height
+    $objDrawing->setWorksheet($objPHPExcel->setActiveSheetIndex(0));
+    //Nombre de la hoja
+    $objPHPExcel->getActiveSheet()->setTitle('Reporte');
+    Headers();
+
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    $objWriter->save('php://output');
+    exit;
+}
+
+
+
+function ExportarVerTotalesMaquinaria($ID_Proyecto) {
+    $objPHPExcel = new PHPExcel();
+    $bdProyectos = new MProyectos();
+    $objPHPExcel->getProperties()->setCreator("Reporte")
+            ->setLastModifiedBy("Reporte")
+            ->setTitle("Reporte Maquinaria")
+            ->setSubject("Reporte Maquinaria")
+            ->setDescription("Reporte Maquinaria.")
+            ->setKeywords("office 2010 openxml php")
+            ->setCategory("Reporte Maquinaria");
+
+    $nombreProyecto = $bdProyectos->ObtenerNombreProyecto($ID_Proyecto);
+    $fila = mysqli_fetch_array($nombreProyecto, MYSQLI_ASSOC);
+    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('C2:F2');
+    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('C3:F3');
+    $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('C2', 'Proycon S.A')
+            ->setCellValue('C3', 'Reportes del sistema')
+            ->setCellValue('C4', 'Proyecto')
+            ->setCellValue('D4', $fila['Nombre'])
+            ->setCellValue('C6', 'TIPO')
+            ->setCellValue('D6', 'CANTIDAD');
+    $result = $bdProyectos->FiltrosMaquinariaProyecto("SELECT tt.Descripcion,COUNT(*) as Cantidad from tbl_prestamoherramientas th, tbl_tipoherramienta tt where th.ID_Proyecto = $ID_Proyecto and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'M' GROUP by tt.Descripcion;");
     $i = 7;
     while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         $objPHPExcel->setActiveSheetIndex(0)
