@@ -14,9 +14,10 @@ class MProyectos implements IProyectos {
         $proyecto->Encargado = LimpiarCadenaCaracter($this->conn, $proyecto->Encargado);
         $proyecto->Nombre = LimpiarCadenaCaracter($this->conn, $proyecto->Nombre);
         $proyecto->FechaCreacion = LimpiarCadenaCaracter($this->conn, $proyecto->FechaCreacion);
-        $sql = "insert into tbl_proyectos(Nombre,DirectorProyecto,FechaCreacion) values(?,?,?)";
+        $proyecto->TipoProyecto = LimpiarCadenaCaracter($this->conn, $proyecto->TipoProyecto);
+        $sql = "insert into tbl_proyectos(Nombre,DirectorProyecto,FechaCreacion,TipoProyecto) values(?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sss", $proyecto->Nombre, $proyecto->Encargado, $proyecto->FechaCreacion);
+        $stmt->bind_param("sssi", $proyecto->Nombre, $proyecto->Encargado, $proyecto->FechaCreacion,$proyecto->TipoProyecto);
         $ok = $stmt->execute();
         $stmt->close();
         $this->conn->close();
@@ -27,10 +28,11 @@ class MProyectos implements IProyectos {
         $proyecto->Nombre = LimpiarCadenaCaracter($this->conn, $proyecto->Nombre);
         $proyecto->Encargado = LimpiarCadenaCaracter($this->conn, $proyecto->Encargado);
         $proyecto->FechaCreacion = LimpiarCadenaCaracter($this->conn, $proyecto->FechaCreacion);
+        $proyecto->TipoProyecto = LimpiarCadenaCaracter($this->conn, $proyecto->TipoProyecto);
         $ID = LimpiarCadenaCaracter($this->conn, $ID);
-        $sql = "update tbl_proyectos set Nombre = ?,FechaCreacion=?,DirectorProyecto=? where ID_Proyecto = ?";
+        $sql = "update tbl_proyectos set Nombre = ?,FechaCreacion=?,DirectorProyecto=?,TipoProyecto=? where ID_Proyecto = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssi", $proyecto->Nombre, $proyecto->FechaCreacion, $proyecto->Encargado, $ID);
+        $stmt->bind_param("sssii", $proyecto->Nombre, $proyecto->FechaCreacion, $proyecto->Encargado,$proyecto->TipoProyecto, $ID);
         $ok = $stmt->execute();
         $stmt->close();
         $this->conn->close();
@@ -56,7 +58,7 @@ class MProyectos implements IProyectos {
     public function ListarProyectos() {
         $conexion = new Conexion();
         $conn = $conexion->CrearConexion();
-        $sql = "SELECT ID_Proyecto,Nombre,(SELECT DISTINCT ID_Proyecto FROM tbl_notificaciones WHERE ID_Proyecto = tp.ID_Proyecto ) as noti FROM tbl_proyectos tp where Estado = 1 order by noti desc;";
+        $sql = "SELECT ID_Proyecto,Nombre,TipoProyecto,(SELECT DISTINCT ID_Proyecto FROM tbl_notificaciones WHERE ID_Proyecto = tp.ID_Proyecto ) as noti FROM tbl_proyectos tp where Estado = 1 order by noti desc;";
         $result = $this->conn->query($sql);
         $this->conn->close();
         return $result;
@@ -371,7 +373,7 @@ class MProyectos implements IProyectos {
     public function BuscarBoletaPedido($numBoleta, $idProyecto) {
         $numBoleta = LimpiarCadenaCaracter($this->conn, $numBoleta);
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
-        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Usuario = tu.ID_Usuario and tb.Consecutivo = ? and ID_Proyecto =  ?";
+        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Usuario = tu.ID_Usuario and tb.Consecutivo = ? and tb.ID_Proyecto =  ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ii", $numBoleta, $idProyecto);
         $stmt->execute();

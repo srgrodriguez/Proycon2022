@@ -201,8 +201,9 @@ function listarProyectos() {
 }
 
 
-function HerramientasMateriales(ID_Proyecto) {
+function HerramientasMateriales(ID_Proyecto, TipoProyecto) {
     $("#idProecto").html(ID_Proyecto);
+    $("#TipoProyecto").html(TipoProyecto);    
     $("#nomProyecto").html("Proyecto: " + $("#" + ID_Proyecto + "").html());
     $("#mhProyectos").show();
     ActualizarMaterialesHerramientaProyecto(ID_Proyecto);
@@ -231,12 +232,18 @@ function InsertarProyecto() {
     var nombre = $('#txtNombreProyecto').val();
     var encargado = $('#txtEncargadoProyecto').val();
     var fechaInicio = $('#txtFechaCreacionProyecto').val();
+    
+    var status = 0;
+    if ($("#chkPorAdministracion").is(":checked")) {
+        status = 1;
+    }
 
     if (nombre != "" && encargado != "" && fechaInicio != "") {
         var datos = {
             "Nombre": nombre,
             "Encargado": encargado,
-            "FechaInicio": fechaInicio
+            "FechaInicio": fechaInicio,
+            "TipoProyecto": status
         };
         $.ajax({
             data: datos,
@@ -534,11 +541,18 @@ function BuscarProyecto() {
 }
 
 function ModificarProyecto(){
+      
+    var status = 0;
+    if ($("#chkPorAdministracion").is(":checked")) {
+        status = 1;
+    }
+
   var datos = {
         "ID":$("#btnEditarProyecto").val(),
         "nombre": $('#txtNombreProyecto').val(),
         "encargado": $('#txtEncargadoProyecto').val(),
-        "fecha": $('#txtFechaCreacionProyecto').val()
+        "fecha": $('#txtFechaCreacionProyecto').val(),
+        "tipoProyecto" : status
     
     };
 
@@ -631,6 +645,7 @@ function MostrarPedidos() {
         $("#pdotituloBtnA").show();
         $("#contienePedidos").show();
         $("#divCboBtnRegresar").hide();
+        
     } else {
 
         ActulizarSeccionPedidos();
@@ -647,6 +662,14 @@ function MostrarPedidos() {
         $("#pdotituloBtnA").show();
     }
 
+    console.log($('#TipoProyecto').text());
+
+    if($('#TipoProyecto').text() == 1){
+        $("#btnAgregarPedido").hide();        
+    }else{
+        $("#btnAgregarPedido").show();        
+
+    }
 
 
 
@@ -1882,6 +1905,8 @@ function BuscarProyectoID(idProyecto){
             url: "../BLL/Proyectos.php?opc=BuscarProyectoid&ID="+idProyecto,
             success: function (respuesta) {
                 
+                    console.log(respuesta)
+
                     $("#frmRegistrarProyecto").html(respuesta);
                     $("#ModalAgregarProyecto").modal("show");
                    $("#btnEditarProyecto").show();

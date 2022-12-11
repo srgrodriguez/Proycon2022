@@ -1064,6 +1064,7 @@ ValidarIniciodeSession();
 
     </main>
     <span hidden="true" id='idProecto'></span>
+    <span hidden="true" id='TipoProyecto'></span>
     <span hidden="true" id='idUsuario'><?php echo $_SESSION['ID_Usuario'] ?></span>
 </body>
 

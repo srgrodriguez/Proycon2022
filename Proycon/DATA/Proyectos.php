@@ -7,6 +7,7 @@ class Proyectos {
     public  $Encargado;
     public $FechaCreacion;
     public $FechaCierre;
+    public $TipoProyecto;
             
 
     function  Proyectos() {
@@ -27,6 +28,14 @@ class Proyectos {
 
     function getFechaCierre() {
         return $this->FechaCierre;
+    }
+
+    function getTipoProyecto() {
+        return $this->TipoProyecto;
+    }
+
+    function setTipoProyecto($TipoProyecto) {
+        $this->TipoProyecto = $TipoProyecto;
     }
 
     function setNombre($Nombre) {
