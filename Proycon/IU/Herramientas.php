@@ -109,7 +109,7 @@ ValidarIniciodeSession();
                                                     <button type="button" class="btn-accion btn btn-info btn-sm"  onclick="window.location.href='TrasladarHerramientaElectrica.php'">Trasladar herramientas</button>
                                                 </li>
                                                 <li>
-                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='boletasBodega.php'">Boletas Desecho Herramientas</button>
+                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='boletasBodega.php'">Boletas Bodega Herramientas</button>
                                                 </li>
                                             </ul>
                                         <?php } ?>
