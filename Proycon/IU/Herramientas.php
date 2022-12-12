@@ -89,7 +89,7 @@ ValidarIniciodeSession();
                             <button id="btnImprimirHerramientas1" type="submit" class="btn btn-default"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
                         </div>
                         <div class="panel-body">
-                        <div>
+                        <div class="row">
                                     <div class="k-grid-toolbar">
                                         <?php if ($_SESSION['ID_ROL'] == Constantes::RolBodega || $_SESSION['ID_ROL'] == Constantes::RolAdminBodega) { ?>
                                             <ul class="lista-accion">
