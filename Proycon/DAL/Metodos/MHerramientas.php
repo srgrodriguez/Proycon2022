@@ -911,7 +911,7 @@ class MHerramientas implements IHerrramientas
 
             if (mysqli_num_rows($existenRegistros) > 0) {
                 $resultado->esValido = false;
-                $resultado->mensaje = "Esta maquinaria  ya presenta un historial, por lo tanto no puede ser eliminada.";
+                $resultado->mensaje = "Esta herramienta  ya presenta un historial, por lo tanto no puede ser eliminada.";
             } else {
 
 

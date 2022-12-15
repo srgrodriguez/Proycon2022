@@ -150,7 +150,7 @@ function AgregarNuevoTipo(tipoEquipo) {
 
 function EditarTipo(id) {
     btnEditar.disabled = false;
-    $("#tituloModalAgregarTipo").html("Editar tipo de maquinaria");
+    $("#tituloModalAgregarTipo").html("Editar");
     $("#btnGuardarTipo").hide();
     $("#btnEditar").show();
     ConsultarTipoHerramientaPorID(id);
@@ -216,10 +216,10 @@ async function ActualizarTipo() {
                 MostrarMensajeResultado(result, false, "respuestaTipoHerramienta");
             });
 
-            btnEditar.disabled = false;
+      
 
     }
-
+    btnEditar.disabled = false;
 
 }
 

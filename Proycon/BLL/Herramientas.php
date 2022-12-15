@@ -1148,7 +1148,7 @@ function GenerarResultadoHTMLTablaPrincipal($result)
                 </button>";
 
         
-            if ($Usuario->ID_Rol== Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)
+            if ($Usuario->ID_Rol== Constantes::RolAdminBodega)
                 $btnEliminar =  str_replace("disabled", "", $btnEliminar);
 
             if ($Usuario->ID_Rol == Constantes::RolAdminBodega || $Usuario->ID_Rol == Constantes::RolBodega)

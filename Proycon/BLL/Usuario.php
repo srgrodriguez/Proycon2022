@@ -145,6 +145,7 @@ function ObtenerDatosUsuario($ID_Usuario){
         $Usuarios->Password = $_POST['pass'];
         $Usuarios->ID_Rol = $_POST['rol'];
         $Usuarios->Estado = $_POST['status'];
+        $Usuarios->IdProyecto =$_POST['idProyecto'];
         
         $bdUsuarios->ModificarUsuario($Usuarios);  
         crearTabla();
@@ -184,6 +185,7 @@ function registrarUsuario(){
         $Usuarios->Password = $_POST['pass'];
         $Usuarios->ID_Rol = $_POST['rol'];
         $Usuarios->Estado = $_POST['status'];
+        $Usuarios->IdProyecto =$_POST['idProyecto'];
         $result = $bdUsuarios ->ValidarUsuarioRegistro( $Usuarios->Usuario);
         if (mysqli_num_rows($result)> 0 ) {
         return 0; 

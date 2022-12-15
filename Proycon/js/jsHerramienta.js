@@ -1586,7 +1586,9 @@ function EliminarTraslado(evento) {
 }
 // GUARDA LA FACTURA DE LA REPARACION DE LA HERRAMIENTA Y VALIDA SUS CAMPOS
 
-function ElaborarFactura() {
+async function ElaborarFactura() {
+    let button = document.getElementById("btnElaborarFacturaHerramienta");
+    button.disabled = true;
     const idMostrarMensajesResultado = "mensajesResultadoFacturarReparacion";
     var validaciones = 4;
     var validarFactura = $('#txtNunFactura').val();
@@ -1650,7 +1652,7 @@ function ElaborarFactura() {
             "CostoFactura": $('#txtCantidadFactura').val()
         };
 
-        $.ajax({
+      await  $.ajax({
             data: datos,
             type: 'POST',
             url: '../BLL/Herramientas.php?opc=guardarFactura',
@@ -1691,7 +1693,7 @@ function ElaborarFactura() {
     } else {
         MostrarMensajeResultado("Debes llenar todos los campos del Formulario", false, idMostrarMensajesResultado);
     }
-
+    button.disabled = false;
     setTimeout(function () {
         $("#headermodalRegistroGastos").removeClass("mensajeCorrecto");
         $("#headermodalRegistroGastos").removeClass("mensajeError");
@@ -1844,7 +1846,8 @@ function Remover(evento) {
 //GUARDARRRRRRRRRRRRRR BOLESTAS
 
 
-function GuardarBoletaReparaciones() {
+async function GuardarBoletaReparaciones() {
+
 
     var dt = new Date();
     var mes = dt.getMonth() + 1;
@@ -1869,15 +1872,16 @@ function GuardarBoletaReparaciones() {
 
         };
 
-        AjaxRegistroBolestasReparaciones(datos);
+       await AjaxRegistroBolestasReparaciones(datos);
     }
 
 
 }
 
-function AjaxRegistroBolestasReparaciones(datos) {
-
-    $.ajax({
+async function AjaxRegistroBolestasReparaciones(datos) {
+    const btn = document.getElementById("btnGenerarBoeltaReparacionHerramienta")
+    btn.disabled =true
+   await $.ajax({
         data: datos,
         type: "POST",
         url: "../BLL/Herramientas.php?opc=registrarReparacion",
@@ -1917,7 +1921,7 @@ function AjaxRegistroBolestasReparaciones(datos) {
         }
 
     });
-
+    btn.disabled =false;
     setTimeout(function () {
         $("#modalBoletaReparacionHerramienta").removeClass("mensajeCorrecto");
         $("#mensajeBoletaReparacion").html("<strong>Salida de Herramienta ha Reparación</strong>")

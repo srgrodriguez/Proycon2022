@@ -92,7 +92,7 @@ ValidarIniciodeSession();
                                                     <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='TrasladarMaquinaria.php'">Trasladar maquinaria</button>
                                                 </li>
                                                 <li>
-                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='boletasBodega.php'">Boletas Bodega maquinaria</button>
+                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='BoletasBodega.php'">Boletas Bodega maquinaria</button>
                                                 </li>
                                             </ul>
                                         <?php } ?>

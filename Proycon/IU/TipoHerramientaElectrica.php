@@ -60,7 +60,7 @@ ValidarIniciodeSession();
 
                                             <ul class="lista-accion">
                                                 <li>
-                                                    <button type="button" class="btn-accion btn btn-info btn-sm" data-toggle="modal" data-target="#ModalAgregarTipoMaquinaria" onclick="AbriModalAgregar()">Agregar tipo maquinaria</button>
+                                                    <button type="button" class="btn-accion btn btn-info btn-sm" data-toggle="modal" data-target="#ModalAgregarTipoMaquinaria" onclick="AbriModalAgregar()">Agregar tipo herramienta</button>
                                                 </li>                           
                                             </ul>
                                         <?php } ?>

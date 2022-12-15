@@ -85,7 +85,7 @@ ValidarIniciodeSession();
                     <div class="panel panel-info" style=" width: auto">
 
                         <div class="panel-heading" id="headerpnlTotalHerra">
-                            <h4 id="tituloHeaderListadoH">Invertario de herramienta eléctrica</h4>
+                            <h4 id="">Invertario de herramienta eléctrica</h4>
                             <button id="btnImprimirHerramientas1" type="submit" class="btn btn-default"><img src="../resources/imagenes/Excel.png" alt="" width="20" /> </button>
                         </div>
                         <div class="panel-body">
@@ -109,7 +109,7 @@ ValidarIniciodeSession();
                                                     <button type="button" class="btn-accion btn btn-info btn-sm"  onclick="window.location.href='TrasladarHerramientaElectrica.php'">Trasladar herramientas</button>
                                                 </li>
                                                 <li>
-                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='boletasBodega.php'">Boletas Bodega Herramientas</button>
+                                                    <button type="button" class="btn-accion btn btn-info btn-sm" onclick="window.location.href='BoletasBodega.php'">Boletas Bodega Herramientas</button>
                                                 </li>
                                             </ul>
                                         <?php } ?>
@@ -775,7 +775,7 @@ ValidarIniciodeSession();
                          </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success btn-estilos" onclick="ElaborarFactura()">Guardar</button>
+                            <button type="submit" id="btnElaborarFacturaHerramienta" class="btn btn-success btn-estilos" onclick="ElaborarFactura()">Guardar</button>
                             <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="LimpiarBoletaFactura()">Cerrar</button>
                         </div>
                     </div>
@@ -802,7 +802,7 @@ ValidarIniciodeSession();
 
         <!--Modal de Advertencia Codigo ERRONEO-->
 
-        <div id="ModalDefaul" style="" class="modal fade" role="dialog">
+        <div id="ModalDefaul" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 20%;margin: auto">
 
@@ -983,7 +983,7 @@ ValidarIniciodeSession();
                                     <!--  <button type="button" class="btn btn-default btn-estilos" onclick="">
                                             <img src="../resources/imagenes/print.png" alt="" width="30px"/>
                                         </button>-->
-                                    <button type="button" class="btn btn-success btn-estilos" onclick="GuardarBoletaReparaciones()">Guardar</button>
+                                    <button type="button" id="btnGenerarBoeltaReparacionHerramienta" class="btn btn-success btn-estilos" onclick="GuardarBoletaReparaciones()">Guardar</button>
 
                                 </div>
                             </div>

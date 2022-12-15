@@ -38,7 +38,7 @@ class MUsuarios implements IUsuarios {
         }        
         $data = $usuarios->Password;
         $pass_cifrado = password_hash($data, PASSWORD_DEFAULT, array("cost" => 12));
-        $sql = "insert into tbl_usuario(Nombre,ID_Rol,Usuario,Pass,Estado) values (?,?,?,?,?)";
+        $sql = "insert into tbl_usuario(Nombre,ID_Rol,Usuario,Pass,Estado,ID_Proyecto) values (?,?,?,?,?,?)";
        
          if ($stmt = $this->conn->prepare($sql)) {
              
@@ -47,7 +47,7 @@ class MUsuarios implements IUsuarios {
              $usuarios->Usuario = LimpiarCadenaCaracter($this->conn, $usuarios->Usuario);
              $usuarios->Password = $pass_cifrado;
              $usuarios->Estado = LimpiarCadenaCaracter($this->conn, $usuarios->Estado);           
-             $stmt->bind_param("sissi", $usuarios->Nombre, $usuarios->ID_Rol, $usuarios->Usuario, $usuarios->Password, $usuarios->Estado);
+             $stmt->bind_param("sissii", $usuarios->Nombre, $usuarios->ID_Rol, $usuarios->Usuario, $usuarios->Password, $usuarios->Estado,$usuarios->IdProyecto);
              $OK = $stmt->execute();
              
         } else {
@@ -76,7 +76,7 @@ class MUsuarios implements IUsuarios {
     public function ModificarUsuario(Usuarios $usuarios) {
         if ($usuarios->Password != "") {
             //$sql = "update tbl_usuario set Nombre = '$usuarios->Nombre',Usuario = '$usuarios->Usuario',Pass = '$usuarios->Password',ID_Rol ='$usuarios->ID_Rol',Estado ='$usuarios->Estado' where ID_Usuario = '$usuarios->ID_Usuarios'";
-            $sql = "update tbl_usuario set Nombre = ?,Usuario = ?,Pass = ? ,ID_Rol = ?,Estado = ? where ID_Usuario = ?";
+            $sql = "update tbl_usuario set Nombre = ?,Usuario = ?,Pass = ? ,ID_Rol = ?,Estado = ?,ID_Proyecto=? where ID_Usuario = ?";
 
             //Cifrar el password
             $data = $usuarios->Password;
@@ -90,7 +90,7 @@ class MUsuarios implements IUsuarios {
                 $usuarios->ID_Rol = LimpiarCadenaCaracter($this->conn, $usuarios->ID_Rol);
                 $usuarios->Estado = LimpiarCadenaCaracter($this->conn, $usuarios->Estado);
                 $usuarios->ID_Usuario = LimpiarCadenaCaracter($this->conn, $usuarios->ID_Usuarios);
-                $stmt->bind_param("sssiii", $usuarios->Nombre, $usuarios->Usuario,$usuarios->Password,$usuarios->ID_Rol,$usuarios->Estado,$usuarios->ID_Usuario);
+                $stmt->bind_param("sssiiii", $usuarios->Nombre, $usuarios->Usuario,$usuarios->Password,$usuarios->ID_Rol,$usuarios->Estado,$usuarios->IdProyecto,$usuarios->ID_Usuario);
                    
             $stmt->execute();
             } else {
@@ -99,7 +99,7 @@ class MUsuarios implements IUsuarios {
             
         } else {
           //  $sql = "update tbl_usuario set Nombre = '$usuarios->Nombre',Usuario = '$usuarios->Usuario',ID_Rol ='$usuarios->ID_Rol',Estado ='$usuarios->Estado' where ID_Usuario = '$usuarios->ID_Usuarios'";
-            $sql = "update tbl_usuario set Nombre = ?, Usuario = ?, ID_Rol = ?, Estado = ? where ID_Usuario = ?";
+            $sql = "update tbl_usuario set Nombre = ?, Usuario = ?, ID_Rol = ?, Estado = ?,ID_Proyecto=? where ID_Usuario = ?";
 
             if ($stmt = $this->conn->prepare($sql)) {
                  $usuarios->Nombre = LimpiarCadenaCaracter($this->conn, $usuarios->Nombre);
@@ -107,7 +107,7 @@ class MUsuarios implements IUsuarios {
                 $usuarios->ID_Rol = LimpiarCadenaCaracter($this->conn, $usuarios->ID_Rol);
                 $usuarios->Estado = LimpiarCadenaCaracter($this->conn, $usuarios->Estado);
                 $usuarios->ID_Usuario = LimpiarCadenaCaracter($this->conn, $usuarios->ID_Usuarios);
-                $stmt->bind_param("ssiii", $usuarios->Nombre, $usuarios->Usuario,$usuarios->ID_Rol,$usuarios->Estado,$usuarios->ID_Usuario);
+                $stmt->bind_param("ssiiii", $usuarios->Nombre, $usuarios->Usuario,$usuarios->ID_Rol,$usuarios->Estado,$usuarios->IdProyecto,$usuarios->ID_Usuario);
                    
             $stmt->execute();
                 

@@ -111,7 +111,7 @@ function OpenModalEditarMaquinaria(codigo, idArchivo) {
                 document.getElementById("comboHerramientaTipoEditar").value = equipo.ID_Tipo;
                 $("#txtNumFacturaEditar").val(equipo.NumFactura)
                 document.getElementById("txtFileFichaTecnicaEditar");
-                document.getElementById("cboMonedaEditar").value = equipo.MonedaCompra == null || equipo.MonedaCompra == "" ? "0" : equipo.MonedaCompra;
+                document.getElementById("cboMonedaEditar").value = (equipo.CodigoMonedaCobro == null || equipo.CodigoMonedaCobro == "") ? "0" : equipo.CodigoMonedaCobro;
                 $("#ModalEditarMaquinaria").modal()
             }
 
