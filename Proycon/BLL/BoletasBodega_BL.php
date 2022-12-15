@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 require_once '../DAL/Metodos/MBoletasBodega.php';
 require_once '../DAL/Conexion.php';
 require_once 'Autorizacion.php';

@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 include '../DAL/Conexion.php';
 include '../DATA/Herramientas.php';
 include '../DAL/Interfaces/IHerrramientas.php';

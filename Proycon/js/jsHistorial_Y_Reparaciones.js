@@ -548,7 +548,7 @@ function MostraBoletasReparaciones() {
 
 }
 
-function Atras() {
+function AtrasHistorialReparaciones() {
     //$("#BoletaReparacionHerramienta").is(":visible")
 
     let reparacion = $("#equipoEnReparacion");

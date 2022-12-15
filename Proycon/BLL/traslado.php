@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 function llamarFuncion($Destino, $NumBoleta, $FechaFinal, $ID_Usuario) {
     try{
         $conexion = new Conexion();

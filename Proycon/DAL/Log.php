@@ -36,7 +36,9 @@
     }
 
     public static function GenerarArchivoLog($strError){
+        $hoy = date("Y-m-d H:i:s"); 
         $filename = "Logs/error".date("Y-m-d").".log";
+        $strError.=" ".$hoy;
          error_log($strError.'; \n ',3,$filename);
     }
  }

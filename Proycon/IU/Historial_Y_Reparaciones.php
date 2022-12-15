@@ -42,7 +42,7 @@ ValidarIniciodeSession();
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h3>Hitorial y reparaciones</h3>
-                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="Atras()">
+                <button style="float: right;margin-right: 20px;position: relative;top:-40px" type="button" class="btn btn-default" id="btnAtrasNoResponsive" onclick="AtrasHistorialReparaciones()">
                     <img src="../resources/imagenes/regresar.png" alt="" width="20px;" />
                 </button>
 

@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 require_once '..//DAL/Interfaces/IUsuarios.php';
 require_once '..//DAL/Metodos/MUsuarios.php';
 require_once '../DAL/Conexion.php';

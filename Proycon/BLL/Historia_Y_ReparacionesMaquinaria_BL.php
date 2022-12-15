@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html;charset=utf-8");
 require_once 'Autorizacion.php';
 require_once '../DAL/Conexion.php';
 require_once '../DAL/Log.php';
@@ -74,31 +75,14 @@ function ConsultarHistorialMaquinaria()
             $resultadoHTML = '';
             while ($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
                 $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
-                if ($fila['Destino'] == "") {
-                    $resultadoHTML .= "<tr>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . $fila['Ubicacion'] . "</td>
-                        <td>" . "En reparacion" . "</td>       
-						</tr>";
-                } else {
-
-                    if ($fila['Ubicacion'] == "") {
+                $destino = $fila['Destino'] == "" ? "En reparación" : $fila['Destino'];
+                $ubicacion =  $fila['Ubicacion'] == "" ? "En reparación" : $fila['Ubicacion'];
                         $resultadoHTML .= "<tr>
                         <td>" . $Fecha . "</td>
                         <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . "En reparacion" . "</td>
-                        <td>" . $fila['Destino'] . "</td>       
-						</tr>";
-                    } else {
-                        $resultadoHTML .= "<tr>
-                        <td>" . $Fecha . "</td>
-                        <td>" . $fila['NumBoleta'] . "</td>
-                        <td>" . $fila['Ubicacion'] . "</td>
-                        <td>" . $fila['Destino'] . "</td>       
-						</tr>";
-                    }
-                }
+                        <td>" .  $ubicacion . "</td>
+                        <td>" .  $destino. "</td>       
+						</tr>";             
             }
             echo $resultadoHTML;
         }

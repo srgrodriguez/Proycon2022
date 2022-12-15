@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 require_once '../DATA/Proyectos.php';
 require_once '../DATA/Materiales.php';
 require_once '../DAL/Interfaces/IProyectos.php';

@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html;charset=utf-8");
 require_once '..//DAL/Conexion.php';
 require_once '..//DAL/Interfaces/IPedidos.php';
 require_once '..//DAL/Metodos/MPedidos.php';

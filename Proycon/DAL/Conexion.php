@@ -18,6 +18,7 @@ class Conexion
                 Log::GenerarArchivoLog($error);
                 exit();
             } else {
+                $connect->set_charset("utf8");
                 return $connect;
             }
         } catch (\Throwable  $e) {

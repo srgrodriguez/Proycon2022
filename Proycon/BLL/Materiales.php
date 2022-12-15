@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html;charset=utf-8");
 include '../DATA/Materiales.php';
 include '../DAL/Interfaces/IMateriales.php';
 include '../DAL/Metodos/MMaterial.php';

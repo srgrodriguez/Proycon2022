@@ -57,7 +57,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
                             if ($resultadoInsertarPrestamo) {
                                 $controlarMovimientos = new MTrasladarEquipo();
                                 $esValidoElMovimiento = $controlarMovimientos->ControlarMovimientosEquipo($conn, $equipo->CodigoEquipo, $equipo->IdUbicacionActual, $equipo->IdProyectoDestino);
-                                if ($esValidoElMovimiento) {
+                                if ($esValidoElMovimiento->esValido) {
 
                                     $sqlInsertarHistorial =  "Insert into tbl_historialherramientas(Codigo,Ubicacion,Destino,NumBoleta,Fecha) 
                                                       values('" . $equipo->CodigoEquipo . "'," . $equipo->IdUbicacionActual . "," . $equipo->IdProyectoDestino . ",'" . $equipo->NumBoleta . "',Now())";
@@ -82,6 +82,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
                                     }
                                 } else {
                                     $resultado->esValido = false;
+                                    $resultado->mensaje ="Falló el registro del movimiento del equipo";
                                     $CodigoEquipoQueFallo = $equipo->CodigoEquipo;
                                 }
                             } else {
@@ -219,7 +220,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
             if ($resultadoMovimiento != null && mysqli_num_rows($resultadoMovimiento) > 0) {
                 $fila = mysqli_fetch_array($resultadoMovimiento, MYSQLI_ASSOC);
                 $ultimoMovimiento = $fila["ID_Movimiento"];
-                $sqlActualizarFechaSalida = "UPDATE tbl_movientosequipoproyecto SET FechaSalida = CURRENT_DATE();
+                $sqlActualizarFechaSalida = "UPDATE tbl_movientosequipoproyecto SET FechaSalida = CURRENT_DATE()
                                               where ID_Movimiento = $ultimoMovimiento";
                 if ($idProyectoActual != Constantes::Bodega) {
 

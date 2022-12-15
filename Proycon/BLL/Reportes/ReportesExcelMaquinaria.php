@@ -198,17 +198,20 @@ function GenerarReporteHistorial_Y_ReparacionesMaquinaria()
          $objPHPExcel->setActiveSheetIndex(0)
          ->setCellValue("C$i","Historial de traslados");
          $i++;
-         $listadoColumnas = ["FECHA","NUMERO FACTURA","DESCRIPCIÓN","COSTO"];
+         $listadoColumnas = ["Fecha","NºBoleta","Ubicación","Destino"];
          GenerarEncabezadoTabla($objPHPExcel, $listadoColumnas,$i);
          $i++;
           $filaInicioTablaHistorial = $i;
          while ($fila = mysqli_fetch_array($historial, MYSQLI_ASSOC)) {
             $Fecha = date('d/m/Y', strtotime($fila['Fecha']));
-               $objPHPExcel->setActiveSheetIndex(0)
-                       ->setCellValue("C$i", $Fecha)
-                       ->setCellValue("D$i", $fila['NumBoleta'])
-                       ->setCellValue("E$i",$fila['Ubicacion'])
-                       ->setCellValue("F$i",$fila['Destino']);
+            $destino = $fila['Destino'] == "" ? "En reparación" : $fila['Destino'];
+            $ubicacion =  $fila['Ubicacion'] == "" ? "En reparación" : $fila['Ubicacion'];
+                $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue("C$i", $Fecha)
+                ->setCellValue("D$i", $fila['NumBoleta'])
+                ->setCellValue("E$i",$ubicacion)
+                ->setCellValue("F$i",$destino);
+            
         
                $i++;
            }

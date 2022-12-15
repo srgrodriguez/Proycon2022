@@ -1,9 +1,9 @@
 <?php
-
+header("Content-Type: text/html;charset=utf-8");
 require_once '../DAL/Conexion.php';
 require_once '../DATA/Herramientas.php';
 require_once '../DAL/Interfaces/IHerrramientas.php';
-include'../DAL/Metodos/MHerramientas.php';
+include '../DAL/Metodos/MHerramientas.php';
 require_once 'Autorizacion.php';
 
 Autorizacion();

@@ -19,7 +19,7 @@ class MHistoria_Y_ReparacionesMaquinaria
         c.Nombre AS Destino
         FROM tbl_historialherramientas a 
         LEFT JOIN tbl_proyectos b ON b.ID_Proyecto = a.Ubicacion
-        LEFT JOIN tbl_proyectos c ON A.Destino = c.ID_Proyecto
+        LEFT JOIN tbl_proyectos c ON a.Destino = c.ID_Proyecto
         where a.Codigo = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
