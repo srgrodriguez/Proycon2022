@@ -508,7 +508,7 @@ ValidarIniciodeSession();
 
 
                             <div class="modal-footer">
-                                <button  type="button" class="btn btn-default btn-estilos" onclick="Exportar_Pdf('ContenidoPedido_Selecionado')">
+                                <button  type="button" class="btn btn-default btn-estilos" onclick="Exportar_PdfDesecho('tbl_P_Materiales_Selecionado')">
                                     <img  src="../resources/imagenes/print.png" alt="" width="30px"/>
                                 </button>
 
