@@ -102,7 +102,7 @@ function Crearmenu() {
             '<li> <a href="Maquinaria.php"><span class="icon-tools"></span> Maquinaria </a>' .
             '</li>' .
             '<li> <a href="Materiales.php"><span class="icon-spinner4"></span>  Materiales </a></li>' .
-            '<li> <a href="Desecho.php"><span class="icon-tools"></span> Desecho </a>' .
+            '<li> <a href="Desecho.php"><span class="icon-cross"></span> Desecho </a>' .
             '</li>' .
             '<li> <a href="MiCuenta.php"><span class="icon-man"></span>'.$nombre.'</a></li>' .
             '<li> <a href="Crerrarsession.php" class="salir" ><span class="icon-cross"></span> Salir </a></li>' .
