@@ -290,7 +290,7 @@ class MProyectos implements IProyectos {
                                     <th>Codigo</th>                                     
                                     <th>Cantidad</th>
                                     <th>Material</th>
-                                    <th></th>
+                                    <th>.</th>
                                 </tr>
                             </thead>
                             <tbody>";

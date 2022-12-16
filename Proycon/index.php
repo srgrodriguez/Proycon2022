@@ -5,7 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
-        $_SESSION['Usuario']=null;
+    $_SESSION['Usuario']=null;
 	$_SESSION['Nombre']=null;
 	$_SESSION['ID_Usuario']=null;
 	$_SESSION['ID_ROL']=null;
