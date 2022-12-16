@@ -1694,9 +1694,9 @@ function procesarPeido(evento){
   var  fecha =  $(evento).parents("tr").find("td").eq(1).html();
   var solicita = $(evento).parents("tr").find("td").eq(2).html();
       var array = fecha.split("/");
-    $("#dia").html(array[2]);
+    $("#dia").html(array[0]);
     $("#mes").html(array[1]);
-    $("#anno").html(array[0]);
+    $("#anno").html(array[2]);
     $("#solicita").html(solicita);
     $("#consecutivoPedidoProveeduria").html(NBoleta);
             $.ajax({
