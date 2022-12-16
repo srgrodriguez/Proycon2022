@@ -129,7 +129,6 @@ class MTrasladarEquipo implements ITrasladarEquipo
         try {
             $conexion = new Conexion();
             $conn = $conexion->CrearConexion();
-            $fechaActual = date('d/m/y');
             $mensaje = "Se envio a revesar un traslado de equipo, el siguiente equipo:";
             $equipoRevesar = json_encode($equipoProcesados);
             Log::GuardarEventoString($mensaje, "ReversarTrasaldos");
@@ -137,7 +136,7 @@ class MTrasladarEquipo implements ITrasladarEquipo
 
             foreach ($equipoProcesados as &$equipo) {
 
-                $sqlReversarPrestamo = "DELETE FROM tbl_prestamoherramientas WHERE Codigo = '" . $equipo->CodigoEquipo . "' AND ID_Proyecto = '$equipo->IdProyectoDestino' AND NBOLETA = '$equipo->NumBoleta'  AND FechaSalida = '$fechaActual';";
+                $sqlReversarPrestamo = "DELETE FROM tbl_prestamoherramientas WHERE Codigo = '" . $equipo->CodigoEquipo . "' AND ID_Proyecto = '$equipo->IdProyectoDestino' AND NBOLETA = '$equipo->NumBoleta';";
                 $sqlReverdarHistorial = "DELETE FROM tbl_historialherramientas WHERE Codigo = '" . $equipo->CodigoEquipo . "' AND NumBoleta = '$equipo->NumBoleta'; ";
                 $sqlReversarBoleta = "DELETE FROM tbl_boletaspedido WHERE Consecutivo = '" . $equipo->NumBoleta . "'; ";
                 $sqlReversarHerramienta = "UPDATE tbl_herramientaelectrica SET Ubicacion=" . $equipo->IdUbicacionActual . ", Disposicion = '$equipo->DisposicionActual' WHERE Codigo = '" . $equipo->CodigoEquipo . "'; ";
