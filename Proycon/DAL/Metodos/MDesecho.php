@@ -249,7 +249,7 @@ class MDesecho implements IDesecho {
 
                 // 4- Actualizar el estadoDesecho de la herramienta a 1
 
-                        $sql3 = "UPDATE tbl_herramientaelectrica SET EstadoDesecho = 1 WHERE Codigo = '" . $item['codigo'] . "'";
+                        $sql3 = "UPDATE tbl_herramientaelectrica SET EstadoDesecho = 1, Ubicacion = 13, Disposicion = 0 WHERE Codigo = '" . $item['codigo'] . "'";
                         $this->conn->query($sql3);
 
         }; 

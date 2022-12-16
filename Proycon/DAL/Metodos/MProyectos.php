@@ -66,9 +66,10 @@ class MProyectos implements IProyectos {
 
     public function ListaHerramientaProyecto($idProyecto) {
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
-        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
-            th.Ubicacion = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'H';
-            ;";
+        $sql = "SELECT th.Codigo, tt.Descripcion, th.Estado, (SELECT NBoleta from tbl_prestamoherramientas where ID_Proyecto = th.Ubicacion and Codigo = th.Codigo order by ID_Prestamo desc LIMIT 1)  as NBoleta,
+        (SELECT FechaSalida from tbl_prestamoherramientas where ID_Proyecto = th.Ubicacion and Codigo = th.Codigo order by ID_Prestamo desc LIMIT 1)  as FechaSalida 
+        FROM tbl_herramientaelectrica th, tbl_tipoherramienta tt 
+        where th.Ubicacion = ? and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'H'";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idProyecto);
         $stmt->execute();
@@ -80,9 +81,10 @@ class MProyectos implements IProyectos {
 
     public function ListaMaquinariaProyecto($idProyecto) {
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
-        $sql = "SELECT tp.Codigo,tt.Descripcion,tp.FechaSalida, th.Estado, tp.NBoleta FROM tbl_prestamoherramientas tp, tbl_herramientaelectrica th, tbl_tipoherramienta tt where 
-            th.Ubicacion = ? and tp.ID_Tipo = tt.ID_Tipo and tp.Codigo =  th.Codigo and tt.TipoEquipo = 'M';
-            ;";
+        $sql = "SELECT th.Codigo, tt.Descripcion, th.Estado, (SELECT NBoleta from tbl_prestamoherramientas where ID_Proyecto = th.Ubicacion and Codigo = th.Codigo order by ID_Prestamo desc LIMIT 1)  as NBoleta,
+        (SELECT FechaSalida from tbl_prestamoherramientas where ID_Proyecto = th.Ubicacion and Codigo = th.Codigo order by ID_Prestamo desc LIMIT 1)  as FechaSalida 
+        FROM tbl_herramientaelectrica th, tbl_tipoherramienta tt 
+        where th.Ubicacion = ? and th.ID_Tipo = tt.ID_Tipo and tt.TipoEquipo = 'M'";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idProyecto);
         $stmt->execute();
@@ -382,7 +384,7 @@ class MProyectos implements IProyectos {
         $this->conn->close();
         return $resultado;
     }
-
+/*
     public function AnularBoletaHerramientas($NBoleta) {
         $NBoleta = LimpiarCadenaCaracter($this->conn, $NBoleta);
         $sqlSelect = "SELECT Codigo FROM tbl_prestamoherramientas WHERE NBoleta = $NBoleta ";
@@ -398,10 +400,78 @@ class MProyectos implements IProyectos {
         $sqlDelete1 = "Delete from tbl_prestamoherramientas where NBoleta = $NBoleta";
         $sqlDelete2 = "Delete from tbl_boletaspedido where Consecutivo = $NBoleta";
 
+
+
+
+
+        $sqlDelete3 = "DELETE FROM tbl_historialherramientas WHERE Codigo = '" . $equipo->CodigoEquipo . "' AND NumBoleta = '$equipo->NumBoleta'; ";
+
+
+
         $this->conn->query($sqlDelete1);
         $this->conn->query($sqlDelete2);
         $this->conn->close();
+    }*/
+
+
+    public function AnularBoletaHerramientas($NBoleta)
+    {
+        $conexion = new Conexion();
+        $conn = $conexion->CrearConexion();
+
+        mysqli_begin_transaction($conn);
+        try {
+           
+           
+            $fechaActual = date('d/m/y');
+            $mensaje = "Se envio a anular la boleta ".$NBoleta;
+            Log::GuardarEventoString($mensaje, "AnularBoletaHerramientas");
+            $NBoleta = LimpiarCadenaCaracter($this->conn, $NBoleta);
+            $sqlSelect = "SELECT Codigo FROM tbl_prestamoherramientas WHERE NBoleta = $NBoleta ";
+            $result = $this->conn->query($sqlSelect);
+
+            while ($fila = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+
+               $codigo = $fila['Codigo'];
+
+               $ubicacionActul =  "SELECT Ubicacion FROM tbl_historialherramientas WHERE NumBoleta = $NBoleta and Codigo = '$codigo'";   
+               $resulta = $this->conn->query($ubicacionActul);
+
+               $Ubicacion = mysqli_fetch_array($resulta, MYSQLI_ASSOC);
+               $ubicacionActual = $Ubicacion['Ubicacion'];
+               $Diposicion = $ubicacionActual == "1" ? 1 : 0;
+
+
+
+                $sqlReversarPrestamo = "DELETE FROM tbl_prestamoherramientas WHERE Codigo = '" . $codigo . "' AND NBOLETA = '$NBoleta';";
+                $sqlReverdarHistorial = "DELETE FROM tbl_historialherramientas WHERE Codigo = '" .$codigo . "' AND NumBoleta = '$NBoleta'; ";
+                $sqlReversarBoleta = "DELETE FROM tbl_boletaspedido WHERE Consecutivo = '" . $NBoleta . "'; ";
+                
+                
+                
+                $sqlReversarHerramienta = "UPDATE tbl_herramientaelectrica SET Ubicacion=" . $ubicacionActual . ", Disposicion = $Diposicion WHERE Codigo = '" . $codigo . "'; ";
+
+                $resultado1 =   $conn->query($sqlReversarPrestamo);
+                $resultado2 =   $conn->query($sqlReverdarHistorial);
+                $resultado3 =   $conn->query($sqlReversarBoleta);
+                $resultado4 =   $conn->query($sqlReversarHerramienta);
+            }
+            mysqli_commit($conn);
+            $conn->close();
+        } catch (\Throwable $th) {
+            mysqli_rollback($conn);
+            echo Log::GuardarEvento($th, "ReversarTrasaldos");
+        }
     }
+
+
+
+
+
+
+
+
+
 
     public function ObtenerNombreProyecto($ID_Proyecto) {
         $conexion = new Conexion();
