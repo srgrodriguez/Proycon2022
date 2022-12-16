@@ -37,7 +37,7 @@ function ListarPedidos() {
                                 <td hidden='true'>" . $fila['TipoPedido'] . "</td>
                                 <td>" . $fila['Consecutivo'] . "</td>
                                 <td>" . $fila['Fecha'] . "</td>
-                                <td>" . $fila['Nombre'] . "</td>    
+                                <td>" . $fila['Usuario'] . "</td>    
                                 <td><a onclick='VerPedido(this)' href='#'>Ver</a></td>
                                 </tbody>
                             </table>
@@ -66,7 +66,7 @@ function MostrarPedidos($TipoPedido, $ID_Proyecto) {
                                 <td hidden='true'>" . $fila['TipoPedido'] . "</td>
                                 <td>" . $fila['Consecutivo'] . "</td>
                                 <td>" . $fila['Fecha'] . "</td>
-                                <td>" . $fila['Nombre'] . "</td>    
+                                <td>" . $fila['Usuario'] . "</td>    
                                 <td><a onclick='VerPedido(this)' href='#'>Ver</a></td>
                                 </tbody>
                             </table>
@@ -93,7 +93,7 @@ function BuscarBoletaPedido() {
                                 <td hidden='true'>" . $fila['TipoPedido'] . "</td>
                                 <td>" . $fila['Consecutivo'] . "</td>
                                 <td>" . $fila['Fecha'] . "</td>
-                                <td>" . $fila['Nombre'] . "</td>    
+                                <td>" . $fila['Usuario'] . "</td>    
                                 <td><a onclick='VerPedido(this)' href='#'>Ver</a></td>
                                 </tbody>
                             </table>

@@ -39,7 +39,7 @@ class MboletasBodega {
     public function MostrarPedidos($TipoPedido, $ID_Proyecto) {
         $TipoPedido = LimpiarCadenaCaracter($this->conn, $TipoPedido);
         $ID_Proyecto = LimpiarCadenaCaracter($this->conn, $ID_Proyecto);
-        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Proyecto = ? AND TipoPedido= ? and tb.ID_Usuario = tu.ID_Usuario  AND tb.ID_Proyecto =1   ORDER BY CONSECUTIVO DESC;";
+        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha, tu.Usuario FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Proyecto = ? AND TipoPedido= ? and tb.ID_Usuario = tu.ID_Usuario  AND tb.ID_Proyecto =1   ORDER BY CONSECUTIVO DESC;";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ii", $ID_Proyecto, $TipoPedido);
         $stmt->execute();
@@ -52,7 +52,7 @@ class MboletasBodega {
     public function BuscarBoletaPedido($numBoleta, $idProyecto) {
         $numBoleta = LimpiarCadenaCaracter($this->conn, $numBoleta);
         $idProyecto = LimpiarCadenaCaracter($this->conn, $idProyecto);
-        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Usuario = tu.ID_Usuario and tb.Consecutivo = ? and tb.ID_Proyecto =  ?";
+        $sql = "SELECT Consecutivo,TipoPedido,Nombre,Fecha,tu.Usuario FROM tbl_boletaspedido tb, tbl_usuario tu WHERE tb.ID_Usuario = tu.ID_Usuario and tb.Consecutivo = ? and tb.ID_Proyecto =  ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ii", $numBoleta, $idProyecto);
         $stmt->execute();
