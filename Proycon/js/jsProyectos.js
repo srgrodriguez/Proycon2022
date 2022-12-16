@@ -1440,7 +1440,7 @@ function Exportar_Pdf(idTabla) {
     pdf.setTextColor(0);
     pdf.text(400, 150, 'Fecha: ' + dia + "/" + mes + "/" + anno);
     pdf.setTextColor(0);
-    pdf.text(30, 180, Proyecto);
+    pdf.text(30, 180, "Proyecto: "+Proyecto);
     pdf.text(30, 210, "Boleta de: " + TipoBoleta);
     pdf.text(30, 240, "Generada Por: " + generadaPor);
     pdf.setLineWidth(1);
@@ -1693,7 +1693,7 @@ function procesarPeido(evento){
   var NBoleta = $(evento).parents("tr").find("td").eq(0).html();
   var  fecha =  $(evento).parents("tr").find("td").eq(1).html();
   var solicita = $(evento).parents("tr").find("td").eq(2).html();
-      var array = fecha.split("-");
+      var array = fecha.split("/");
     $("#dia").html(array[2]);
     $("#mes").html(array[1]);
     $("#anno").html(array[0]);
